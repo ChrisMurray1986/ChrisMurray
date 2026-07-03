@@ -164,3 +164,40 @@ use_cases:
   UC-14-05: {draws: [{pool: labor_analytics, share: 0.05}]}
   UC-14-06: {draws: [{pool: charge_capture, share: 0.02}, {pool: ar_days, days: 0.1}]}
   UC-14-07: {draws: [{pool: cost_external, share: 0.05}]}
+
+# ENG-03: failure-mode -> primary value pool (for pricing operational findings;
+# overlapping attribution — a finding's $ = pools of the FMs it produces)
+fm_pools:
+  FM-DUPMRN: denial_prevention
+  FM-PLANMAP: denial_prevention
+  FM-ELIGLAPSE: denial_prevention
+  FM-COB: denial_prevention
+  FM-NOAUTH: denial_prevention
+  FM-MEDNEC: denial_prevention
+  FM-NOTICEMISS: audit_risk
+  FM-STATUSWRONG: denial_prevention
+  FM-CHGMISS: charge_capture
+  FM-CHGDUP: audit_risk
+  FM-UNITERR: audit_risk
+  FM-CDMSTALE: denial_prevention
+  FM-DOCGAP: doc_yield
+  FM-CODEERR: audit_risk
+  FM-DISPO: underpayment
+  FM-CLAIMDROP: denial_prevention
+  FM-REJECTUNWORKED: denial_prevention
+  FM-TFL: denial_prevention
+  FM-MISPOST: labor_posting
+  FM-DENIALHIDDEN: denial_recovery
+  FM-VARIANCEMISS: underpayment
+  FM-APPEALMISS: denial_recovery
+  FM-REBILLLOOP: labor_ar
+  FM-CREDITAGE: audit_risk
+  FM-PATIENTWRONGBILL: bad_debt_reduction
+  FM-FA-MISS: bad_debt_reduction
+  FM-ENROLLGAP: denial_prevention
+  FM-TERMSUNLOADED: underpayment
+  FM-AMENDMISS: contract_yield
+  FM-AUDITDEADLINE: audit_risk
+  FM-60DAY: audit_risk
+  FM-EDISILENT: denial_prevention
+  FM-BOTSILENT: labor_analytics

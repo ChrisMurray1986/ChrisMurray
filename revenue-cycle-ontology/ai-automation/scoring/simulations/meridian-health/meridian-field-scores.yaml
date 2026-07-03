@@ -3,16 +3,18 @@
 # meridian-assessment.yaml so the reconciliation contract is testable.
 # Evidence notes abbreviated; a real engagement captures full artifacts.
 
+source_version: 2c0952099842
+
 enterprise:
   operating_model:
     OFM-OM-01: {score: 1, notes: "VP RC owns hospital side; medical group bills separately under COO"}
     OFM-OM-03: {score: 2, notes: "no defect feed to access; back-end 'fix list' spreadsheet sighted"}
-    OFM-OM-05: {score: 1, notes: "denial committee reviews dashboards; two repeated agenda items, no owners"}
+    OFM-OM-05: {score: 1, notes: "denial committee reviews dashboards; two repeated agenda items, no owners", chain: [RFM-EXEC-03, PFM-8.5-01]}
     OFM-OM-08: {score: 1, notes: "dedicated Epic team exists but intake unranked; WQ changes ~4 weeks"}
   process_improvement:
     OFM-PI-01: {score: 2, notes: "prevention squad 'paused for backlog' three consecutive quarters"}
     OFM-PI-03: {score: 1, notes: "two AR-days figures in one exec deck (defs differ on credits)"}
-    OFM-PI-04: {score: 2, notes: "sampled RCAs: 9/10 conclude 'payer behavior' or 'user error'"}
+    OFM-PI-04: {score: 2, notes: "sampled RCAs: 9/10 conclude 'payer behavior' or 'user error'", chain: [PFM-8.1-02, RFM-DEN-01]}
     OFM-PI-06: {score: 1, notes: "productivity = touches/day; resolution untracked in 2 of 4 teams"}
   workforce:
     OFM-WF-01: {score: 1, notes: "AR follow-up turnover 22%; overtime standing in denials team"}
@@ -20,7 +22,7 @@ enterprise:
     OFM-WF-08: {score: 1, notes: "Fathom rollout rumor 'coding is next to go'; two senior coders resigned citing it"}
   enabling_technology:
     OFM-ET-02: {score: 1, notes: "two estimator products live (Epic + legacy vendor), figures disagree"}
-    OFM-ET-04: {score: 2, notes: "7 legacy bots pre-Humata, no registry; one found dead 6 weeks"}
+    OFM-ET-04: {score: 2, notes: "7 legacy bots pre-Humata, no registry; one found dead 6 weeks", chain: [PFM-14.4-01]}
     OFM-ET-06: {score: 1, notes: "portal billing adoption 24%; no owner for adoption"}
     OFM-ET-08: {score: 1, notes: "underpayment tracker = Access DB on analyst laptop"}
   vendor_outsourcing:
@@ -28,7 +30,7 @@ enterprise:
     OFM-VN-03: {score: 1, notes: "Humata telemetry good; collection agency grants no call recordings"}
     OFM-VN-04: {score: 1, notes: "early-out vendor claims all statement-cycle cash; no control group"}
   performance_governance:
-    OFM-FG-02: {score: 1, notes: "denial-rate definition differs between finance and ops reports"}
+    OFM-FG-02: {score: 1, notes: "denial-rate definition differs between finance and ops reports", chain: [PFM-13.1-01, RFM-ANL-02]}
     OFM-FG-05: {score: 1, notes: "last RCM capital ask 2023; current asks folded into IT budget"}
 
 process:
@@ -48,7 +50,7 @@ process:
   claims_payments:
     PFM-6.2-01: {score: 1, notes: "edit staff instructed 'get it out the door' at month-end"}
     PFM-6.2-02: {score: 2, notes: "top-10 edits unchanged 4 quarters; no denial→edit pipeline"}
-    PFM-6.5-02: {score: 2, notes: "filing limits in analyst memory; TFL write-offs $1.9M/yr"}
+    PFM-6.5-02: {score: 2, notes: "filing limits in analyst memory; TFL write-offs $1.9M/yr", chain: [PFM-11.2-02, RFM-BILL-03]}
     PFM-7.1-02: {score: 2, notes: "zero-pay 835s auto-adjusted for 3 payers; hidden-denial audit confirmed"}
     PFM-7.4-01: {score: 1, notes: "'contractual—other' is #3 adjustment code by dollars"}
   denials_ar:

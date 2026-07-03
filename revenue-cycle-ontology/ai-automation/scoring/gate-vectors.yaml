@@ -13,116 +13,116 @@
 
 facet_catalog:
   # ---- data ----
-  orders_digitized:        {dim: data, prompt: "Orders/referrals are digitized at intake (e-fax or scan-at-receipt), not handled as physical paper"}
-  mspq_structured:         {dim: data, prompt: "MSP questionnaire answers are captured as structured data, not scanned paper"}
-  auth_structured:         {dim: data, prompt: "Authorization details (number, CPTs, units, date span) are stored structured, not in free-text notes"}
-  denial_labels:           {dim: data, prompt: "Denial outcomes >=12 months linked to accounts with defect/owner attribution (CAP-02)"}
-  appeal_outcomes:         {dim: data, prompt: "Appeal outcomes (win/loss/dollars, by level) have been recorded historically"}
-  touch_logging:           {dim: data, prompt: "Follow-up touches/actions are logged per account (who did what, when, with what result)"}
-  clinical_structured:     {dim: data, prompt: "Labs, vitals, and orders are available as structured data feeds"}
-  notes_access:            {dim: data, prompt: "Clinical note text corpus is programmatically accessible and its use is approved"}
-  charge_linkage:          {dim: data, prompt: "Orders, eMAR, schedules, and charges can be joined at encounter level across systems"}
-  supply_chain_feed:       {dim: data, prompt: "Supply-chain/item-master feed with invoice data, linked to the CDM, is available"}
-  acks_retained:           {dim: data, prompt: "999 and 277CA acknowledgments are retained and parsed (not discarded)"}
-  lockbox_imaging:         {dim: data, prompt: "Lockbox/mail correspondence is imaged at receipt (bank imaging service or scan-at-receipt)"}
-  bank_feeds:              {dim: data, prompt: "Daily bank feeds (BAI2/API) with TRN retention are integrated"}
-  takeback_linkage:        {dim: data, prompt: "Recoupment/takeback transactions are linked to their original claims"}
-  contract_repository:     {dim: data, prompt: "All executed payer contracts and amendments are located, digitized, and centrally stored"}
-  contract_engine_loaded:  {dim: data, prompt: "Expected-reimbursement engine is loaded and verified for payers covering >=80% of volume"}
-  policy_library:          {dim: data, prompt: "Versioned, citation-linked payer policy/medical-policy library exists (CAP-04)"}
-  provider_master:         {dim: data, prompt: "Provider master is a governed single source (not spreadsheets)"}
-  gfe_stored:              {dim: data, prompt: "Good Faith Estimates and patient estimates are stored structured and linkable to final bills"}
-  consents_indexed:        {dim: data, prompt: "NSA notice-and-consent artifacts are captured, indexed, and linkable to claims"}
-  qa_history:              {dim: data, prompt: "Coding QA results history exists in analyzable (non-spreadsheet) form"}
-  audit_outcomes:          {dim: data, prompt: "External/internal audit findings and outcomes are recorded and linked to claims"}
-  plan_payment_history:    {dim: data, prompt: "Patient payment-plan histories (installments, declines, timing) are stored structured"}
-  payment_timing_history:  {dim: data, prompt: ">=24 months of payer payment-timing history is available"}
-  realization_history:     {dim: data, prompt: ">=24 months of cash-realization history by payer/cohort supports reserve modeling"}
-  deficiency_structured:   {dim: data, prompt: "HIM documentation-deficiency tracking is structured (not email)"}
-  working_drg_recorded:    {dim: data, prompt: "CDI working DRG is recorded and extractable alongside final coded DRG"}
-  clearance_outcomes:      {dim: data, prompt: "Financial-clearance outcomes (cleared/deferred/denied-payment results) are recorded as labels"}
-  statement_history:       {dim: data, prompt: "Statement response histories (channel, timing, payment response) are stored per patient"}
-  audit_channels_digitized: {dim: data, prompt: "Every audit-correspondence channel (mail, portal, fax) is digitized/polled into one intake"}
-  peer_benchmarks:         {dim: data, prompt: "Peer benchmark data (E/M distributions etc.) is licensed and available"}
-  system_copy_extracts:    {dim: data, prompt: "Every system copy of CDM/payer/provider masters (billing, estimator, MRF, engine) is extractable"}
-  card_images:             {dim: data, prompt: "Insurance card images are captured digitally at registration/pre-registration (front and back)"}
-  um_worksheets:           {dim: data, prompt: "UR criteria worksheets and determinations (incl. final status outcomes) are stored structured"}
-  edi_telemetry:           {dim: data, prompt: "EDI transaction telemetry (volumes, acks, timestamps by payer/route) is retained"}
+  orders_digitized:        {dim: data, prompt: "Orders/referrals are digitized at intake (e-fax or scan-at-receipt), not handled as physical paper", class: failure-explained}
+  mspq_structured:         {dim: data, prompt: "MSP questionnaire answers are captured as structured data, not scanned paper", class: failure-explained}
+  auth_structured:         {dim: data, prompt: "Authorization details (number, CPTs, units, date span) are stored structured, not in free-text notes", class: failure-explained}
+  denial_labels:           {dim: data, prompt: "Denial outcomes >=12 months linked to accounts with defect/owner attribution (CAP-02)", class: failure-explained}
+  appeal_outcomes:         {dim: data, prompt: "Appeal outcomes (win/loss/dollars, by level) have been recorded historically", class: failure-explained}
+  touch_logging:           {dim: data, prompt: "Follow-up touches/actions are logged per account (who did what, when, with what result)", class: failure-explained}
+  clinical_structured:     {dim: data, prompt: "Labs, vitals, and orders are available as structured data feeds", class: failure-explained}
+  notes_access:            {dim: data, prompt: "Clinical note text corpus is programmatically accessible and its use is approved", class: contractual}
+  charge_linkage:          {dim: data, prompt: "Orders, eMAR, schedules, and charges can be joined at encounter level across systems", class: failure-explained}
+  supply_chain_feed:       {dim: data, prompt: "Supply-chain/item-master feed with invoice data, linked to the CDM, is available", class: new-capability}
+  acks_retained:           {dim: data, prompt: "999 and 277CA acknowledgments are retained and parsed (not discarded)", class: failure-explained}
+  lockbox_imaging:         {dim: data, prompt: "Lockbox/mail correspondence is imaged at receipt (bank imaging service or scan-at-receipt)", class: contractual}
+  bank_feeds:              {dim: data, prompt: "Daily bank feeds (BAI2/API) with TRN retention are integrated", class: new-capability}
+  takeback_linkage:        {dim: data, prompt: "Recoupment/takeback transactions are linked to their original claims", class: failure-explained}
+  contract_repository:     {dim: data, prompt: "All executed payer contracts and amendments are located, digitized, and centrally stored", class: failure-explained}
+  contract_engine_loaded:  {dim: data, prompt: "Expected-reimbursement engine is loaded and verified for payers covering >=80% of volume", class: failure-explained}
+  policy_library:          {dim: data, prompt: "Versioned, citation-linked payer policy/medical-policy library exists (CAP-04)", class: new-capability}
+  provider_master:         {dim: data, prompt: "Provider master is a governed single source (not spreadsheets)", class: failure-explained}
+  gfe_stored:              {dim: data, prompt: "Good Faith Estimates and patient estimates are stored structured and linkable to final bills", class: failure-explained}
+  consents_indexed:        {dim: data, prompt: "NSA notice-and-consent artifacts are captured, indexed, and linkable to claims", class: failure-explained}
+  qa_history:              {dim: data, prompt: "Coding QA results history exists in analyzable (non-spreadsheet) form", class: failure-explained}
+  audit_outcomes:          {dim: data, prompt: "External/internal audit findings and outcomes are recorded and linked to claims", class: failure-explained}
+  plan_payment_history:    {dim: data, prompt: "Patient payment-plan histories (installments, declines, timing) are stored structured", class: failure-explained}
+  payment_timing_history:  {dim: data, prompt: ">=24 months of payer payment-timing history is available", class: failure-explained}
+  realization_history:     {dim: data, prompt: ">=24 months of cash-realization history by payer/cohort supports reserve modeling", class: failure-explained}
+  deficiency_structured:   {dim: data, prompt: "HIM documentation-deficiency tracking is structured (not email)", class: failure-explained}
+  working_drg_recorded:    {dim: data, prompt: "CDI working DRG is recorded and extractable alongside final coded DRG", class: failure-explained}
+  clearance_outcomes:      {dim: data, prompt: "Financial-clearance outcomes (cleared/deferred/denied-payment results) are recorded as labels", class: failure-explained}
+  statement_history:       {dim: data, prompt: "Statement response histories (channel, timing, payment response) are stored per patient", class: new-capability}
+  audit_channels_digitized: {dim: data, prompt: "Every audit-correspondence channel (mail, portal, fax) is digitized/polled into one intake", class: failure-explained}
+  peer_benchmarks:         {dim: data, prompt: "Peer benchmark data (E/M distributions etc.) is licensed and available", class: contractual}
+  system_copy_extracts:    {dim: data, prompt: "Every system copy of CDM/payer/provider masters (billing, estimator, MRF, engine) is extractable", class: failure-explained}
+  card_images:             {dim: data, prompt: "Insurance card images are captured digitally at registration/pre-registration (front and back)", class: failure-explained}
+  um_worksheets:           {dim: data, prompt: "UR criteria worksheets and determinations (incl. final status outcomes) are stored structured", class: failure-explained}
+  edi_telemetry:           {dim: data, prompt: "EDI transaction telemetry (volumes, acks, timestamps by payer/route) is retained", class: failure-explained}
 
   # ---- integration ----
-  writeback:               {dim: integration, prompt: "Write-back path exists: transactions, flags, and queue routing can be set programmatically (I3)"}
-  fabric:                  {dim: integration, prompt: "Orchestration fabric live: event bus, queue APIs, observability, non-human identity (CAP-05/06/08 = I4)"}
-  prebill_hold:            {dim: integration, prompt: "Charges/claims can be programmatically held pre-bill"}
-  statement_suppression:   {dim: integration, prompt: "Statement vendor supports per-account suppression via interface"}
-  statement_vendor_flex:   {dim: integration, prompt: "Statement vendor supports per-account channel/timing/content variation"}
-  ap_refund_path:          {dim: integration, prompt: "Refunds can be executed programmatically into AP/check-issuance systems"}
-  cds_ordering_hook:       {dim: integration, prompt: "A decision-support hook exists in the ordering/scheduling workflow"}
-  account_360:             {dim: integration, prompt: "A unified account API can assemble balance provenance across HB/PB for a coherent patient answer"}
-  queue_api:               {dim: integration, prompt: "Work-queue assignment is API-driven (not manual cherry-picking)"}
-  him_retrieval:           {dim: integration, prompt: "Medical records can be retrieved programmatically from EHR/HIM for defined request types"}
+  writeback:               {dim: integration, prompt: "Write-back path exists: transactions, flags, and queue routing can be set programmatically (I3)", class: new-capability}
+  fabric:                  {dim: integration, prompt: "Orchestration fabric live: event bus, queue APIs, observability, non-human identity (CAP-05/06/08 = I4)", class: new-capability}
+  prebill_hold:            {dim: integration, prompt: "Charges/claims can be programmatically held pre-bill", class: failure-explained}
+  statement_suppression:   {dim: integration, prompt: "Statement vendor supports per-account suppression via interface", class: new-capability}
+  statement_vendor_flex:   {dim: integration, prompt: "Statement vendor supports per-account channel/timing/content variation", class: new-capability}
+  ap_refund_path:          {dim: integration, prompt: "Refunds can be executed programmatically into AP/check-issuance systems", class: new-capability}
+  cds_ordering_hook:       {dim: integration, prompt: "A decision-support hook exists in the ordering/scheduling workflow", class: new-capability}
+  account_360:             {dim: integration, prompt: "A unified account API can assemble balance provenance across HB/PB for a coherent patient answer", class: new-capability}
+  queue_api:               {dim: integration, prompt: "Work-queue assignment is API-driven (not manual cherry-picking)", class: failure-explained}
+  him_retrieval:           {dim: integration, prompt: "Medical records can be retrieved programmatically from EHR/HIM for defined request types", class: failure-explained}
 
   # ---- connectivity ----
-  rte_eligibility:         {dim: connectivity, prompt: "Real-time 270/271 eligibility live for payers covering >=80% of volume"}
-  era_coverage:            {dim: connectivity, prompt: "ERA (835) covers >=80% of remittance volume"}
-  claim_status_edi:        {dim: connectivity, prompt: "276/277 claim status live for major payers"}
-  auth_transactions:       {dim: connectivity, prompt: "278/auth-API/portal submission channels available for major payers"}
-  portal_automation_permitted: {dim: connectivity, prompt: "Payer portal automation is viable: ToS reviewed/permitted, credentials & MFA managed", blockable: true}
-  attachment_channels:     {dim: connectivity, prompt: "Electronic attachment channels (275/portal) exist for major payers"}
-  medicaid_files:          {dim: connectivity, prompt: "State Medicaid eligibility files/API (incl. retroactive spans) are accessible"}
-  external_registries:     {dim: connectivity, prompt: "Bankruptcy/death/probate data feeds are licensed and integrated", blockable: true}
-  agency_data_rights:      {dim: connectivity, prompt: "Collection-agency/vendor contracts grant activity-data, remit-detail, and call-recording access", blockable: true}
-  vbc_data_sharing:        {dim: connectivity, prompt: "VBC payer data-sharing (claims extracts, attribution rosters) is contractually granted and flowing"}
-  bulletin_access:         {dim: connectivity, prompt: "Payer bulletins/policy pages/transmittals are systematically accessible for ingestion"}
+  rte_eligibility:         {dim: connectivity, prompt: "Real-time 270/271 eligibility live for payers covering >=80% of volume", class: new-capability}
+  era_coverage:            {dim: connectivity, prompt: "ERA (835) covers >=80% of remittance volume", class: new-capability}
+  claim_status_edi:        {dim: connectivity, prompt: "276/277 claim status live for major payers", class: new-capability}
+  auth_transactions:       {dim: connectivity, prompt: "278/auth-API/portal submission channels available for major payers", class: new-capability}
+  portal_automation_permitted: {dim: connectivity, prompt: "Payer portal automation is viable: ToS reviewed/permitted, credentials & MFA managed", blockable: true, class: contractual}
+  attachment_channels:     {dim: connectivity, prompt: "Electronic attachment channels (275/portal) exist for major payers", class: new-capability}
+  medicaid_files:          {dim: connectivity, prompt: "State Medicaid eligibility files/API (incl. retroactive spans) are accessible", class: contractual}
+  external_registries:     {dim: connectivity, prompt: "Bankruptcy/death/probate data feeds are licensed and integrated", blockable: true, class: contractual}
+  agency_data_rights:      {dim: connectivity, prompt: "Collection-agency/vendor contracts grant activity-data, remit-detail, and call-recording access", blockable: true, class: contractual}
+  vbc_data_sharing:        {dim: connectivity, prompt: "VBC payer data-sharing (claims extracts, attribution rosters) is contractually granted and flowing", class: contractual}
+  bulletin_access:         {dim: connectivity, prompt: "Payer bulletins/policy pages/transmittals are systematically accessible for ingestion", class: failure-explained}
 
   # ---- workflow ----
-  denial_taxonomy:         {dim: workflow, prompt: "A governed denial taxonomy (categories, root-cause owners) exists and is used"}
-  appeal_process:          {dim: workflow, prompt: "Appeal processes are standardized by level/payer with owned templates"}
-  cdm_governance:          {dim: workflow, prompt: "CDM changes flow through a governed request/review/approval workflow"}
-  masterdata_governance:   {dim: workflow, prompt: "Master data (payer/plan, crosswalks) changes are governed with effective-dating (14.1)"}
-  collection_policy_unified: {dim: workflow, prompt: "One POS collection policy / discount matrix applies across sites"}
-  plan_matrix_unified:     {dim: workflow, prompt: "One payment-plan and discount policy matrix applies across sites"}
-  writeoff_matrix:         {dim: workflow, prompt: "A write-off/adjustment approval authority matrix is defined and enforced"}
-  query_standardized:      {dim: workflow, prompt: "Physician query practice is standardized to the AHIMA/ACDIS brief"}
-  avoidable_day_taxonomy:  {dim: workflow, prompt: "An avoidable-day reason taxonomy exists and is consistently used"}
-  filing_matrix:           {dim: workflow, prompt: "Timely-filing limits (initial/corrected/secondary/appeal) are codified per payer/contract"}
-  kpi_dictionary:          {dim: workflow, prompt: "KPI definitions are governed in a data dictionary (13.1)"}
-  downtime_procedures:     {dim: workflow, prompt: "Downtime billing procedures are documented and have been drilled"}
-  refund_matrix:           {dim: workflow, prompt: "A refund approval matrix with thresholds is defined"}
-  placement_gates:         {dim: workflow, prompt: "Bad-debt placement gate conditions (statements, FA screen, disputes) are codified"}
-  edit_rule_governance:    {dim: workflow, prompt: "Custom claim-edit capability exists with a governed rule-change process (6.2.4)"}
-  audit_workflow:          {dim: workflow, prompt: "Audit response workflow with deadline tracking exists (12.1)"}
-  handback_queues:         {dim: workflow, prompt: "Named human hand-back queues exist for automation exceptions (GOV-05 wiring)"}
-  documentation_stability: {dim: workflow, prompt: "Clinical documentation practice in target charging domains is complete and stable (start/stop times, criteria fields)"}
-  posting_standardized:    {dim: workflow, prompt: "Payment-posting rules use one standardized adjustment/transaction-code scheme"}
+  denial_taxonomy:         {dim: workflow, prompt: "A governed denial taxonomy (categories, root-cause owners) exists and is used", class: failure-explained}
+  appeal_process:          {dim: workflow, prompt: "Appeal processes are standardized by level/payer with owned templates", class: failure-explained}
+  cdm_governance:          {dim: workflow, prompt: "CDM changes flow through a governed request/review/approval workflow", class: failure-explained}
+  masterdata_governance:   {dim: workflow, prompt: "Master data (payer/plan, crosswalks) changes are governed with effective-dating (14.1)", class: failure-explained}
+  collection_policy_unified: {dim: workflow, prompt: "One POS collection policy / discount matrix applies across sites", class: failure-explained}
+  plan_matrix_unified:     {dim: workflow, prompt: "One payment-plan and discount policy matrix applies across sites", class: failure-explained}
+  writeoff_matrix:         {dim: workflow, prompt: "A write-off/adjustment approval authority matrix is defined and enforced", class: failure-explained}
+  query_standardized:      {dim: workflow, prompt: "Physician query practice is standardized to the AHIMA/ACDIS brief", class: failure-explained}
+  avoidable_day_taxonomy:  {dim: workflow, prompt: "An avoidable-day reason taxonomy exists and is consistently used", class: failure-explained}
+  filing_matrix:           {dim: workflow, prompt: "Timely-filing limits (initial/corrected/secondary/appeal) are codified per payer/contract", class: failure-explained}
+  kpi_dictionary:          {dim: workflow, prompt: "KPI definitions are governed in a data dictionary (13.1)", class: failure-explained}
+  downtime_procedures:     {dim: workflow, prompt: "Downtime billing procedures are documented and have been drilled", class: failure-explained}
+  refund_matrix:           {dim: workflow, prompt: "A refund approval matrix with thresholds is defined", class: failure-explained}
+  placement_gates:         {dim: workflow, prompt: "Bad-debt placement gate conditions (statements, FA screen, disputes) are codified", class: failure-explained}
+  edit_rule_governance:    {dim: workflow, prompt: "Custom claim-edit capability exists with a governed rule-change process (6.2.4)", class: failure-explained}
+  audit_workflow:          {dim: workflow, prompt: "Audit response workflow with deadline tracking exists (12.1)", class: failure-explained}
+  handback_queues:         {dim: workflow, prompt: "Named human hand-back queues exist for automation exceptions (GOV-05 wiring)", class: failure-explained}
+  documentation_stability: {dim: workflow, prompt: "Clinical documentation practice in target charging domains is complete and stable (start/stop times, criteria fields)", class: failure-explained}
+  posting_standardized:    {dim: workflow, prompt: "Payment-posting rules use one standardized adjustment/transaction-code scheme", class: failure-explained}
 
   # ---- org ----
-  routing_authority:       {dim: org, prompt: "Cross-functional routing authority exists: named owners are obligated to accept prevention/policy-change actions"}
-  escalation_staffed:      {dim: org, prompt: "Live human escalation is staffed across the operating hours of patient-facing automation"}
-  hitl_capacity:           {dim: org, prompt: "Human-in-the-loop review/exception capacity is sized and staffed for planned automations"}
-  mpi_capacity:            {dim: org, prompt: "HIM MPI team has capacity to review merge candidates"}
-  dept_charge_owners:      {dim: org, prompt: "Departments have named charge owners who will work reconciliation/gap lists"}
-  ranked_list_adoption:    {dim: org, prompt: "AR management has committed to ranked worklists over aging-bucket cherry-picking"}
-  provider_adoption:       {dim: org, prompt: "A provider workflow-adoption path (champions, governance, training) exists for provider-facing tools"}
-  compliance_charter:      {dim: org, prompt: "Compliance charter covers billing-pattern surveillance and defines how findings are used"}
+  routing_authority:       {dim: org, prompt: "Cross-functional routing authority exists: named owners are obligated to accept prevention/policy-change actions", class: failure-explained}
+  escalation_staffed:      {dim: org, prompt: "Live human escalation is staffed across the operating hours of patient-facing automation", class: failure-explained}
+  hitl_capacity:           {dim: org, prompt: "Human-in-the-loop review/exception capacity is sized and staffed for planned automations", class: failure-explained}
+  mpi_capacity:            {dim: org, prompt: "HIM MPI team has capacity to review merge candidates", class: failure-explained}
+  dept_charge_owners:      {dim: org, prompt: "Departments have named charge owners who will work reconciliation/gap lists", class: failure-explained}
+  ranked_list_adoption:    {dim: org, prompt: "AR management has committed to ranked worklists over aging-bucket cherry-picking", class: failure-explained}
+  provider_adoption:       {dim: org, prompt: "A provider workflow-adoption path (champions, governance, training) exists for provider-facing tools", class: failure-explained}
+  compliance_charter:      {dim: org, prompt: "Compliance charter covers billing-pattern surveillance and defines how findings are used", class: failure-explained}
 
   # ---- governance ----
-  gov_body:                {dim: governance, prompt: "An AI governance body exists that tiers use cases and approves autonomy changes (GOV-01)"}
-  decision_logging:        {dim: governance, prompt: "Decision logging + model/prompt version control are operational (GOV-02/11, CAP-10)"}
-  model_monitoring:        {dim: governance, prompt: "Model monitoring with drift detection and auto-demotion is live (CAP-06, UC-13-04)"}
-  bias_program:            {dim: governance, prompt: "Bias/adverse-impact testing program for patient-affecting models is operational (GOV-06)"}
-  citation_harness:        {dim: governance, prompt: "A citation-verification harness validates generative citations against sources (GOV-03)"}
-  golden_sets:             {dim: governance, prompt: "Golden evaluation datasets exist (or are planned per use case) for release gating (CAP-09)"}
-  lineage:                 {dim: governance, prompt: "Data/model lineage tooling can evidence how a figure was produced (external-audit grade)"}
+  gov_body:                {dim: governance, prompt: "An AI governance body exists that tiers use cases and approves autonomy changes (GOV-01)", class: new-capability}
+  decision_logging:        {dim: governance, prompt: "Decision logging + model/prompt version control are operational (GOV-02/11, CAP-10)", class: new-capability}
+  model_monitoring:        {dim: governance, prompt: "Model monitoring with drift detection and auto-demotion is live (CAP-06, UC-13-04)", class: new-capability}
+  bias_program:            {dim: governance, prompt: "Bias/adverse-impact testing program for patient-affecting models is operational (GOV-06)", class: new-capability}
+  citation_harness:        {dim: governance, prompt: "A citation-verification harness validates generative citations against sources (GOV-03)", class: new-capability}
+  golden_sets:             {dim: governance, prompt: "Golden evaluation datasets exist (or are planned per use case) for release gating (CAP-09)", class: new-capability}
+  lineage:                 {dim: governance, prompt: "Data/model lineage tooling can evidence how a figure was produced (external-audit grade)", class: new-capability}
 
   # ---- legal ----
-  baa_program:             {dim: legal, prompt: "BAA + privacy/security review process for AI vendors and PHI flows is in place"}
-  outreach_consent:        {dim: legal, prompt: "TCPA/consent capture for automated outreach (text/voice) is implemented", blockable: true}
-  criteria_license:        {dim: legal, prompt: "MCG/InterQual license permits programmatic criteria mapping", blockable: true}
-  reference_license:       {dim: legal, prompt: "Coding references (Coding Clinic, NCCI manuals) are licensed for programmatic retrieval use", blockable: true}
-  socio_data_license:      {dim: legal, prompt: "External socioeconomic/credit data for FA scoring is licensed and legally permissible", blockable: true}
-  privilege_protocol:      {dim: legal, prompt: "A privilege protocol governs counsel-directed analytical work product"}
-  recoupment_law_matrix:   {dim: legal, prompt: "A maintained matrix of state/contract recoupment rules exists"}
-  fa_501r_review:          {dim: legal, prompt: "Financial assistance / collection policies have current 501(r) counsel review"}
+  baa_program:             {dim: legal, prompt: "BAA + privacy/security review process for AI vendors and PHI flows is in place", class: contractual}
+  outreach_consent:        {dim: legal, prompt: "TCPA/consent capture for automated outreach (text/voice) is implemented", blockable: true, class: contractual}
+  criteria_license:        {dim: legal, prompt: "MCG/InterQual license permits programmatic criteria mapping", blockable: true, class: contractual}
+  reference_license:       {dim: legal, prompt: "Coding references (Coding Clinic, NCCI manuals) are licensed for programmatic retrieval use", blockable: true, class: contractual}
+  socio_data_license:      {dim: legal, prompt: "External socioeconomic/credit data for FA scoring is licensed and legally permissible", blockable: true, class: contractual}
+  privilege_protocol:      {dim: legal, prompt: "A privilege protocol governs counsel-directed analytical work product", class: contractual}
+  recoupment_law_matrix:   {dim: legal, prompt: "A maintained matrix of state/contract recoupment rules exists", class: contractual}
+  fa_501r_review:          {dim: legal, prompt: "Financial assistance / collection policies have current 501(r) counsel review", class: contractual}
 
 # ---------------------------------------------------------------------------
 
@@ -141,7 +141,7 @@ use_cases:
   UC-01-11: {name: "Necessity screening & dx assist",     vector: {D: 3, I: 3, C: null, W: 2, O: 2, V: 2, E: 2, L: 2}, facets: [cds_ordering_hook, provider_adoption, policy_library], note: "Post-hoc screening loses most value — needs ordering-workflow hook"}
   UC-01-12: {name: "Estimate accuracy engine",            vector: {D: 4, I: 3, C: 2, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [contract_engine_loaded, rte_eligibility, gfe_stored], note: "Estimates without loaded contract terms are fiction"}
   UC-01-13: {name: "Clearance risk scoring",              vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [clearance_outcomes, hitl_capacity], note: "Deferral recommendations stay A1 forever (GOV-09)"}
-  UC-01-14: {name: "Conversational pre-registration",     vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 3}, facets: [outreach_consent, escalation_staffed], note: "Kill without staffed human escalation coverage"}
+  UC-01-14: {anchor: opportunity, name: "Conversational pre-registration",     vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 3}, facets: [outreach_consent, escalation_staffed], note: "Kill without staffed human escalation coverage"}
   UC-01-15: {name: "POS next-best-action",                vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 2}, facets: [collection_policy_unified], note: "Standardize collection policy across sites first"}
   UC-01-16: {name: "Real-time registration QA",           vector: {D: 4, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [denial_labels, writeback], note: "Rules-only version can start at D3"}
   UC-01-17: {name: "No-show revenue protection",          vector: {D: 4, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 3}, facets: [outreach_consent], note: "Kill for low-volume lines; pool with UC-01-14 infrastructure"}
@@ -160,19 +160,19 @@ use_cases:
   UC-03-04: {name: "Charge trigger surveillance",         vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [], note: "Low bar — Wave-1 candidate almost everywhere"}
   UC-03-05: {name: "CDM update automation",               vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [cdm_governance, reference_license], note: "Defer if CDM changes happen by direct edit"}
   UC-03-06: {name: "Autonomous charging",                 vector: {D: 4, I: 3, C: null, W: 4, O: 2, V: 3, E: 2, L: 1}, facets: [documentation_stability, notes_access, golden_sets], note: "Enable domain-by-domain; capture-first where documentation incomplete"}
-  UC-03-07: {name: "Device/implant reconciliation",       vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [supply_chain_feed], note: "Point-of-use capture project first if OR supplies are paper stickers"}
+  UC-03-07: {anchor: opportunity, name: "Device/implant reconciliation",       vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [supply_chain_feed], note: "Point-of-use capture project first if OR supplies are paper stickers"}
   UC-03-08: {name: "MRF/transparency pipeline",           vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 2}, facets: [contract_engine_loaded], note: "Bad terms data automates noncompliance"}
 
   # ---------------- RC-04 CDI ----------------
   UC-04-01: {name: "CDI case prioritization",             vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 2, E: 2, L: 1}, facets: [notes_access, working_drg_recorded], note: "Label backfill from encoder + query tool history"}
-  UC-04-02: {name: "Evidence surfacing",                  vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [notes_access], note: "A0, low risk, feasible early"}
+  UC-04-02: {anchor: opportunity, name: "Evidence surfacing",                  vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [notes_access], note: "A0, low risk, feasible early"}
   UC-04-03: {name: "Compliant query drafting",            vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 1}, facets: [query_standardized, citation_harness, notes_access], note: "Standardize the human query process first"}
   UC-04-04: {name: "HCC suspecting & recapture",          vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [notes_access, provider_adoption], note: "Kill if no VBC/MA population"}
   UC-04-05: {name: "DRG reconciliation triage",           vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [working_drg_recorded], note: "Trivial where CDI+coding share a platform"}
 
   # ---------------- RC-05 Coding ----------------
-  UC-05-01: {name: "Autonomous/assisted coding",          vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [golden_sets, model_monitoring, notes_access, reference_license], note: "Scope by case type; never kill wholesale"}
-  UC-05-02: {name: "DRG risk scoring",                    vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [audit_outcomes, hitl_capacity], note: "Instrument audit outcomes first if unrecorded"}
+  UC-05-01: {anchor: opportunity, name: "Autonomous/assisted coding",          vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [golden_sets, model_monitoring, notes_access, reference_license], note: "Scope by case type; never kill wholesale"}
+  UC-05-02: {anchor: opportunity, name: "DRG risk scoring",                    vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [audit_outcomes, hitl_capacity], note: "Instrument audit outcomes first if unrecorded"}
   UC-05-03: {name: "Disposition validator",               vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [], note: "Rules-only version feasible everywhere; external signals need HIE"}
   UC-05-04: {name: "Deficiency chase automation",         vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [deficiency_structured], note: "W2 the deficiency process first if ad hoc"}
   UC-05-05: {name: "Work distribution optimizer",         vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [queue_api], note: "Workflow-platform gap if queues are manual"}
@@ -180,7 +180,7 @@ use_cases:
   UC-05-07: {name: "Edit/denial coding assist",           vector: {D: 3, I: 2, C: null, W: 2, O: 2, V: 2, E: 2, L: 2}, facets: [reference_license, citation_harness], note: "License rights for programmatic reference use"}
 
   # ---------------- RC-06 Claims ----------------
-  UC-06-01: {name: "Denial risk scoring",                 vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [denial_labels, writeback], note: "Pilot A0 score display while hold policy is negotiated"}
+  UC-06-01: {anchor: opportunity, name: "Denial risk scoring",                 vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [denial_labels, writeback], note: "Pilot A0 score display while hold policy is negotiated"}
   UC-06-02: {name: "Edit resolution agent",               vector: {D: 3, I: 4, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [fabric, edit_rule_governance, golden_sets], note: "A3 only per governed class"}
   UC-06-03: {name: "Edit rule mining",                    vector: {D: 4, I: 2, C: null, W: 3, O: 1, V: 2, E: 2, L: 1}, facets: [denial_labels, edit_rule_governance], note: "Defer if edit rules are vendor-locked"}
   UC-06-04: {name: "Submission integrity reconciler",     vector: {D: 3, I: 3, C: 1, W: 3, O: 1, V: 2, E: 1, L: 1}, facets: [acks_retained], note: "Turn on ack retention, then straightforward — Wave-1"}
@@ -242,7 +242,7 @@ use_cases:
   # ---------------- RC-13 Analytics ----------------
   UC-13-01: {name: "KPI anomaly narratives",              vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [kpi_dictionary], note: "Anomaly detection on ungoverned metrics is noise"}
   UC-13-02: {name: "Reserve/net-revenue models",          vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [realization_history, lineage], note: "Shadow-run >=2 closes before reliance"}
-  UC-13-03: {name: "Cash forecasting",                    vector: {D: 4, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [payment_timing_history], note: "A0, low risk — Wave-2"}
+  UC-13-03: {anchor: opportunity, name: "Cash forecasting",                    vector: {D: 4, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [payment_timing_history], note: "A0, low risk — Wave-2"}
   UC-13-04: {name: "Governance telemetry (Wave-0)",       vector: {D: 3, I: 4, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [gov_body, fabric], note: "Every A3+ UC depends on it — build before scaling past A1"}
 
   # ---------------- RC-14 Master Data & Tech ----------------
@@ -250,6 +250,6 @@ use_cases:
   UC-14-02: {name: "Master data drift monitoring",        vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [system_copy_extracts], note: "Partial coverage disclosed, not silent"}
   UC-14-03: {name: "EDI pipeline observability (Wave-0)", vector: {D: 3, I: 2, C: 1, W: 3, O: 1, V: 2, E: 1, L: 1}, facets: [edi_telemetry], note: "Trivial data, high leverage"}
   UC-14-04: {name: "Bot fleet observability (Wave-0)",    vector: {D: 3, I: 4, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [fabric, handback_queues], note: "Hard prerequisite for any A4 RPA"}
-  UC-14-05: {name: "Automation candidate mining",         vector: {D: 3, I: 1, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [touch_logging], note: "Value scales with instrumentation coverage"}
+  UC-14-05: {anchor: opportunity, name: "Automation candidate mining",         vector: {D: 3, I: 1, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [touch_logging], note: "Value scales with instrumentation coverage"}
   UC-14-06: {name: "Downtime orchestration",              vector: {D: 3, I: 4, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [downtime_procedures, fabric], note: "Write and drill the checklist before orchestrating it"}
   UC-14-07: {name: "Vendor performance analytics",        vector: {D: 3, I: 2, C: 3, W: 2, O: 1, V: 2, E: 1, L: 2}, facets: [agency_data_rights], note: "Defer per vendor to contract renewal if rights absent"}

@@ -20,7 +20,14 @@ Reconciliation mode (--scores + --facets):
 
 Usage:
   python3 reconcile.py
-  python3 reconcile.py --scores <scores.yaml> --facets <assessment.yaml> [-o report.md]
+  python3 reconcile.py --scores <scores.yaml> --facets <assessment.yaml> \
+                       [--profile <org-profile.yaml>] [-o report.md]
+
+Hardening features (18-full-assessment-simulation.md): facet causality classes
+(ENG-01), degrades couplings for all layers (ENG-02), FM->pool pricing with
+--profile (ENG-03), explicit chain grouping via `chain:` in score entries
+(ENG-04), opportunity-anchor awareness (ENG-05), and source-version refusal
+(ENG-06; override with --allow-version-mismatch).
 """
 
 import argparse
@@ -37,6 +44,7 @@ except ImportError:
 HERE = Path(__file__).parent
 ROOT = HERE.parent
 SCORING = ROOT / "ai-automation" / "scoring"
+PROFILE = None
 
 import build_field_instrument as bfi  # noqa: E402  (sibling module)
 
@@ -68,7 +76,9 @@ def registries():
     cc = (ROOT / "10-cross-cutting-entities.md").read_text()
     fms = set(re.findall(r"(?<![A-Z])FM-[A-Z][A-Z0-9]*(?:-[A-Z]+)?", cc))
     gv = yaml.safe_load((SCORING / "gate-vectors.yaml").read_text())
-    return fms, set(gv["facet_catalog"]), set(gv["use_cases"])
+    classes = {f: m.get("class", "failure-explained") for f, m in gv["facet_catalog"].items()}
+    anchors = {u: m.get("anchor", "failure") for u, m in gv["use_cases"].items()}
+    return fms, set(gv["facet_catalog"]), set(gv["use_cases"]), classes, anchors
 
 
 def extract_bindings(items, fms, facets, ucs, sections):
@@ -113,6 +123,46 @@ def coverage(couplings, fms, facets, ucs):
             "facets_unmentioned": sorted(facets - mentioned)}
 
 
+def price_findings(couplings, flagged, chains):
+    """ENG-03: finding $ = sizes of the pools its produced FMs feed (overlapping)."""
+    import value as vm
+    vd = yaml.safe_load((SCORING / "value-drivers.yaml").read_text())
+    fm_pools = vd.get("fm_pools", {})
+    profile = yaml.safe_load(Path(PROFILE).read_text())
+    amounts, day_rec, _ = vm.size_pools(profile, vd["pools"])
+    def item_price(iid):
+        pools = {fm_pools[fm] for fm in couplings.get(iid, {}).get("produces", []) if fm in fm_pools}
+        return sum(amounts.get(p, 0.0) for p in pools), sorted(pools)
+    priced = {i: item_price(i) for i in flagged}
+    chain_priced = []
+    for members in chains:
+        pools = set()
+        for i in members:
+            pools |= {fm_pools[fm] for fm in couplings.get(i, {}).get("produces", []) if fm in fm_pools}
+        chain_priced.append((sorted(members), sum(amounts.get(p, 0.0) for p in pools), sorted(pools)))
+    return priced, chain_priced
+
+
+def build_chains(scores, flagged):
+    """ENG-04: union explicit chain: links into problem chains."""
+    parent = {i: i for i in flagged}
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+    def union(a, b):
+        if a in parent and b in parent:
+            parent[find(a)] = find(b)
+    for iid in flagged:
+        for other in (scores[iid].get("chain") or []):
+            union(iid, other)
+    groups = {}
+    for i in flagged:
+        groups.setdefault(find(i), []).append(i)
+    return sorted(groups.values(), key=len, reverse=True)
+
+
 def load_scores(path):
     doc = yaml.safe_load(Path(path).read_text())
     out = {}
@@ -128,9 +178,11 @@ def load_scores(path):
     return out
 
 
-def reconcile(couplings, scores, facet_scores, facets):
+def reconcile(couplings, scores, facet_scores, facets, classes):
     flagged = {i: s for i, s in scores.items() if s.get("score", 0) > 0}
-    weak_facets = {f for f in facets if facet_scores.get(f, 0) in (0, 1)}
+    weak_all = {f for f in facets if facet_scores.get(f, 0) in (0, 1)}
+    weak_facets = {f for f in weak_all if classes.get(f) == "failure-explained"}
+    weak_other = {f: classes[f] for f in weak_all - weak_facets}
     facet_to_findings = defaultdict(list)
     for iid in flagged:
         for f in couplings.get(iid, {}).get("facets", []):
@@ -139,11 +191,14 @@ def reconcile(couplings, scores, facet_scores, facets):
     unexplained = sorted(weak_facets - set(facet_to_findings))
     unmotivated = sorted(i for i in flagged
                          if not couplings.get(i, {}).get("facets")
-                         and not couplings.get(i, {}).get("produces"))
+                         and not couplings.get(i, {}).get("produces")
+                         and not couplings.get(i, {}).get("degrades_dims"))
     return {"n_flagged": len(flagged), "n_weak_facets": len(weak_facets),
+            "n_weak_exempt": len(weak_other),
+            "weak_exempt": weak_other,
             "explained": {f: v for f, v in sorted(explained.items())},
             "unexplained_weak_facets": unexplained,
-            "findings_without_bindings": unmotivated}
+            "findings_without_bindings": unmotivated, "flagged": flagged}
 
 
 def main():
@@ -151,11 +206,13 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--scores", help="scored field-instrument YAML")
     ap.add_argument("--facets", help="AI facet assessment YAML (score.py format)")
+    ap.add_argument("--profile", help="org financial profile YAML — prices findings via FM->pool (ENG-03)")
+    ap.add_argument("--allow-version-mismatch", action="store_true")
     ap.add_argument("-o", "--output", help="write markdown report")
     args = ap.parse_args()
 
     items = bfi.parse_ofm() + bfi.parse_pfm() + bfi.parse_rfm()
-    fms, facets, ucs = registries()
+    fms, facets, ucs, classes, anchors = registries()
     sections = master_structure()
     couplings, problems = extract_bindings(items, fms, facets, ucs, sections)
     cov = coverage(couplings, fms, facets, ucs)
@@ -174,18 +231,32 @@ def main():
         L += [f"- {p}" for p in problems]
     L.append("\n## Coverage gaps\n")
     L.append(f"- **FMs unproduced:** {', '.join(cov['fms_unproduced']) or 'none'}")
-    L.append(f"- **UCs unreferenced (no operational anchor):** "
-             f"{', '.join(cov['ucs_unreferenced']) or 'none'}")
+    unref_fail = [u for u in cov["ucs_unreferenced"] if anchors.get(u) == "failure"]
+    unref_opp = [u for u in cov["ucs_unreferenced"] if anchors.get(u) == "opportunity"]
+    L.append(f"- **UCs unreferenced, failure-anchored (real gaps):** {', '.join(unref_fail) or 'none'}")
+    L.append(f"- **UCs opportunity-anchored (by design, ENG-05):** {', '.join(unref_opp) or 'none'}")
     L.append(f"- **Facets unmentioned (reconciliation blind spots):** "
              f"{', '.join(cov['facets_unmentioned']) or 'none'}")
 
     if args.scores and args.facets:
+        doc = yaml.safe_load(Path(args.scores).read_text())
+        sv = doc.get("source_version")
+        cur = bfi.source_version()
+        if sv and sv != cur and not args.allow_version_mismatch:
+            sys.exit(f"score file source_version {sv} != current {cur} — "
+                     f"item sets may differ (ENG-06). Re-score or pass --allow-version-mismatch.")
         scores = load_scores(args.scores)
         fa = yaml.safe_load(Path(args.facets).read_text())
-        rec = reconcile(couplings, scores, fa.get("facets", {}), facets)
+        rec = reconcile(couplings, scores, fa.get("facets", {}), facets, classes)
+        chains = build_chains(scores, rec["flagged"])
+        multi = [c for c in chains if len(c) > 1]
         L.append("\n## Reconciliation with the facet assessment\n")
-        L.append(f"- Flagged findings: {rec['n_flagged']} | weak facets (0/1): {rec['n_weak_facets']}")
-        L.append(f"- Weak facets **explained** by ≥1 flagged finding: {len(rec['explained'])}")
+        L.append(f"- Score-file source version: {sv or 'unstamped'} (current {cur})")
+        L.append(f"- Flagged findings: {rec['n_flagged']} → **{len(chains)} problem chains** "
+                 f"({len(multi)} multi-layer, ENG-04)")
+        L.append(f"- Weak facets in scope (class failure-explained): {rec['n_weak_facets']} | "
+                 f"exempt by causality class (new-capability/contractual, ENG-01): {rec['n_weak_exempt']}")
+        L.append(f"- In-scope weak facets **explained** by ≥1 flagged finding: {len(rec['explained'])}")
         L.append(f"- Weak facets **unexplained** (contract violation — no linked finding): "
                  f"{len(rec['unexplained_weak_facets'])}")
         if rec["unexplained_weak_facets"]:
@@ -195,6 +266,21 @@ def main():
         if rec["findings_without_bindings"]:
             L.append(f"  - {', '.join(rec['findings_without_bindings'][:30])}"
                      + (" …" if len(rec["findings_without_bindings"]) > 30 else ""))
+        if args.profile:
+            global PROFILE
+            PROFILE = args.profile
+            sys.path.insert(0, str(SCORING))
+            priced, chain_priced = price_findings(couplings, rec["flagged"], chains)
+            top = sorted(((v, p, i) for i, (v, p) in priced.items() if v > 0), reverse=True)[:10]
+            L.append("\n### Findings priced via FM→pool (ENG-03; overlapping attribution)\n")
+            L.append("| Finding | Pools at stake | $ at stake/yr |")
+            L.append("|---|---|---|")
+            for v, p, i in top:
+                L.append(f"| {i} | {', '.join(p)} | ${v/1e6:.1f}M |")
+            cp = sorted((c for c in chain_priced if len(c[0]) > 1), key=lambda x: -x[1])[:5]
+            if cp:
+                L.append("\n**Top multi-layer chains:** " + "; ".join(
+                    f"{{{', '.join(m)}}} → ${v/1e6:.1f}M ({', '.join(p)})" for m, v, p in cp))
 
     report = "\n".join(L) + "\n"
     if args.output:

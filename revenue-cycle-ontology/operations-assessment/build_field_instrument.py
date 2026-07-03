@@ -48,23 +48,44 @@ def parse_ofm():
             items.append({"id": oid, "layer": "enterprise",
                           "group": domain.replace("_", " ").title(),
                           "prompt": e["prompt"], "signals": "", "practice": "",
-                          "degrades": e.get("degrades", [])})
+                          "degrades": e.get("degrades", []),
+                          "ask": "executive + 2 frontline interviews in the domain",
+                          "artifact": "the governance/policy artifact the prompt names (or its absence)"})
     return items
+
+
+ROLE_FALLBACK = {"2.": "ROLE-URN, ROLE-CM", "4.": "ROLE-CDIS", "8.": "ROLE-DENIAL",
+                 "11.": "ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL", "12.": "ROLE-COMPLIANCE, ROLE-AUDITCOORD",
+                 "13.": "ROLE-ANALYTICS", "14.": "ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG"}
+
+
+def couplings_file():
+    doc = yaml.safe_load((HERE / "pfm-couplings.yaml").read_text())
+    return {**doc.get("process", {}), **doc.get("role", {})}
 
 
 def parse_pfm():
     pnames = process_names()
+    coup = couplings_file()
     items = []
     for fname in FN_FILES:
         text = (HERE / fname).read_text()
-        for m in re.finditer(
-                r"^\| (PFM-(\d{1,2}\.\d)-\d\d) \| (.*?) \| (.*?) \| (.*?) \|\s*$",
-                text, re.M):
-            pid, proc, failure, signals, practice = m.groups()
-            items.append({"id": pid, "layer": "process",
-                          "group": f"{proc} {pnames.get(proc, '').strip()}".strip(),
-                          "prompt": failure.strip(), "signals": signals.strip(),
-                          "practice": practice.strip()})
+        roles = ""
+        for line in text.splitlines():
+            h = re.match(r"###\s+\d{1,2}\.\d[^—]*—\s*(.*)", line)
+            if h:
+                roles = h.group(1).strip()
+            m = re.match(r"^\| (PFM-(\d{1,2}\.\d)-\d\d) \| (.*?) \| (.*?) \| (.*?) \|\s*$", line)
+            if m:
+                pid, proc, failure, signals, practice = m.groups()
+                ask = roles or next((v for k, v in ROLE_FALLBACK.items() if proc.startswith(k)), "")
+                items.append({"id": pid, "layer": "process",
+                              "group": f"{proc} {pnames.get(proc, '').strip()}".strip(),
+                              "prompt": failure.strip(), "signals": signals.strip(),
+                              "practice": practice.strip(),
+                              "degrades": coup.get(pid, []),
+                              "ask": (ask + " + supervisor").strip(" +"),
+                              "artifact": "walk 10 sampled accounts through this process; request the report/log named in the signals"})
     return items
 
 
@@ -81,7 +102,10 @@ def parse_rfm():
             if pm:
                 items.append({"id": pm.group(1), "layer": "role", "group": role,
                               "prompt": pm.group(2).strip(), "signals": "",
-                              "practice": rbp_cell.strip()})
+                              "practice": rbp_cell.strip(),
+                              "degrades": couplings_file().get(pm.group(1), []),
+                              "ask": "observe 2+ incumbents at work + their supervisor; never accuse from the table",
+                              "artifact": "sampled work product from the judgment surface: " + row.group(3).strip()})
     return items
 
 
@@ -95,6 +119,10 @@ def build_yaml(items):
         entry = {"prompt": it["prompt"], "score": 0, "notes": ""}
         if it["signals"]:
             entry["signals"] = it["signals"]
+        if it.get("degrades"):
+            entry["degrades"] = it["degrades"]
+        if it.get("ask"):
+            entry["protocol"] = {"ask": it["ask"], "artifact": it.get("artifact", "")}
         group[it["id"]] = entry
     return out
 
@@ -166,6 +194,8 @@ HTML = r"""<!doctype html>
   </div>
   <button class="btn" id="save">Save…</button>
   <button class="btn" id="open">Open…</button>
+  <label class="prog" style="cursor:pointer"><input type="checkbox" id="prioOnly"> priority only</label>
+  <label class="prog" style="cursor:pointer" title="Role-level detail is HR-sensitive; exports aggregate by default (engagement lead only)"><input type="checkbox" id="roleDetail"> role detail in export</label>
   <button class="btn" id="exportY">Export YAML</button>
   <input type="file" id="fileIn" accept=".json">
 </div></header>
@@ -185,17 +215,32 @@ prescriptions differ by layer (structure / standard work / coaching).</footer>
 const ITEMS = __ITEMS__;
 const S = { layer:"enterprise", q:"", scores:{}, notes:{} };
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function flaggedOFMFacets(){
+  const s = new Set();
+  for (const i of ITEMS) if (i.layer==="enterprise" && (S.scores[i.id]||0)>0)
+    for (const d of (i.degrades||[])) s.add(d);
+  return s;
+}
 function render(){
   const q = S.q.toLowerCase();
+  const hot = flaggedOFMFacets();
+  const isPrio = i => i.layer!=="enterprise" && (i.degrades||[]).some(d=>hot.has(d));
+  const prioOnly = document.getElementById("prioOnly")?.checked;
   const rows = ITEMS.filter(i => i.layer===S.layer &&
+    (!prioOnly || i.layer==="enterprise" || isPrio(i)) &&
     (!q || (i.id+" "+i.group+" "+i.prompt+" "+i.signals).toLowerCase().includes(q)));
   let html = "", g = null;
+  if (S.layer==="role") html += `<p class="intro" style="border-left:3px solid var(--warning-ink);padding-left:10px">
+    <b>Sensitivity:</b> role-level findings describe behavior patterns, not individuals. Verify in
+    sampled work before scoring; exports aggregate this layer unless "role detail" is enabled by
+    the engagement lead. Never attach names.</p>`;
   for (const i of rows){
     if (i.group!==g){ g=i.group; html+=`<h2>${esc(g)}</h2>`; }
     const sc = S.scores[i.id]||0;
     html += `<div class="item scored-${sc}" data-id="${i.id}">
-      <div><div class="p"><b>${i.id}</b> — ${esc(i.prompt)}</div>
+      <div><div class="p"><b>${i.id}</b>${isPrio(i)?' <span style="color:var(--warning-ink);font-weight:700">⚑ priority</span>':""} — ${esc(i.prompt)}</div>
         ${i.signals?`<div class="sig">Signals: ${esc(i.signals)}</div>`:""}
+        ${i.ask?`<div class="sig">Ask: ${esc(i.ask)} · Artifact: ${esc(i.artifact||"")}</div>`:""}
         ${i.practice?`<div class="fix"><b>Paired practice:</b> ${esc(i.practice)}</div>`:""}</div>
       <div class="seg" data-id="${i.id}">
         ${[0,1,2].map(v=>`<button data-v="${v}" aria-pressed="${sc===v}">${["Not obs.","Partial","Present"][v]}</button>`).join("")}
@@ -241,17 +286,26 @@ document.getElementById("fileIn").onchange = async e=>{
   const f=e.target.files[0]; if(!f) return;
   const d=JSON.parse(await f.text()); S.scores=d.scores||{}; S.notes=d.notes||{}; render(); persist(); };
 document.getElementById("exportY").onclick = ()=>{
-  const lines=["# field instrument scores — generated export","# source_version: __VERSION__",
-    "# 0 = not observed, 1 = partial, 2 = clearly present"];
+  const roleDetail = document.getElementById("roleDetail").checked;
+  const lines=["# field instrument scores — generated export",
+    "# 0 = not observed, 1 = partial, 2 = clearly present",
+    'source_version: "__VERSION__"'];
   let layer=null, group=null;
   for (const i of ITEMS){
-    if (i.layer!==layer){ layer=i.layer; lines.push(`${layer}:`); group=null; }
+    if (i.layer!==layer){ layer=i.layer; lines.push(`${layer}:`); group=null;
+      if (layer==="role" && !roleDetail){
+        const rs=ITEMS.filter(x=>x.layer==="role");
+        const f1=rs.filter(x=>S.scores[x.id]===1).length, f2=rs.filter(x=>S.scores[x.id]===2).length;
+        lines.push(`  # aggregated (ENG-08): role detail withheld — enable "role detail in export" (engagement lead only)`);
+        lines.push(`  aggregate: {items: ${rs.length}, partial: ${f1}, present: ${f2}}`);
+        break; } }
     if (i.group!==group){ group=i.group; lines.push(`  "${group}":`); }
     lines.push(`    ${i.id}: {score: ${S.scores[i.id]||0}${S.notes[i.id]?`, notes: "${(S.notes[i.id]||"").replace(/"/g,"'")}"`:""}}`);
   }
   const blob=new Blob([lines.join("\n")+"\n"],{type:"text/yaml"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="field-instrument-scores.yaml"; a.click(); };
+document.getElementById("prioOnly").onchange = render;
 render();
 </script></body></html>
 """
@@ -259,7 +313,7 @@ render();
 
 def source_version():
     h = hashlib.sha1()
-    for f in ["checklist.yaml"] + FN_FILES + ["17-role-assessment.md"]:
+    for f in ["checklist.yaml", "pfm-couplings.yaml"] + FN_FILES + ["17-role-assessment.md"]:
         h.update((HERE / f).read_bytes())
     return h.hexdigest()[:12]
 
@@ -267,6 +321,12 @@ def source_version():
 def main():
     items = parse_ofm() + parse_pfm() + parse_rfm()
     version = source_version()
+    gv = yaml.safe_load((ROOT / "ai-automation" / "scoring" / "gate-vectors.yaml").read_text())
+    valid = set(gv["facet_catalog"]) | {"dim:" + d for d in
+             ("data", "integration", "connectivity", "workflow", "org", "governance", "economics", "legal")}
+    bad = [(it["id"], d) for it in items for d in it.get("degrades", []) if d not in valid]
+    if bad:
+        sys.exit(f"unknown degrades tokens: {bad}")
     by_layer = {}
     for it in items:
         by_layer[it["layer"]] = by_layer.get(it["layer"], 0) + 1

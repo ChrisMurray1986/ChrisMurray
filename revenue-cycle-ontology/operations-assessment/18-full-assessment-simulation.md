@@ -46,9 +46,23 @@ backlog (ENG-*) that falls out. Artifacts: `reconcile.py`, `couplings.yaml`,
 | W9 | **The reconciler's facet-mention extraction is string-matching.** It worked here because tokens were written into some texts deliberately; it will silently miss paraphrase forever. | Superseded by ENG-02 (explicit annotations beat NLP extraction for a governed ontology); string-matching demoted to a *lint* that suggests candidate annotations. |
 | W10 | **Instrument fatigue is real.** 278 items is a 2–3 day field effort; nothing sequences it. | **ENG-09 — Adaptive pathing:** enterprise layer first; OFM scores gate which process/role sections are worth deep sampling (e.g., OFM-PI-02 absent → light-touch the standard-work PFMs). Encode as `skip-if` hints, keep override trivial. |
 
-**Priority read:** ENG-01 + ENG-02 are the pair that makes the causal-chain reconciliation —
-the model's central promise — enforceable end-to-end (est. 2–3 days of annotation + a day of
-code). ENG-03 makes findings fundable. The rest harden field usability and safety.
+**Status (post-hardening pass):** all nine requirements are now **implemented**:
+ENG-01 facet causality classes (59 failure-explained / 23 new-capability / 16 contractual in
+gate-vectors); ENG-02 `degrades:` couplings for all 236 PFM/RFM items (`pfm-couplings.yaml`,
+token-validated at build); ENG-03 FM→pool pricing (`fm_pools` in value-drivers; `--profile`
+prices findings and chains); ENG-04 explicit `chain:` grouping with union-find and chain
+pricing; ENG-05 `anchor: opportunity` on the 8 by-design-unreferenced use cases; ENG-06
+version stamping **plus refusal** on mismatch; ENG-07 per-item ask/artifact protocol defaults
+(role-aware for the process layer); ENG-08 role-layer sensitivity banner + aggregate-only
+export default; ENG-09 adaptive priority pathing (flagged OFMs light up their coupled
+PFM/RFM items, with a priority-only filter). String-matching demoted to lint per W9.
+
+**Post-hardening Meridian rerun:** facets no finding can explain 96 → 67 → **7** (all exempt
+classes); weak facets in contract scope 58 → 30, of which 20 explained and 10 correctly flagged
+for assessor follow-up; findings with no machine binding 27 → **0**; 58 findings group into
+**50 problem chains** (5 multi-layer); top priced finding: the filing-limits chain
+{PFM-11.2-02, PFM-6.5-02} at **$32M/yr at stake** (behavior-only chains price $0 — honest:
+they degrade capability rather than produce defects).
 
 ## Scoreboard from the Meridian run
 
