@@ -82,6 +82,8 @@ its risk tier's ceiling**, regardless of model performance. Details and controls
 | `04-use-cases-cross-cutting.md` | UC-11-* … UC-14-* (Contracting, Compliance, Analytics, Data/Tech) |
 | `05-governance-assurance.md` | GOV-* controls, CAP-* enabling capabilities, lifecycle, HITL patterns |
 | `06-coverage-matrix.md` | FM-* → UC-* coverage (every failure mode countered), KPI → UC index, portfolio sequencing |
+| `07-feasibility-gating.md` | Feasibility gating framework: 8 readiness dimensions (0–4 scales), universal decision tree, pattern gate templates, autonomy/risk modifiers, remediation playbook |
+| `08-use-case-gate-profiles.md` | Per-use-case gate profiles: minimum gate vector, decisive gates, and kill/defer conditions for every UC |
 
 ## Design principles encoded in this ontology
 
