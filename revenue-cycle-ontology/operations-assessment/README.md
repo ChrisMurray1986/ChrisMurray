@@ -35,9 +35,30 @@ Relationships: `signals` (what an assessor sees/hears), `damages` (RC-* processe
 | AD-05 | Vendor & Outsourcing Management | `05-vendor-outsourcing.md` | 6 / 6 |
 | AD-06 | Performance & Financial Governance | `06-performance-governance.md` | 5 / 5 |
 
-A field checklist (`checklist.yaml`) lists every failure mode with its signal prompt for
-structured capture during interviews and observation, scored `0 = not observed / 1 = partial /
-2 = clearly present`, mirroring the facet-scoring discipline (evidence, not impressions).
+A field checklist (`checklist.yaml`) lists every enterprise failure mode with its signal prompt
+for structured capture during interviews and observation, scored `0 = not observed / 1 =
+partial / 2 = clearly present`, mirroring the facet-scoring discipline (evidence, not
+impressions).
+
+## Process- and role-level layer
+
+The enterprise domains above assess the organization; a second layer takes the same
+failure-mode/best-practice structure down the **master ontology's spine** — function → process
+→ sub-process → decision → action → role — binding every finding to master-ontology IDs
+(`PFM-1.4-01 corrupts 1.4.3.D2`, `performed-by ROLE-AUTH`, `hardened-by UC-01-09`):
+
+| File | Contents |
+|---|---|
+| `10-process-assessment-model.md` | Meta-model: PFM/PBP/RFM/RBP classes, binding verbs, the OFM→PFM→FM causal stack, altitude rules |
+| `11-fn-patient-access.md` … `16-fn-enterprise.md` | Process-level failure modes and paired practices for **all 88 processes** of the master taxonomy (1.1–14.6), each bound to the sub-processes/decisions/actions it corrupts, the `FM-*` defects it produces, and the `UC-*` automation that hardens it |
+| `17-role-assessment.md` | Role-level failure patterns and practices for every `ROLE-*` family (including ROLE-BOT — automated agents as workforce), with judgment surfaces mapped to decision IDs |
+
+The three layers compose into complete findings: **OFM** (systemic cause, files 01–06) enables
+**PFM** (local process failure, files 11–16) executed through **RFM** (role behavior, file 17),
+producing **FM-\*** (defect artifact, master ontology), costing **KPI-\*/value-pool dollars**,
+and — where a `hardened-by UC-*` binding exists — preventable by a priced automation. The fix
+prescription differs by layer: structure/incentives (OFM), standard work/tooling (PFM),
+coaching/competency (RFM); assessments that prescribe only one layer relapse.
 
 ## How this couples to the AI investment stack
 
