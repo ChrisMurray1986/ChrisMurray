@@ -85,6 +85,7 @@ its risk tier's ceiling**, regardless of model performance. Details and controls
 | `07-feasibility-gating.md` | Feasibility gating framework: 8 readiness dimensions (0–4 scales), universal decision tree, pattern gate templates, autonomy/risk modifiers, remediation playbook |
 | `08-use-case-gate-profiles.md` | Per-use-case gate profiles: minimum gate vector, decisive gates, and kill/defer conditions for every UC |
 | `09-value-model.md` | Dynamic value model: 8 value streams, shared value pools with double-count capping, disposition-gated ramps, measurement designs and benefit-ledger governance |
+| `10-cost-model.md` | Cost model: three cost layers (platform/build/run), sourcing options (vendor, rules/RPA, ML, frontier API, fine-tune, SLM) with TCO-based decision procedure, SLM break-even math, payer-connectivity pricing, cost governance |
 | `scoring/` | Runnable toolkit: feasibility scoring (`score.py`) and value modeling (`value.py`) with templates, machine-readable drivers, and example reports |
 
 ## Design principles encoded in this ontology

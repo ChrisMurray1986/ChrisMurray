@@ -19,6 +19,9 @@ remediations that unlock the most portfolio value.
 | `org-profile.template.yaml` | Financial inputs for the value model (NPR + rates; defaults provided). |
 | `value.py` | Value engine — estimates per-UC/portfolio value, joins the feasibility assessment to disposition-adjust and price locked gates. |
 | `example-org-profile.yaml`, `example-value-report.md/.html` | Value-model example for the same fictional org. |
+| `cost-drivers.yaml` | Cost model drivers: rates, volume drivers, platform assets, SLM families, per-UC sourcing bindings (`../10-cost-model.md`). |
+| `cost.py` | Cost engine — prices every UC across its viable sourcing options, picks by 3-yr TCO with strategic overrides, prices platform/payer/SLM economics; `--roi` joins the value model for net value, ROI, and payback. |
+| `example-cost-report.md/.html` | Cost-model example (with ROI join) for the same fictional org. |
 
 ## How to run
 
