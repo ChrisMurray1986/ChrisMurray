@@ -95,6 +95,12 @@ use case onto this process ontology — each use case binds to the process IDs i
 `FM-*` failure modes it prevents, and the `KPI-*` metrics it improves, under a governance
 meta-model (pattern taxonomy, autonomy levels, risk tiers).
 
+A second companion, the **Operations Assessment ontology** (`operations-assessment/`), covers
+the dimensions a full revenue cycle assessment examines alongside AI: operating model, process
+improvement, workforce, enabling technology, vendor management, and performance governance —
+structured as named failure modes (`OFM-*`, with field-observable signals) and the best
+practices (`BP-*`) that prevent them, each coupled to the AI-stack gates it degrades or enables.
+
 ## Canonical end-to-end flow
 
 ```

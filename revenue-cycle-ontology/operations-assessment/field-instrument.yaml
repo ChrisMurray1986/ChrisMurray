@@ -1,0 +1,2933 @@
+instrument: revenue-cycle operations assessment — field instrument
+scoring: 0 = not observed, 1 = partial/suspected, 2 = clearly present (evidence required)
+layers:
+  enterprise:
+    Operating Model:
+      OFM-OM-01:
+        prompt: No single executive owns the revenue cycle end-to-end
+        score: 0
+        notes: ''
+        degrades:
+        - routing_authority
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-OM-02:
+        prompt: Policies (collections, discounts, write-offs) vary by site
+        score: 0
+        notes: ''
+        degrades:
+        - collection_policy_unified
+        - plan_matrix_unified
+        - dim:workflow
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-OM-03:
+        prompt: No formal defect feedback from back end to front end
+        score: 0
+        notes: ''
+        degrades:
+        - denial_labels
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-OM-04:
+        prompt: No physician advisor structure with real authority; CDI/UM siloed
+        score: 0
+        notes: ''
+        degrades:
+        - provider_adoption
+        - um_worksheets
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-OM-05:
+        prompt: Committees meet without decision rights, budget, or follow-through
+        score: 0
+        notes: ''
+        degrades:
+        - gov_body
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-OM-06:
+        prompt: Supervisor spans >20 transactional / >12 judgment; no coaching time
+        score: 0
+        notes: ''
+        degrades:
+        - hitl_capacity
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-OM-07:
+        prompt: Centralized services without SLAs; sites run shadow staff
+        score: 0
+        notes: ''
+        degrades:
+        - ranked_list_adoption
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-OM-08:
+        prompt: Revenue cycle waits in a general IT queue; config changes take months
+        score: 0
+        notes: ''
+        degrades:
+        - writeback
+        - queue_api
+        - fabric
+        - dim:integration
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+    Process Improvement:
+      OFM-PI-01:
+        prompt: All capacity on backlog; prevention perpetually deferred
+        score: 0
+        notes: ''
+        degrades:
+        - dim:workflow
+        - routing_authority
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-PI-02:
+        prompt: No standard work; outcomes vary by individual
+        score: 0
+        notes: ''
+        degrades:
+        - dim:workflow
+        - documentation_stability
+        - posting_standardized
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-PI-03:
+        prompt: Dashboards green while operations struggle; definitions drift
+        score: 0
+        notes: ''
+        degrades:
+        - kpi_dictionary
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-PI-04:
+        prompt: Root cause analysis stops at 'payer' or 'user error'
+        score: 0
+        notes: ''
+        degrades:
+        - denial_labels
+        - denial_taxonomy
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-PI-05:
+        prompt: Improvements decay; no control plans or re-audits
+        score: 0
+        notes: ''
+        degrades:
+        - dim:economics
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-PI-06:
+        prompt: Productivity measured in touches, not resolutions
+        score: 0
+        notes: ''
+        degrades:
+        - touch_logging
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-PI-07:
+        prompt: QA inspects final output only; feedback reaches source late or never
+        score: 0
+        notes: ''
+        degrades:
+        - qa_history
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+    Workforce:
+      OFM-WF-01:
+        prompt: Turnover > ~25% transactional; standing overtime; vacancy spiral
+        score: 0
+        notes: ''
+        degrades:
+        - hitl_capacity
+        - escalation_staffed
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-WF-02:
+        prompt: Onboarding is shadowing; no certification before production
+        score: 0
+        notes: ''
+        degrades:
+        - dim:org
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-WF-03:
+        prompt: No career ladder; mastery has no rungs; best performers exit the work
+        score: 0
+        notes: ''
+        degrades:
+        - dim:org
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-WF-04:
+        prompt: Volume standards without quality weighting (or no standards)
+        score: 0
+        notes: ''
+        degrades:
+        - hitl_capacity
+        - qa_history
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-WF-05:
+        prompt: Single-person knowledge dependencies on critical processes
+        score: 0
+        notes: ''
+        degrades:
+        - dim:org
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-WF-06:
+        prompt: Incentives reward cash/volume in ways that distort write-offs or picking
+        score: 0
+        notes: ''
+        degrades:
+        - writeoff_matrix
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-WF-07:
+        prompt: Remote work without instrumentation, coaching rhythm, or QA parity
+        score: 0
+        notes: ''
+        degrades:
+        - dim:org
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-WF-08:
+        prompt: Automation framed/rumored as layoffs; experts disengaging or leaving
+        score: 0
+        notes: ''
+        degrades:
+        - provider_adoption
+        - hitl_capacity
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+    Enabling Technology:
+      OFM-ET-01:
+        prompt: EHR workqueues/edits at install defaults; ownerless queue sprawl
+        score: 0
+        notes: ''
+        degrades:
+        - queue_api
+        - dim:workflow
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-02:
+        prompt: Overlapping bolt-ons with contradictory data and double fees
+        score: 0
+        notes: ''
+        degrades:
+        - system_copy_extracts
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-03:
+        prompt: Versions behind; licensed features unused; upgrades feared
+        score: 0
+        notes: ''
+        degrades:
+        - dim:integration
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-04:
+        prompt: Unregistered/unmonitored bots; silent failures discovered downstream
+        score: 0
+        notes: ''
+        degrades:
+        - handback_queues
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-05:
+        prompt: Patient-facing agents lack integrated account context (CTI/CRM gap)
+        score: 0
+        notes: ''
+        degrades:
+        - account_360
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-06:
+        prompt: Patient-facing tech live with low adoption and no adoption owner
+        score: 0
+        notes: ''
+        degrades:
+        - statement_history
+        - statement_vendor_flex
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-07:
+        prompt: Undocumented point-to-point interfaces; single-engineer dependency
+        score: 0
+        notes: ''
+        degrades:
+        - fabric
+        - edi_telemetry
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-08:
+        prompt: Critical processes run on spreadsheets/Access outside governance
+        score: 0
+        notes: ''
+        degrades:
+        - masterdata_governance
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+    Vendor Outsourcing:
+      OFM-VN-01:
+        prompt: Vendor footprint grew by accretion; no sourcing strategy; scope overlaps
+        score: 0
+        notes: ''
+        degrades:
+        - dim:economics
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-VN-02:
+        prompt: Auto-renewals; SLAs unenforced; rates stale vs volume
+        score: 0
+        notes: ''
+        degrades:
+        - dim:legal
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-VN-03:
+        prompt: No data/telemetry/recording rights; oversight via vendor-authored decks
+        score: 0
+        notes: ''
+        degrades:
+        - agency_data_rights
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-VN-04:
+        prompt: Contingency attribution disputed; no control groups; double-claimed dollars
+        score: 0
+        notes: ''
+        degrades:
+        - dim:economics
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-VN-05:
+        prompt: No retained SME/QA for outsourced functions; insourcing impossible
+        score: 0
+        notes: ''
+        degrades:
+        - dim:org
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-VN-06:
+        prompt: Global delivery without unified QA, SOP parity, or attrition visibility
+        score: 0
+        notes: ''
+        degrades:
+        - hitl_capacity
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+    Performance Governance:
+      OFM-FG-01:
+        prompt: RCM budgeted as pure cost; cuts made without yield modeling
+        score: 0
+        notes: ''
+        degrades:
+        - dim:economics
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-FG-02:
+        prompt: Multiple definitions of the same KPI in circulation
+        score: 0
+        notes: ''
+        degrades:
+        - kpi_dictionary
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-FG-03:
+        prompt: Month-end close dominates; reserves opaque; analysts consumed by close
+        score: 0
+        notes: ''
+        degrades:
+        - realization_history
+        - lineage
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-FG-04:
+        prompt: Benchmarks used without definition/case-mix alignment
+        score: 0
+        notes: ''
+        degrades:
+        - peer_benchmarks
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-FG-05:
+        prompt: No standing investment roadmap; episodic unquantified capital asks
+        score: 0
+        notes: ''
+        degrades:
+        - dim:economics
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+  process:
+    1.1 Scheduling & Appointment Management:
+      PFM-1.1-01:
+        prompt: Orders accepted incomplete; validation (1.1.1.A3–A4) skipped under queue pressure → downstream FM-MEDNEC,
+          FM-NOAUTH
+        score: 0
+        notes: ''
+        signals: '"We schedule it and sort it out later"; ordering-office callbacks post-service; unsigned orders
+          found at coding'
+        degrades:
+        - orders_digitized
+        protocol:
+          ask: ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.1-02:
+        prompt: 'Slot-first scheduling: network/site rules (1.1.2.A3, D1) checked after booking or never'
+        score: 0
+        notes: ''
+        signals: OON surprises at check-in; site-of-care denials; schedulers unaware plan networks differ
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.1-03:
+        prompt: Reschedules break auth linkage (1.1.4.A1, D1) — date moved, auth span not re-checked
+        score: 0
+        notes: ''
+        signals: Auth-date-mismatch denials cluster on rescheduled cases
+        degrades:
+        - auth_structured
+        protocol:
+          ask: ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.1-04:
+        prompt: Unscheduled/ED arrivals bypass quick-reg discipline (1.1.5.A1–A2); EMTALA fear suppresses *all*
+          data capture
+        score: 0
+        notes: ''
+        signals: Bedside registration never completed; "ED accounts are always a mess"
+        degrades:
+        - card_images
+        - mspq_structured
+        protocol:
+          ask: ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.2 Pre-Registration:
+      PFM-1.2-01:
+        prompt: Search-then-create discipline absent; duplicate MRNs created at 1.2.1.A3 → FM-DUPMRN
+        score: 0
+        notes: ''
+        signals: MPI duplicate queue growing; "easier to make a new record"
+        degrades:
+        - mpi_capacity
+        protocol:
+          ask: ROLE-PREREG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.2-02:
+        prompt: Plan mapping guessed at 1.2.2.A3; card images not captured (A2) → FM-PLANMAP
+        score: 0
+        notes: ''
+        signals: Top eligibility-denial cause is wrong plan code; mapping folklore ("BCBS PPO usually means…")
+        degrades:
+        - card_images
+        - denial_labels
+        protocol:
+          ask: ROLE-PREREG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.2-03:
+        prompt: MSPQ administered as a read-aloud script; answers defaulted (1.2.4.A1, D1) → FM-COB
+        score: 0
+        notes: ''
+        signals: Identical MSPQ answers across accounts; MSP denials on working-aged patients
+        degrades:
+        - mspq_structured
+        protocol:
+          ask: ROLE-PREREG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.2-04:
+        prompt: Coverage order set by card order, not COB rules (1.2.2.D1) → FM-COB
+        score: 0
+        notes: ''
+        signals: Birthday-rule errors on dependents; secondary billed as primary
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-PREREG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.3 Eligibility & Benefits Verification:
+      PFM-1.3-01:
+        prompt: 271 read as active/inactive only; benefits detailing (1.3.3.A1–A5) skipped → benefit-max and site-of-care
+          denials
+        score: 0
+        notes: ''
+        signals: Benefit fields defaulted; carve-outs discovered at denial
+        degrades:
+        - rte_eligibility
+        protocol:
+          ask: ROLE-VERIF + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.3-02:
+        prompt: Day-of-service re-verification (1.3.1.A1 cadence) not run; T-3 result trusted at arrival → FM-ELIGLAPSE
+        score: 0
+        notes: ''
+        signals: Term-date denials on month-boundary services
+        degrades:
+        - rte_eligibility
+        protocol:
+          ask: ROLE-VERIF + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.3-03:
+        prompt: Plan-change signals in 271 ignored (1.3.1.D2) — MA replacement, managed Medicaid assignment missed
+          → FM-NOAUTH downstream
+        score: 0
+        notes: ''
+        signals: '"Medicare" billed while 271 showed MA plan; auth denials citing wrong payer'
+        degrades:
+        - rte_eligibility
+        protocol:
+          ask: ROLE-VERIF + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.3-04:
+        prompt: Coverage discovery (1.3.5) run only at write-off, not at self-pay classification → FM-FA-MISS, lost
+          conversion
+        score: 0
+        notes: ''
+        signals: Retro Medicaid found by collection agency, not by access
+        degrades:
+        - clearance_outcomes
+        - medicaid_files
+        protocol:
+          ask: ROLE-VERIF + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.4 Prior Authorization, Pre-Certification & Referral Management:
+      PFM-1.4-01:
+        prompt: '"No auth required" concluded from stale grid; proof not captured (1.4.1.A3, D1) → FM-NOAUTH'
+        score: 0
+        notes: ''
+        signals: Auth denials on services the grid said were exempt; no evidence trail for appeals
+        degrades:
+        - policy_library
+        - auth_structured
+        protocol:
+          ask: ROLE-AUTH + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.4-02:
+        prompt: Clinical packets under-built (1.4.2.A1, D1); submit-and-pray, then P2P scramble
+        score: 0
+        notes: ''
+        signals: High auth-denial→P2P rate; criteria gaps discovered by the payer
+        degrades:
+        - notes_access
+        - um_worksheets
+        protocol:
+          ask: ROLE-AUTH + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.4-03:
+        prompt: Pending auths unworked until day-of-service (1.4.3.A1, D1–D2); escalation ad hoc
+        score: 0
+        notes: ''
+        signals: Day-of-service scrambles; reschedule-vs-proceed decisions undocumented
+        degrades:
+        - auth_structured
+        protocol:
+          ask: ROLE-AUTH + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.4-04:
+        prompt: Performed ≠ authorized never reconciled (1.4.6.A1–A3, D1) — intraop changes, date moves → FM-NOAUTH
+          (mismatch)
+        score: 0
+        notes: ''
+        signals: CPT-mismatch denials on surgical cases; claims released on hold-expiry autopilot
+        degrades:
+        - auth_structured
+        protocol:
+          ask: ROLE-AUTH + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.5 Medical Necessity & Coverage Screening:
+      PFM-1.5-01:
+        prompt: Necessity check post-hoc, not at ordering (1.5.1.A1); provider never sees the failure → FM-MEDNEC
+        score: 0
+        notes: ''
+        signals: ABN volume near zero at a Medicare-heavy site; necessity denials instead
+        degrades:
+        - cds_ordering_hook
+        - provider_adoption
+        protocol:
+          ask: ROLE-VERIF/ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.5-02:
+        prompt: ABNs issued blank/late/en-masse (1.5.2.A1–A2, D1) — invalid when needed
+        score: 0
+        notes: ''
+        signals: Signed ABNs missing estimates or reasons; "everyone gets one" practice
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-VERIF/ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.5-03:
+        prompt: Research/trial services billed to payer (1.5.3.A3) — QCT rules unapplied
+        score: 0
+        notes: ''
+        signals: Study items on commercial claims; sponsor-billable charges written off
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-VERIF/ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.6 Price Estimation & Good Faith Estimates:
+      PFM-1.6-01:
+        prompt: Estimates from chargemaster only; contract terms and accumulators ignored (1.6.1.A2)
+        score: 0
+        notes: ''
+        signals: Estimate-vs-final variance >30%; staff apologize for estimates
+        degrades:
+        - contract_engine_loaded
+        protocol:
+          ask: ROLE-ESTIM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.6-02:
+        prompt: GFE issued only on request; timing/content rules missed (1.6.2.A1–A3)
+        score: 0
+        notes: ''
+        signals: 'GFE compliance sampled: late or absent for self-pay schedulings'
+        degrades:
+        - gfe_stored
+        protocol:
+          ask: ROLE-ESTIM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.6-03:
+        prompt: Estimates not stored/versioned (1.6.1.A4, 1.6.3.A2) — dispute defense and accuracy loop impossible
+        score: 0
+        notes: ''
+        signals: '"We don''t keep them"; NSA disputes lost by default'
+        degrades:
+        - gfe_stored
+        protocol:
+          ask: ROLE-ESTIM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.7 Financial Counseling & Financial Clearance:
+      PFM-1.7-01:
+        prompt: Clearance = checklist theater; disposition (1.7.1.D1, 1.7.5) not enforced — uncleared electives
+          proceed silently
+        score: 0
+        notes: ''
+        signals: '"Cleared" accounts missing auth/benefits; defer policy exists, never invoked'
+        degrades:
+        - clearance_outcomes
+        protocol:
+          ask: ROLE-FINCOUNS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.7-02:
+        prompt: Counseling = payment demand; assistance screening (1.7.2.A3) skipped → FM-FA-MISS
+        score: 0
+        notes: ''
+        signals: FA applications originate in collections, not counseling; POS scripts purely collective
+        degrades:
+        - fa_501r_review
+        protocol:
+          ask: ROLE-FINCOUNS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.7-03:
+        prompt: Medicaid/exchange applications started, never tracked (1.7.3.A2, D1)
+        score: 0
+        notes: ''
+        signals: Pending-app accounts age into bad debt; approval windows missed
+        degrades:
+        - clearance_outcomes
+        - medicaid_files
+        protocol:
+          ask: ROLE-FINCOUNS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.8 Point-of-Service (POS) Collections:
+      PFM-1.8-01:
+        prompt: The ask never happens (1.8.1.A1–A2) — discomfort, no scripting, no expectation
+        score: 0
+        notes: ''
+        signals: POS yield <30% of estimated collectible; "we don't really ask"
+        degrades:
+        - collection_policy_unified
+        protocol:
+          ask: ROLE-REGISTRAR + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.8-02:
+        prompt: Cash controls informal (1.8.3.A1–A3) — shared drawers, unreconciled days
+        score: 0
+        notes: ''
+        signals: Overs/shorts unexplained; single-signature counts
+        degrades:
+        - posting_standardized
+        protocol:
+          ask: ROLE-REGISTRAR + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    1.9 Registration / Arrival / Admission (ADT):
+      PFM-1.9-01:
+        prompt: Identity check compressed to name+DOB confirmation (1.9.1.A1–A2) → FM-DUPMRN, wrong-patient risk
+        score: 0
+        notes: ''
+        signals: ID scan rate low; overlays discovered by HIM
+        degrades:
+        - mpi_capacity
+        - card_images
+        protocol:
+          ask: ROLE-REGISTRAR, ROLE-PA-QA + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.9-02:
+        prompt: Patient type/financial class guessed (1.9.2.A4, D1) — rework cascades to billing
+        score: 0
+        notes: ''
+        signals: Patient-type corrections post-discharge; recurring/series accounts built wrong
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-REGISTRAR, ROLE-PA-QA + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.9-03:
+        prompt: Regulatory notices missed or batch-signed (1.9.3.A1–A4) → FM-NOTICEMISS
+        score: 0
+        notes: ''
+        signals: IMM second copies absent; MOON delivered at hour 30; signature piles
+        degrades:
+        - consents_indexed
+        protocol:
+          ask: ROLE-REGISTRAR, ROLE-PA-QA + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.9-04:
+        prompt: Accident/TPL details not captured at the desk (1.9.6.A1–A2) → FM-COB, lost liens
+        score: 0
+        notes: ''
+        signals: WC claims missing employer/claim number; liability discovered at denial
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-REGISTRAR, ROLE-PA-QA + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.9-05:
+        prompt: Registration QA samples courtesy, not denial-linked accuracy (1.9.5.A1–A3)
+        score: 0
+        notes: ''
+        signals: QA scores 98% while eligibility denials climb
+        degrades:
+        - denial_labels
+        - qa_history
+        protocol:
+          ask: ROLE-REGISTRAR, ROLE-PA-QA + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    2.1 Admission Status Determination:
+      PFM-2.1-01:
+        prompt: First status review hours late (2.1.1.A1); status set by bed placement, not criteria → FM-STATUSWRONG
+        score: 0
+        notes: ''
+        signals: OBS-to-IP flips after midnight; CC44 volume high or (worse) zero
+        degrades:
+        - um_worksheets
+        - clinical_structured
+        protocol:
+          ask: ROLE-URN, ROLE-PHYSADV + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-2.1-02:
+        prompt: Criteria worksheets completed as after-the-fact paperwork (2.1.1.A2) — determinations don't match
+          documentation
+        score: 0
+        notes: ''
+        signals: Worksheets identical across cases; criteria cited absent from chart
+        degrades:
+        - um_worksheets
+        protocol:
+          ask: ROLE-URN, ROLE-PHYSADV + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-2.1-03:
+        prompt: Physician advisor referrals late/rubber-stamped (2.1.4.A1–A3, D1)
+        score: 0
+        notes: ''
+        signals: Advisor agrees with requestor >95%; referrals post-discharge
+        degrades:
+        - provider_adoption
+        - um_worksheets
+        protocol:
+          ask: ROLE-URN, ROLE-PHYSADV + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    2.2 Concurrent Review & Payer Notification:
+      PFM-2.2-01:
+        prompt: Notification windows missed on weekends/holidays (2.2.1.A1, D1)
+        score: 0
+        notes: ''
+        signals: Late-notification denials cluster Mon/Tue admissions
+        degrades:
+        - dim:org
+        protocol:
+          ask: ROLE-URN, ROLE-CM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-2.2-02:
+        prompt: Reviews submitted on payer cadence but content-thin (2.2.2.A1); auth days run out unnoticed (2.2.3.A1,
+          D1)
+        score: 0
+        notes: ''
+        signals: Concurrent denials for "insufficient clinical"; unauthorized days at discharge
+        degrades:
+        - um_worksheets
+        - auth_structured
+        protocol:
+          ask: ROLE-URN, ROLE-CM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-2.2-03:
+        prompt: P2P offers missed or unprepped (2.2.4.A1–A2)
+        score: 0
+        notes: ''
+        signals: P2P conversion low; attendings learn of P2P after window
+        degrades:
+        - provider_adoption
+        protocol:
+          ask: ROLE-URN, ROLE-CM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    2.3 Discharge & Level-of-Care Transitions:
+      PFM-2.3-01:
+        prompt: Avoidable days untracked or blamed uniformly on payers (2.3.A1)
+        score: 0
+        notes: ''
+        signals: No taxonomy; "payer delay" = 90% of entries
+        degrades:
+        - avoidable_day_taxonomy
+        protocol:
+          ask: ROLE-CM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-2.3-02:
+        prompt: Discharge-appeal notices (IMM second copy) missed (2.3.A3, D1) → FM-NOTICEMISS
+        score: 0
+        notes: ''
+        signals: QIO appeals reveal notice gaps
+        degrades:
+        - consents_indexed
+        protocol:
+          ask: ROLE-CM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    2.4 Retrospective Utilization Review:
+      PFM-2.4-01:
+        prompt: Held accounts reviewed for billability, not defensibility (2.4.A1) — bill-and-hope
+        score: 0
+        notes: ''
+        signals: Status-related denials on held accounts; self-denial/rebill (2.1.3.D1) never used
+        degrades:
+        - um_worksheets
+        protocol:
+          ask: ROLE-URN + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    3.1 Charge Generation & Entry:
+      PFM-3.1-01:
+        prompt: Interface/trigger failures repaired silently, root cause never fixed (3.1.1.A3, D1) → FM-CHGMISS
+        score: 0
+        notes: ''
+        signals: Same interface queue cleared weekly; orphan charges recurring
+        degrades:
+        - charge_linkage
+        - edi_telemetry
+        protocol:
+          ask: ROLE-DEPTCHG, ROLE-CHGANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-3.1-02:
+        prompt: 'High-complexity areas run folk charging: infusion hierarchy, ED leveling inconsistent (3.1.3.A2,
+          A4)'
+        score: 0
+        notes: ''
+        signals: Leveling distribution differs by shift; infusion charges flat regardless of documentation
+        degrades:
+        - documentation_stability
+        protocol:
+          ask: ROLE-DEPTCHG, ROLE-CHGANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-3.1-03:
+        prompt: Drug units converted by habit (3.1.3.A3) → FM-UNITERR; waste undocumented
+        score: 0
+        notes: ''
+        signals: MUE hits; JW/JZ absent; pharmacist never in the loop
+        degrades:
+        - masterdata_governance
+        protocol:
+          ask: ROLE-DEPTCHG, ROLE-CHGANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-3.1-04:
+        prompt: Provider encounters closed without charges; missing-encounter list unworked (3.1.4.A2–A3, D1)
+        score: 0
+        notes: ''
+        signals: Profee charge lag >5 days; "the doctors will get to it"
+        degrades:
+        - dept_charge_owners
+        - provider_adoption
+        protocol:
+          ask: ROLE-DEPTCHG, ROLE-CHGANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    3.2 Charge Reconciliation:
+      PFM-3.2-01:
+        prompt: Daily reconciliation attested, not performed (3.2.1.A1–A2)
+        score: 0
+        notes: ''
+        signals: Attestations 100%, late charges anyway; no source-log comparison evident
+        degrades:
+        - dept_charge_owners
+        - charge_linkage
+        protocol:
+          ask: ROLE-DEPTCHG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-3.2-02:
+        prompt: Late charges written off silently below threshold (3.2.3.D1) — threshold nobody set
+        score: 0
+        notes: ''
+        signals: Late-charge write-off code among top adjustments
+        degrades:
+        - writeoff_matrix
+        protocol:
+          ask: ROLE-DEPTCHG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    3.3 Charge Description Master (CDM) Management:
+      PFM-3.3-01:
+        prompt: CDM changes by direct edit; review workflow (3.3.1.A2) bypassed → FM-CDMSTALE
+        score: 0
+        notes: ''
+        signals: No change log; downstream systems out of sync (3.3.4.A2)
+        degrades:
+        - cdm_governance
+        - system_copy_extracts
+        protocol:
+          ask: ROLE-CDMANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-3.3-02:
+        prompt: Annual code update = find-and-replace under deadline (3.3.2.A1–A2); no claim testing
+        score: 0
+        notes: ''
+        signals: Q1 edit spikes every year
+        degrades:
+        - cdm_governance
+        - reference_license
+        protocol:
+          ask: ROLE-CDMANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    3.4 Revenue Integrity Auditing:
+      PFM-3.4-01:
+        prompt: Pre-bill review queues staffed as overflow; DNFB pressure empties them unread (3.4.1.A2) → FM-CHGDUP
+          and unit errors escape
+        score: 0
+        notes: ''
+        signals: Review bypass rate unmeasured; "we release at day 5 regardless"
+        degrades:
+        - prebill_hold
+        - hitl_capacity
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-3.4-02:
+        prompt: Retro audits find overcharges, refund path unclear (3.4.2.A2) → FM-60DAY exposure
+        score: 0
+        notes: ''
+        signals: Findings sit in spreadsheets; compliance learns late
+        degrades:
+        - audit_outcomes
+        - audit_workflow
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    3.5 Price Transparency Operations:
+      PFM-3.5-01:
+        prompt: MRF published from stale extracts (3.5.A1); nobody owns refresh
+        score: 0
+        notes: ''
+        signals: File dates months old; estimator and MRF disagree
+        degrades:
+        - system_copy_extracts
+        - contract_engine_loaded
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    4.1 Concurrent Documentation Review:
+      PFM-4.1-01:
+        prompt: Review prioritization by payer/LOS habit (4.1.A1); high-opportunity charts unseen → FM-DOCGAP
+        score: 0
+        notes: ''
+        signals: Review rate high, query yield low
+        degrades:
+        - notes_access
+        - working_drg_recorded
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    4.2 Physician Query Process:
+      PFM-4.2-01:
+        prompt: Leading or drive-by queries (4.2.A1); answers not documented in record (4.2.A3)
+        score: 0
+        notes: ''
+        signals: Query templates suggest diagnoses; coded dx present only in query threads
+        degrades:
+        - query_standardized
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-4.2-02:
+        prompt: Query non-response tolerated (4.2.A2, D1) — escalation path exists on paper
+        score: 0
+        notes: ''
+        signals: Response rate <70%; same providers forever
+        degrades:
+        - provider_adoption
+        - query_standardized
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    4.3 CDI–Coding DRG Reconciliation:
+      PFM-4.3-01:
+        prompt: DRG mismatches resolved by seniority, not evidence (4.3.A2, D1)
+        score: 0
+        notes: ''
+        signals: Reconciliation log shows one side always wins
+        degrades:
+        - working_drg_recorded
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    4.4 Risk Adjustment / HCC Documentation Programs:
+      PFM-4.4-01:
+        prompt: HCC capture pursued without MEAT support (4.4.A2–A3) — compliance risk masquerading as performance
+        score: 0
+        notes: ''
+        signals: Suspect lists coded wholesale; RAF up, audit exposure up
+        degrades:
+        - notes_access
+        - dim:governance
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    4.5 CDI Metrics, Education & Escalation:
+      PFM-4.5-01:
+        prompt: CDI metrics = activity counts (4.5.A1); impact never tied to outcomes
+        score: 0
+        notes: ''
+        signals: Query rate celebrated; CMI flat
+        degrades:
+        - kpi_dictionary
+        protocol:
+          ask: ROLE-REVINT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.1 Record Preparation & Work Distribution:
+      PFM-5.1-01:
+        prompt: DNFC managed by exhortation; deficiency chase manual (5.1.1.A2, D1)
+        score: 0
+        notes: ''
+        signals: Coders idle while charts incomplete; deficiency emails
+        degrades:
+        - deficiency_structured
+        protocol:
+          ask: ROLE-HIM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-5.1-02:
+        prompt: Queue assignment by grabbing (5.1.2.A1); aging and credentials mismatched
+        score: 0
+        notes: ''
+        signals: Hard cases age; simple cases cherry-picked
+        degrades:
+        - queue_api
+        protocol:
+          ask: ROLE-HIM + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.2 Inpatient Facility Coding:
+      PFM-5.2-01:
+        prompt: 'Defensive undercoding: CCs/MCCs left uncoded to avoid audit anxiety (5.2.A1, A3) → FM-CODEERR (under),
+          CMI leakage'
+        score: 0
+        notes: ''
+        signals: CC/MCC capture below peers; coders cite "playing it safe"
+        degrades:
+        - qa_history
+        protocol:
+          ask: ROLE-CODER-IP/OP/PRO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-5.2-02:
+        prompt: Disposition defaulted (5.2.A4, D2) → FM-DISPO transfer-rule errors
+        score: 0
+        notes: ''
+        signals: Disposition corrections post-payment; home-health dispositions rare vs reality
+        degrades:
+        - working_drg_recorded
+        protocol:
+          ask: ROLE-CODER-IP/OP/PRO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-5.2-03:
+        prompt: Retrospective queries bypassed under productivity pressure (5.2.D1)
+        score: 0
+        notes: ''
+        signals: Codeable-as-documented used to close ambiguous charts
+        degrades:
+        - query_standardized
+        protocol:
+          ask: ROLE-CODER-IP/OP/PRO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.3 Outpatient Facility Coding:
+      PFM-5.3-01:
+        prompt: 'Modifier reflexes: 59/25 appended to clear edits (5.3.A2, 5.4.D1) → FM-CODEERR (over), audit exposure'
+        score: 0
+        notes: ''
+        signals: Modifier rates outliers vs peers; edit-clearance correlates with modifier use
+        degrades:
+        - qa_history
+        protocol:
+          ask: ROLE-CODER-IP/OP/PRO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.4 Professional Fee Coding:
+      PFM-5.4-01:
+        prompt: E/M leveled by habit/template, not MDM (5.4.A1)
+        score: 0
+        notes: ''
+        signals: Level distribution near-uniform per provider; cloned notes
+        degrades:
+        - qa_history
+        - provider_adoption
+        protocol:
+          ask: ROLE-CODER-IP/OP/PRO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.5 Specialty Coding:
+      PFM-5.5-01:
+        prompt: 'Specialty coding by generalists: anesthesia units, interventional bundling, PDPM/OASIS rules applied
+          from memory (5.5.A1–A4)'
+        score: 0
+        notes: ''
+        signals: Specialty denial/audit rates outliers; no credentialed specialty coverage or backup
+        degrades:
+        - reference_license
+        - dim:org
+        protocol:
+          ask: ROLE-CODER-IP/OP/PRO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.6 Computer-Assisted & Autonomous Coding Oversight:
+      PFM-5.6-01:
+        prompt: CAC suggestions accepted wholesale (5.6.A1); autonomous eligibility never revisited (5.6.A2–A3)
+        score: 0
+        notes: ''
+        signals: Acceptance rate ≈100%; no per-doc-type precision tracking
+        degrades:
+        - golden_sets
+        - model_monitoring
+        protocol:
+          ask: ROLE-CODEAUD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.7 Coding Quality Review & Education:
+      PFM-5.7-01:
+        prompt: QA samples randomly, findings die in spreadsheets (5.7.A2–A3, D1)
+        score: 0
+        notes: ''
+        signals: Same error types quarter after quarter
+        degrades:
+        - qa_history
+        protocol:
+          ask: ROLE-CODEAUD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    5.8 Coding Support for Edits, Denials & Audits:
+      PFM-5.8-01:
+        prompt: Coding-denial support ad hoc; edit resolutions undocumented (5.8.A1–A2)
+        score: 0
+        notes: ''
+        signals: Coding edits resolved differently per coder; appeal rationales thin
+        degrades:
+        - reference_license
+        - denial_taxonomy
+        protocol:
+          ask: ROLE-CODEAUD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    6.1 Claim Generation:
+      PFM-6.1-01:
+        prompt: Bill-hold expiry ships dirty claims (6.1.1.D1); hold reasons unworked, just waited-out
+        score: 0
+        notes: ''
+        signals: Claims release at day N regardless; DNFB huddle reviews totals, not blockers
+        degrades:
+        - prebill_hold
+        - dim:workflow
+        protocol:
+          ask: ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-6.1-02:
+        prompt: Payment-window/series rules hand-applied (6.1.3.A1–A3, D1) — 72-hour combines missed or wrong
+        score: 0
+        notes: ''
+        signals: Window-rule denials and duplicate-billing rejections both present
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    6.2 Claim Editing & Scrubbing:
+      PFM-6.2-01:
+        prompt: Edits resolved to *pass the edit*, not fix the claim (6.2.3.A2) — modifiers/data forced → FM-CODEERR,
+          audit exposure
+        score: 0
+        notes: ''
+        signals: Edit clearance fast, denial rate flat; "make it go through" culture
+        degrades:
+        - edit_rule_governance
+        - qa_history
+        protocol:
+          ask: ROLE-EDITANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-6.2-02:
+        prompt: Same defects re-edited forever; rule feedback loop (6.2.4.A1–A2) dead
+        score: 0
+        notes: ''
+        signals: Top-10 edits unchanged for a year; no custom-edit pipeline from denials
+        degrades:
+        - edit_rule_governance
+        - denial_labels
+        protocol:
+          ask: ROLE-EDITANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-6.2-03:
+        prompt: Edit queues worked FIFO regardless of dollars/filing clocks (6.2.3.A1)
+        score: 0
+        notes: ''
+        signals: High-dollar claims age behind trivia; TFL near-misses
+        degrades:
+        - filing_matrix
+        - queue_api
+        protocol:
+          ask: ROLE-EDITANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    6.3 Claim Submission & Acknowledgment:
+      PFM-6.3-01:
+        prompt: Batch counts unverified; 999/277CA worked partially (6.3.1.A2, 6.3.2.A1–A3, D1) → FM-CLAIMDROP
+        score: 0
+        notes: ''
+        signals: '"Submitted" claims payers never received, found at day 60'
+        degrades:
+        - acks_retained
+        - edi_telemetry
+        protocol:
+          ask: ROLE-EDI, ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-6.3-02:
+        prompt: Front-end rejections parked in a side queue (6.3.3.A1) → FM-REJECTUNWORKED
+        score: 0
+        notes: ''
+        signals: Rejection queue aged >14 days; excluded from denial reporting
+        degrades:
+        - acks_retained
+        - denial_taxonomy
+        protocol:
+          ask: ROLE-EDI, ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-6.3-03:
+        prompt: ADR/attachment deadlines tracked in memory (6.3.5.A3, D1)
+        score: 0
+        notes: ''
+        signals: RFI denials for "documentation not received" on documentation that exists
+        degrades:
+        - attachment_channels
+        - audit_workflow
+        protocol:
+          ask: ROLE-EDI, ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    6.4 Secondary, Tertiary & Special Claims:
+      PFM-6.4-01:
+        prompt: Secondaries billed before primary resolution verified (6.4.1.D1); crossovers double-billed (6.4.2.A2)
+        score: 0
+        notes: ''
+        signals: Secondary denials for primary-pending; crossover duplicates
+        degrades:
+        - era_coverage
+        protocol:
+          ask: ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-6.4-02:
+        prompt: WC/liability claims billed like commercial (6.4.3.A1–A2) — jurisdiction forms/attachments missing
+        score: 0
+        notes: ''
+        signals: State-form rejections; adjuster info absent from claims
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    6.5 Corrected, Late & Void Claims:
+      PFM-6.5-01:
+        prompt: Corrections resubmitted as new claims, not frequency-7 (6.5.1.A1, D1) — duplicate denials loop
+        score: 0
+        notes: ''
+        signals: Duplicate-denial volume high; original ICNs not referenced
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-6.5-02:
+        prompt: Filing limits tracked by folklore (6.5.3.A1–A2, D1) → FM-TFL
+        score: 0
+        notes: ''
+        signals: TFL write-offs material; protective-claim option unknown to staff
+        degrades:
+        - filing_matrix
+        protocol:
+          ask: ROLE-BILLER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    7.1 Electronic Remittance (835) Processing:
+      PFM-7.1-01:
+        prompt: Exception queue triaged by ease; unmatched remits sit (7.1.2.A3, D1)
+        score: 0
+        notes: ''
+        signals: Suspense aging up; posters judged on lines/day
+        degrades:
+        - posting_standardized
+        - hitl_capacity
+        protocol:
+          ask: ROLE-POSTER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-7.1-02:
+        prompt: Zero-pay remits auto-adjusted without denial routing (7.1.2.A4, 7.1.3.A2) → FM-DENIALHIDDEN
+        score: 0
+        notes: ''
+        signals: Denial volumes understate 835 reality; adjustment codes hide denials
+        degrades:
+        - denial_taxonomy
+        - denial_labels
+        protocol:
+          ask: ROLE-POSTER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-7.1-03:
+        prompt: New CARC/RARC combos mapped ad hoc by whoever hits them (7.1.3.D1)
+        score: 0
+        notes: ''
+        signals: Mapping table has no owner or history
+        degrades:
+        - denial_taxonomy
+        - masterdata_governance
+        protocol:
+          ask: ROLE-POSTER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    7.2 Manual & Paper Remittance Posting:
+      PFM-7.2-01:
+        prompt: Paper EOB detail keyed as lump sums; denial codes dropped (7.2.A2) → FM-MISPOST, FM-DENIALHIDDEN
+        score: 0
+        notes: ''
+        signals: Paper-payer denials invisible; line detail absent
+        degrades:
+        - lockbox_imaging
+        - denial_labels
+        protocol:
+          ask: ROLE-POSTER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    7.3 Payment Reconciliation & Treasury:
+      PFM-7.3-01:
+        prompt: EFT-835 matching manual; missing remits chased when someone notices (7.3.1.A1–A2, D1)
+        score: 0
+        notes: ''
+        signals: Money-without-remit aged weeks; posted-from-portal workarounds
+        degrades:
+        - bank_feeds
+        - edi_telemetry
+        protocol:
+          ask: ROLE-RECON + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-7.3-02:
+        prompt: Suspense as dumping ground (7.3.3.A1–A3, D1) — research happens at year-end
+        score: 0
+        notes: ''
+        signals: Suspense balance grows monotonically
+        degrades:
+        - posting_standardized
+        protocol:
+          ask: ROLE-RECON + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    7.4 Adjustment Posting & Variance Detection:
+      PFM-7.4-01:
+        prompt: Balance forced to zero with generic adjustment codes (7.4.1.A2–A3) — variance signal destroyed →
+          FM-VARIANCEMISS
+        score: 0
+        notes: ''
+        signals: '"Contractual—other" among top codes; posting audits absent'
+        degrades:
+        - posting_standardized
+        - contract_engine_loaded
+        protocol:
+          ask: ROLE-POSTER, ROLE-UNDERPAY + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-7.4-02:
+        prompt: Recoupments absorbed unvalidated (7.4.3.A2, D1)
+        score: 0
+        notes: ''
+        signals: Take-backs posted same-day, never disputed
+        degrades:
+        - takeback_linkage
+        - recoupment_law_matrix
+        protocol:
+          ask: ROLE-POSTER, ROLE-UNDERPAY + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    7.5 Patient Payment Processing:
+      PFM-7.5-01:
+        prompt: Allocation rules inconsistent (7.5.A2) — payments land on wrong visits; refunds spawn
+        score: 0
+        notes: ''
+        signals: Patient calls about "paid" bills; credit churn
+        degrades:
+        - posting_standardized
+        protocol:
+          ask: ROLE-POSTER + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    7.6 Cash Application Controls & Balancing:
+      PFM-7.6-01:
+        prompt: Batch balancing self-attested; segregation of duties thin (7.6.A1–A2)
+        score: 0
+        notes: ''
+        signals: Same person posts, adjusts, refunds; variances unexplained
+        degrades:
+        - posting_standardized
+        - dim:governance
+        protocol:
+          ask: ROLE-RECON + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    8.1 Denial Identification & Classification:
+      PFM-8.1-01:
+        prompt: Denial universe = 835s only; letter/portal denials uncaptured (8.1.A1)
+        score: 0
+        notes: ''
+        signals: Appeals discover denials the reports never showed; paper-payer denials absent
+        degrades:
+        - lockbox_imaging
+        - denial_taxonomy
+        protocol:
+          ask: ROLE-DENIAL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-8.1-02:
+        prompt: Classification stops at CARC; root-cause owner never attributed (8.1.A2–A3) — the taxonomy exists,
+          unused
+        score: 0
+        notes: ''
+        signals: Denial reports by code, never by owning function; prevention meetings argue anecdotes
+        degrades:
+        - denial_labels
+        - denial_taxonomy
+        protocol:
+          ask: ROLE-DENIAL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-8.1-03:
+        prompt: Appeal deadlines computed per-analyst from memory (8.1.A4) → FM-APPEALMISS
+        score: 0
+        notes: ''
+        signals: Deadline-missed write-offs exist at all
+        degrades:
+        - filing_matrix
+        protocol:
+          ask: ROLE-DENIAL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    8.2 Denial Triage & Routing:
+      PFM-8.2-01:
+        prompt: Worked oldest-first or smallest-first (8.2.A1) — recoverable dollars age out
+        score: 0
+        notes: ''
+        signals: High-value denials untouched at day 30; cherry-picking measurable
+        degrades:
+        - queue_api
+        - touch_logging
+        protocol:
+          ask: ROLE-DENIAL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-8.2-02:
+        prompt: Systemic denial clusters worked one-by-one (8.2.A3, D1)
+        score: 0
+        notes: ''
+        signals: Same payer/reason denied 400 times, appealed 400 times separately
+        degrades:
+        - denial_taxonomy
+        protocol:
+          ask: ROLE-DENIAL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    8.3 Denial Resolution (non-appeal paths):
+      PFM-8.3-01:
+        prompt: 'Rebill reflex: resubmit-as-fix without diagnosis (8.3.A1, D1) → FM-REBILLLOOP'
+        score: 0
+        notes: ''
+        signals: Accounts with 3+ identical submissions; touch history shows loops
+        degrades:
+        - touch_logging
+        - denial_taxonomy
+        protocol:
+          ask: ROLE-DENIAL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-8.3-02:
+        prompt: Write-off as path of least resistance (8.3.A4); authority matrix ignored under volume
+        score: 0
+        notes: ''
+        signals: Small-balance denials auto-adjusted; write-off codes concentrated on a few users
+        degrades:
+        - writeoff_matrix
+        protocol:
+          ask: ROLE-DENIAL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    8.4 Appeals Management:
+      PFM-8.4-01:
+        prompt: Template letters regardless of denial substance (8.4.2.A1)
+        score: 0
+        notes: ''
+        signals: Overturn rate low and flat; payers pattern-match and deny
+        degrades:
+        - appeal_process
+        - appeal_outcomes
+        protocol:
+          ask: ROLE-APPEALW, ROLE-APPEALRN, ROLE-PHYSADV + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-8.4-02:
+        prompt: Clinical appeals written without criteria mapping or chart pinpoints (8.4.3.A1)
+        score: 0
+        notes: ''
+        signals: Letters assert "medically necessary" without evidence citations
+        degrades:
+        - criteria_license
+        - um_worksheets
+        - notes_access
+        protocol:
+          ask: ROLE-APPEALW, ROLE-APPEALRN, ROLE-PHYSADV + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-8.4-03:
+        prompt: 'Levels burned reflexively: level-1 loss → level-2 same letter (8.4.5.A1, D1)'
+        score: 0
+        notes: ''
+        signals: Multi-level appeals with identical content; external review never reached strategically
+        degrades:
+        - appeal_process
+        - appeal_outcomes
+        protocol:
+          ask: ROLE-APPEALW, ROLE-APPEALRN, ROLE-PHYSADV + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-8.4-04:
+        prompt: Won appeals unpaid — overturn letter filed, payment never verified (8.4.6.A1–A2)
+        score: 0
+        notes: ''
+        signals: Wins celebrated, cash unmatched
+        degrades:
+        - appeal_outcomes
+        protocol:
+          ask: ROLE-APPEALW, ROLE-APPEALRN, ROLE-PHYSADV + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    8.5 Denial Prevention Program:
+      PFM-8.5-01:
+        prompt: Prevention meeting = report review; actions unowned, untracked (8.5.A2–A4)
+        score: 0
+        notes: ''
+        signals: Same top-5 denial categories for 8 quarters
+        degrades:
+        - routing_authority
+        - denial_labels
+        protocol:
+          ask: ROLE-DENIAL + owning functions + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    8.6 Write-Off Governance & Adjustment Approval:
+      PFM-8.6-01:
+        prompt: Authority matrix on paper; system permits anyone anything (8.6.A1–A2)
+        score: 0
+        notes: ''
+        signals: Write-offs above authority levels found on sampling
+        degrades:
+        - writeoff_matrix
+        protocol:
+          ask: ROLE-CFO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.1 Work Prioritization & Inventory Management:
+      PFM-9.1-01:
+        prompt: Aging-bucket worklists; cherry-picking endemic (9.1.A2, D1)
+        score: 0
+        notes: ''
+        signals: 90+ bucket grows while 30-day easy accounts get triple-touched
+        degrades:
+        - ranked_list_adoption
+        - queue_api
+        protocol:
+          ask: ROLE-ARFU + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-9.1-02:
+        prompt: 'Touch ≠ progress: status-check notes count as work (9.1.A3)'
+        score: 0
+        notes: ''
+        signals: '"Claim in process" notes recurring monthly per account'
+        degrades:
+        - touch_logging
+        protocol:
+          ask: ROLE-ARFU + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.2 Claim Status Determination:
+      PFM-9.2-01:
+        prompt: Reps call payers for statuses available on 276/portal (9.2.A1)
+        score: 0
+        notes: ''
+        signals: Hold-time hours; status calls >50% of touches
+        degrades:
+        - claim_status_edi
+        protocol:
+          ask: ROLE-ARFU + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.3 No-Response / Unadjudicated Claim Follow-Up:
+      PFM-9.3-01:
+        prompt: No-response claims re-billed blind (9.3.A2, D1) — duplicate denials, TFL burn
+        score: 0
+        notes: ''
+        signals: Resubmission without receipt-verification; duplicates in denial mix
+        degrades:
+        - acks_retained
+        - filing_matrix
+        protocol:
+          ask: ROLE-ARFU + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.4 Underpayment Recovery:
+      PFM-9.4-01:
+        prompt: Variances chased claim-by-claim; systematic patterns never aggregated (9.4.A2–A3)
+        score: 0
+        notes: ''
+        signals: Same fee-schedule error recovered 900 times individually
+        degrades:
+        - contract_engine_loaded
+        protocol:
+          ask: ROLE-UNDERPAY + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-9.4-02:
+        prompt: 'Load-vs-payer confusion: engine errors "recovered" from payers, payer errors "fixed" in the engine
+          (9.4.D1)'
+        score: 0
+        notes: ''
+        signals: Demand letters withdrawn; contract engine trust erodes
+        degrades:
+        - contract_engine_loaded
+        protocol:
+          ask: ROLE-UNDERPAY + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.5 Credit Balance & Refund Management:
+      PFM-9.5-01:
+        prompt: Credits worked oldest-first at month-end only (9.5.A1) → FM-CREDITAGE, FM-60DAY
+        score: 0
+        notes: ''
+        signals: Credit AR aged >90 days; government credits untracked for the clock
+        degrades:
+        - audit_workflow
+        - refund_matrix
+        protocol:
+          ask: ROLE-CREDIT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-9.5-02:
+        prompt: Patient refunds slow-walked while payer demands jump the queue (9.5.A3)
+        score: 0
+        notes: ''
+        signals: Patient refund cycle >30 days; complaints reference credits
+        degrades:
+        - refund_matrix
+        protocol:
+          ask: ROLE-CREDIT + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.6 Small Balance & Administrative Resolution:
+      PFM-9.6-01:
+        prompt: Small-balance thresholds set once, never revisited; leakage compounding (9.6.A1)
+        score: 0
+        notes: ''
+        signals: Threshold write-offs material in aggregate; no periodic review
+        degrades:
+        - writeoff_matrix
+        protocol:
+          ask: ROLE-ARFU + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.7 Aged AR, Reserves & Bad Debt Transfer:
+      PFM-9.7-01:
+        prompt: 'Placement gates unchecked: accounts to bad debt with statements incomplete or FA unscreened (9.7.A3)
+          → FM-FA-MISS, 501(r) exposure'
+        score: 0
+        notes: ''
+        signals: Agency kicks back gate failures; charity found post-placement
+        degrades:
+        - placement_gates
+        - fa_501r_review
+        protocol:
+          ask: ROLE-ARFU, ROLE-CFO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    9.8 Special Account Resolution:
+      PFM-9.8-01:
+        prompt: Bankruptcy/deceased notices actioned late (9.8.A2–A3) — stay violations, estate windows missed
+        score: 0
+        notes: ''
+        signals: Collection letters post-petition; probate deadlines lapsed
+        degrades:
+        - external_registries
+        protocol:
+          ask: ROLE-ARFU + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-9.8-02:
+        prompt: Liens unperfected or unmonitored (9.8.A1)
+        score: 0
+        notes: ''
+        signals: Liability settlements paid out with hospital unpaid
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: ROLE-ARFU + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    10.1 Patient Statement & Communication Management:
+      PFM-10.1-01:
+        prompt: Statements fire on cycle regardless of payer-work state (10.1.D1) → FM-PATIENTWRONGBILL
+        score: 0
+        notes: ''
+        signals: Patients billed for balances under active appeal/COB work; complaint themes match
+        degrades:
+        - statement_suppression
+        - posting_standardized
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.1-02:
+        prompt: Returned mail piles unworked; address hygiene absent (10.1.A3)
+        score: 0
+        notes: ''
+        signals: Statement cost with zero-response segments; skip-trace never run
+        degrades:
+        - statement_history
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.1-03:
+        prompt: 501(r) FA notice content drifts across statement versions (10.1.A4)
+        score: 0
+        notes: ''
+        signals: Template edits bypass compliance review
+        degrades:
+        - dim:legal
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    10.2 Patient Customer Service & Dispute Resolution:
+      PFM-10.2-01:
+        prompt: Reps can't see the whole account (HB/PB split) — answers guessed, calls repeat (10.2.A1–A2)
+        score: 0
+        notes: ''
+        signals: '"Let me transfer you"; contradictory answers on the same balance'
+        degrades:
+        - account_360
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.2-02:
+        prompt: Disputes handled as complaints, not investigations (10.2.D1); itemized-bill requests slow
+        score: 0
+        notes: ''
+        signals: Dispute outcomes unrecorded; same dispute re-raised
+        degrades:
+        - denial_taxonomy
+        - routing_authority
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.2-03:
+        prompt: Improvised discounts/plans per rep sympathy (10.2.A4) — policy variance at the phone
+        score: 0
+        notes: ''
+        signals: Plan terms differ by rep; discount authority informal
+        degrades:
+        - plan_matrix_unified
+        - collection_policy_unified
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    10.3 Payment Plans & Financing:
+      PFM-10.3-01:
+        prompt: Plans set to whatever the patient proposes; default handling passive (10.3.A1–A3)
+        score: 0
+        notes: ''
+        signals: Plan default >40%; broken plans quietly restart
+        degrades:
+        - plan_matrix_unified
+        - plan_payment_history
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    10.4 Financial Assistance / Charity Care (501(r)):
+      PFM-10.4-01:
+        prompt: FA reached only by those who ask and persist; application friction high (10.4.A1–A3) → FM-FA-MISS
+        score: 0
+        notes: ''
+        signals: FA volume low vs demographics; applications abandoned mid-way
+        degrades:
+        - fa_501r_review
+        - socio_data_license
+        protocol:
+          ask: ROLE-FACOUNS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.4-02:
+        prompt: Presumptive charity absent; bad debt carries charity-eligible accounts (10.4.A4)
+        score: 0
+        notes: ''
+        signals: Agency returns accounts as "clearly indigent"; community-benefit understated
+        degrades:
+        - placement_gates
+        - socio_data_license
+        protocol:
+          ask: ROLE-FACOUNS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.4-03:
+        prompt: ECA timing rules (501(r)) tracked informally (10.4.A5)
+        score: 0
+        notes: ''
+        signals: Collections started inside notice windows on sampled accounts
+        degrades:
+        - fa_501r_review
+        protocol:
+          ask: ROLE-FACOUNS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    10.5 Self-Pay Segmentation & Early-Out Programs:
+      PFM-10.5-01:
+        prompt: One treatment path for all self-pay (10.5.A1) — same cadence for $80 and $8,000, for able and unable
+        score: 0
+        notes: ''
+        signals: Uniform statement cycles; propensity unused
+        degrades:
+        - statement_history
+        - plan_payment_history
+        protocol:
+          ask: ROLE-AGCYLIAISON + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.5-02:
+        prompt: Early-out vendor works unmonitored; conduct QA absent (10.5.A3–A4)
+        score: 0
+        notes: ''
+        signals: Vendor scripts never reviewed; complaints reach the CFO cold
+        degrades:
+        - agency_data_rights
+        protocol:
+          ask: ROLE-AGCYLIAISON + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    10.6 Bad Debt & Collection Agency Management:
+      PFM-10.6-01:
+        prompt: Placements untracked post-transfer; recalls and adjustments drift (10.6.A2, A5)
+        score: 0
+        notes: ''
+        signals: Agency inventory ≠ hospital records; dual collection incidents
+        degrades:
+        - placement_gates
+        - agency_data_rights
+        protocol:
+          ask: ROLE-AGCYLIAISON + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.6-02:
+        prompt: Net-back never computed; commissions accepted as quoted (10.6.A3–A4)
+        score: 0
+        notes: ''
+        signals: Agency compared on fee %, not net recovery; no champion/challenger
+        degrades:
+        - agency_data_rights
+        protocol:
+          ask: ROLE-AGCYLIAISON + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    10.7 No Surprises Act Patient Protections:
+      PFM-10.7-01:
+        prompt: NSA-protected scenarios billed as ordinary OON (10.7.A1–A2) → FM-PATIENTWRONGBILL, penalties
+        score: 0
+        notes: ''
+        signals: OON ED balances at full liability; consent artifacts unfindable
+        degrades:
+        - consents_indexed
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-10.7-02:
+        prompt: GFE-vs-final never compared; SDR disputes land unprepared (10.7.A4)
+        score: 0
+        notes: ''
+        signals: $400-threshold breaches unnoticed until dispute notice
+        degrades:
+        - gfe_stored
+        protocol:
+          ask: ROLE-PFSREP + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    11.1 Contract Strategy, Modeling & Negotiation:
+      PFM-11.1-01:
+        prompt: Negotiations run on rate benchmarks alone; denial burden, auth friction, payment behavior unpriced
+          (11.1.A2–A3)
+        score: 0
+        notes: ''
+        signals: JOC issues never reach the negotiation table; "good rates" from a payer that denies 15%
+        degrades:
+        - payment_timing_history
+        - denial_labels
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-11.1-02:
+        prompt: Amendments and term dates slip by (11.1.D2) → FM-AMENDMISS
+        score: 0
+        notes: ''
+        signals: Evergreen rollovers unexamined; objection windows found expired
+        degrades:
+        - contract_repository
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    11.2 Contract Implementation & Maintenance:
+      PFM-11.2-01:
+        prompt: Contract loads unverified against source (11.2.A1–A2) → FM-TERMSUNLOADED, false variance
+        score: 0
+        notes: ''
+        signals: Engine trusted until an analyst proves it wrong; variance queue polluted
+        degrades:
+        - contract_engine_loaded
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-11.2-02:
+        prompt: Filing/appeal limits per contract never codified (11.2.A4) → feeds FM-TFL, FM-APPEALMISS
+        score: 0
+        notes: ''
+        signals: Deadlines live in analyst memory (see PFM-6.5-02, PFM-8.1-03)
+        degrades:
+        - filing_matrix
+        - contract_repository
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    11.3 Payer Policy & Bulletin Monitoring:
+      PFM-11.3-01:
+        prompt: Payer bulletins read by whoever subscribes; changes reach ops after denials do (11.3.A1–A3)
+        score: 0
+        notes: ''
+        signals: Policy-change denial waves; "since when?" meetings
+        degrades:
+        - bulletin_access
+        - routing_authority
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    11.4 Provider Credentialing:
+      PFM-11.4-01:
+        prompt: Expirables tracked in spreadsheets; lapses discovered by rejection (11.4.A4–A5, 11.5.A2) → FM-ENROLLGAP
+        score: 0
+        notes: ''
+        signals: Claims held for lapsed enrollment; revalidations missed
+        degrades:
+        - provider_master
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-11.4-02:
+        prompt: Exclusion screening (OIG/SAM) periodic, not continuous (11.4.A5)
+        score: 0
+        notes: ''
+        signals: Annual batch checks; hires between checks unscreened
+        degrades:
+        - provider_master
+        - dim:governance
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    11.5 Payer Enrollment & Revalidation:
+      PFM-11.5-01:
+        prompt: Enrollment applications (855s, CAQH, delegated rosters) worked reactively; effective-date gaps eat
+          revenue (11.5.A1–A3) → FM-ENROLLGAP
+        score: 0
+        notes: ''
+        signals: New providers seeing patients before enrollment effective; held-claim inventory by provider unknown
+        degrades:
+        - provider_master
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    11.6 Payer Relations & Joint Operating Committees:
+      PFM-11.6-01:
+        prompt: JOCs are grievance sessions without dollarized issues or follow-through (11.6.A1–A3)
+        score: 0
+        notes: ''
+        signals: Same issues every JOC; no issue ledger
+        degrades:
+        - avoidable_day_taxonomy
+        - denial_labels
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    11.7 Value-Based & Alternative Payment Model Administration:
+      PFM-11.7-01:
+        prompt: VBC settlements accepted as issued; attribution/rosters unreconciled (11.7.A2–A3)
+        score: 0
+        notes: ''
+        signals: Settlement checks deposited unverified; roster churn invisible
+        degrades:
+        - vbc_data_sharing
+        protocol:
+          ask: ROLE-CONTRACT, ROLE-CRED, ROLE-ENROLL + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    12.1 External Government Audit Response:
+      PFM-12.1-01:
+        prompt: Audit requests enter through many doors; deadlines tracked locally (12.1.A1–A2) → FM-AUDITDEADLINE
+        score: 0
+        notes: ''
+        signals: ADRs found in department inboxes; technical-denial losses for non-response
+        degrades:
+        - audit_channels_digitized
+        - audit_workflow
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-12.1-02:
+        prompt: Record submissions incomplete — the packet loses what the care earned (12.1.A3)
+        score: 0
+        notes: ''
+        signals: Findings overturned on appeal *with the same record*, better assembled
+        degrades:
+        - him_retrieval
+        - audit_workflow
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-12.1-03:
+        prompt: Findings unappealed by default; extrapolation math unexamined (12.1.A5–A6, D1)
+        score: 0
+        notes: ''
+        signals: Auto-accepted findings; universe/sample never challenged
+        degrades:
+        - audit_outcomes
+        - privilege_protocol
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    12.2 Commercial Payer Audit Response:
+      PFM-12.2-01:
+        prompt: Commercial audits handled like government audits — contract audit clauses (lookback limits, ADR
+          caps, offset rules) never invoked (12.2.A1–A3)
+        score: 0
+        notes: ''
+        signals: Out-of-scope record pulls fulfilled; recoupments beyond contractual lookback absorbed
+        degrades:
+        - contract_repository
+        - audit_workflow
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    12.3 Internal Audit & Monitoring Program:
+      PFM-12.3-01:
+        prompt: Monitoring plan = last year's plan; risk-blind sampling (12.3.A1–A2)
+        score: 0
+        notes: ''
+        signals: Work plan static while services/codes shift
+        degrades:
+        - peer_benchmarks
+        - compliance_charter
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    12.4 Overpayment Identification & Refund (60-day rule, self-disclosure):
+      PFM-12.4-01:
+        prompt: Overpayments identified in silos; no central register or clock (12.4.A1–A2) → FM-60DAY
+        score: 0
+        notes: ''
+        signals: Refunds ad hoc; identification dates unrecorded
+        degrades:
+        - audit_workflow
+        - ap_refund_path
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    12.5 Regulatory Change Management:
+      PFM-12.5-01:
+        prompt: Regulatory changes tracked by newsletter forwarding (12.5.A1–A2)
+        score: 0
+        notes: ''
+        signals: Implementation evidence absent; effective dates missed
+        degrades:
+        - routing_authority
+        - bulletin_access
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    12.6 Billing Compliance Investigations & Education:
+      PFM-12.6-01:
+        prompt: Investigations punish individuals; systemic causes untouched; education generic (12.6.A1–A3)
+        score: 0
+        notes: ''
+        signals: Repeat findings in the same process with different names attached; annual compliance training as
+          the universal remedy
+        degrades:
+        - compliance_charter
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    12.7 Privacy & Security in Billing Operations:
+      PFM-12.7-01:
+        prompt: Billing staff access broad by convenience; minimum-necessary unenforced (12.7.A1–A2)
+        score: 0
+        notes: ''
+        signals: Role-based access reviews stale; ROI releases over-inclusive
+        degrades:
+        - dim:legal
+        protocol:
+          ask: ROLE-COMPLIANCE, ROLE-AUDITCOORD + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    13.1 KPI Definition & Data Governance:
+      PFM-13.1-01:
+        prompt: Metrics computed per-report from raw tables; definitions re-derived each time (13.1.A1–A2)
+        score: 0
+        notes: ''
+        signals: Two analysts, two denial rates; logic in personal SQL
+        degrades:
+        - kpi_dictionary
+        protocol:
+          ask: ROLE-ANALYTICS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    13.2 Operational Reporting & Work-Driver Analytics:
+      PFM-13.2-01:
+        prompt: 'Reporting describes, never directs: no work-driver linkage (13.2.A2–A4)'
+        score: 0
+        notes: ''
+        signals: Dashboards admired; queues unchanged
+        degrades:
+        - kpi_dictionary
+        - touch_logging
+        protocol:
+          ask: ROLE-ANALYTICS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    13.3 Month-End Close & Revenue Recognition Support:
+      PFM-13.3-01:
+        prompt: Reserve methodology opaque to operations; hindsight never tested (13.3.A1, D1)
+        score: 0
+        notes: ''
+        signals: Surprises at year-end audit; operators distrust net numbers
+        degrades:
+        - realization_history
+        - lineage
+        protocol:
+          ask: ROLE-ANALYTICS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    13.4 Predictive & AI-Enabled Analytics:
+      PFM-13.4-01:
+        prompt: Models deployed without owners or refresh plans (13.4.A2)
+        score: 0
+        notes: ''
+        signals: Propensity scores from 2022 still routing work
+        degrades:
+        - model_monitoring
+        - decision_logging
+        protocol:
+          ask: ROLE-ANALYTICS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    13.5 Benchmarking & Executive Performance Review:
+      PFM-13.5-01:
+        prompt: Benchmarks quoted without definition alignment (13.5.A1–A2)
+        score: 0
+        notes: ''
+        signals: See OFM-FG-04 — this is its process-level instance
+        degrades:
+        - peer_benchmarks
+        - kpi_dictionary
+        protocol:
+          ask: ROLE-ANALYTICS + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    14.1 Master Data Management:
+      PFM-14.1-01:
+        prompt: Payer/plan master edited live under pressure (14.1.A1, D1) → FM-PLANMAP at the table
+        score: 0
+        notes: ''
+        signals: Mapping changes untracked; Friday-afternoon edits precede Monday denial spikes
+        degrades:
+        - masterdata_governance
+        protocol:
+          ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    14.2 Revenue Cycle System Configuration & Maintenance:
+      PFM-14.2-01:
+        prompt: Config changes ship without regression checks; work-queue logic drifts (14.2.A1–A3)
+        score: 0
+        notes: ''
+        signals: Post-change denial/edit spikes correlate with release dates, nobody connects them
+        degrades:
+        - system_copy_extracts
+        - dim:integration
+        protocol:
+          ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    14.3 EDI & Trading Partner Management:
+      PFM-14.3-01:
+        prompt: EDI monitored by absence-of-complaints (14.3.A1–A3) → FM-EDISILENT
+        score: 0
+        notes: ''
+        signals: File failures discovered by cash dips; trading-partner tickets stale
+        degrades:
+        - edi_telemetry
+        protocol:
+          ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    14.4 Bot/Automation Fleet Operations:
+      PFM-14.4-01:
+        prompt: Bots owned by their builders; failures return work to no one (14.4.A2–A3) → FM-BOTSILENT
+        score: 0
+        notes: ''
+        signals: See OFM-ET-04 — process-level instance; exception queues unmapped
+        degrades:
+        - handback_queues
+        - fabric
+        protocol:
+          ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    14.5 Vendor Management & Outsourcing Oversight:
+      PFM-14.5-01:
+        prompt: Vendor SLAs reviewed at renewal only (14.5.A2–A3)
+        score: 0
+        notes: ''
+        signals: Quarterly reviews skipped when busy — which is always
+        degrades:
+        - agency_data_rights
+        protocol:
+          ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+    14.6 Business Continuity & Downtime Billing Procedures:
+      PFM-14.6-01:
+        prompt: Downtime procedures exist, drilled never (14.6.A1–A2); reconstruction improvised
+        score: 0
+        notes: ''
+        signals: Post-outage charge gaps found months later
+        degrades:
+        - downtime_procedures
+        protocol:
+          ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+  role:
+    ROLE-SCHED:
+      RFM-SCHED-01:
+        prompt: books first, validates later
+        score: 0
+        notes: ''
+        degrades:
+        - orders_digitized
+        - dim:workflow
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.1.1.D1–D2, 1.1.2.D1–D2'
+      RFM-SCHED-02:
+        prompt: treats network/auth flags as someone else's step
+        score: 0
+        notes: ''
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.1.1.D1–D2, 1.1.2.D1–D2'
+    ROLE-PREREG / ROLE-REGISTRAR:
+      RFM-REG-01:
+        prompt: field-filling without comprehension (garbage-in tolerated)
+        score: 0
+        notes: ''
+        degrades:
+        - denial_labels
+        - qa_history
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.2.2.D1, 1.2.4.D1, 1.9.2.D1, 1.9.3.A1–A4'
+      RFM-REG-02:
+        prompt: avoids the money conversation (1.8.1)
+        score: 0
+        notes: ''
+        degrades:
+        - collection_policy_unified
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.2.2.D1, 1.2.4.D1, 1.9.2.D1, 1.9.3.A1–A4'
+      RFM-REG-03:
+        prompt: batch-signs notices
+        score: 0
+        notes: ''
+        degrades:
+        - consents_indexed
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.2.2.D1, 1.2.4.D1, 1.9.2.D1, 1.9.3.A1–A4'
+    ROLE-VERIF:
+      RFM-VERIF-01:
+        prompt: reads 271 as binary active/inactive
+        score: 0
+        notes: ''
+        degrades:
+        - rte_eligibility
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.3.1.D1–D2, 1.3.3.D1, 1.3.4.D1'
+      RFM-VERIF-02:
+        prompt: accepts payer phone answers without reference numbers
+        score: 0
+        notes: ''
+        degrades:
+        - dim:workflow
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.3.1.D1–D2, 1.3.3.D1, 1.3.4.D1'
+      RFM-VERIF-03:
+        prompt: stops at the first coverage found
+        score: 0
+        notes: ''
+        degrades:
+        - medicaid_files
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.3.1.D1–D2, 1.3.3.D1, 1.3.4.D1'
+    ROLE-AUTH:
+      RFM-AUTH-01:
+        prompt: clears "no auth required" without proof
+        score: 0
+        notes: ''
+        degrades:
+        - policy_library
+        - auth_structured
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.4.1.D1, 1.4.2.D1, 1.4.3.D1–D2, 1.4.4.D1'
+      RFM-AUTH-02:
+        prompt: submits thin packets, banks on P2P
+        score: 0
+        notes: ''
+        degrades:
+        - notes_access
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.4.1.D1, 1.4.2.D1, 1.4.3.D1–D2, 1.4.4.D1'
+      RFM-AUTH-03:
+        prompt: treats approved-as-requested without checking CPT/units match
+        score: 0
+        notes: ''
+        degrades:
+        - auth_structured
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.4.1.D1, 1.4.2.D1, 1.4.3.D1–D2, 1.4.4.D1'
+    ROLE-ESTIM / ROLE-FINCOUNS:
+      RFM-FC-01:
+        prompt: quotes without disclosing confidence/assumptions
+        score: 0
+        notes: ''
+        degrades:
+        - gfe_stored
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.6.1.D1, 1.7.1.D1, 1.7.4.D1'
+      RFM-FC-02:
+        prompt: counsels payment only, screens assistance never
+        score: 0
+        notes: ''
+        degrades:
+        - fa_501r_review
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.6.1.D1, 1.7.1.D1, 1.7.4.D1'
+      RFM-FC-03:
+        prompt: defers every hard case to "billing will sort it"
+        score: 0
+        notes: ''
+        degrades:
+        - clearance_outcomes
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 1.6.1.D1, 1.7.1.D1, 1.7.4.D1'
+    ROLE-URN / ROLE-CM:
+      RFM-URN-01:
+        prompt: criteria worksts as paperwork after the decision
+        score: 0
+        notes: ''
+        degrades:
+        - um_worksheets
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 2.1.1.D1, 2.1.2.D1, 2.2.3.D1, 2.3.D1'
+      RFM-URN-02:
+        prompt: payer-cadence compliance over clinical substance
+        score: 0
+        notes: ''
+        degrades:
+        - um_worksheets
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 2.1.1.D1, 2.1.2.D1, 2.2.3.D1, 2.3.D1'
+      RFM-URN-03:
+        prompt: avoids attending confrontation on status
+        score: 0
+        notes: ''
+        degrades:
+        - provider_adoption
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 2.1.1.D1, 2.1.2.D1, 2.2.3.D1, 2.3.D1'
+    ROLE-PHYSADV:
+      RFM-PHYSADV-01:
+        prompt: rubber-stamps referrals (>95% agreement)
+        score: 0
+        notes: ''
+        degrades:
+        - um_worksheets
+        - provider_adoption
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 2.1.4, 2.2.4, 4.2 escalations, 8.4.3'
+      RFM-PHYSADV-02:
+        prompt: P2P unprepared or delegated
+        score: 0
+        notes: ''
+        degrades:
+        - provider_adoption
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 2.1.4, 2.2.4, 4.2 escalations, 8.4.3'
+      RFM-PHYSADV-03:
+        prompt: avoids peer accountability on documentation
+        score: 0
+        notes: ''
+        degrades:
+        - provider_adoption
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 2.1.4, 2.2.4, 4.2 escalations, 8.4.3'
+    ROLE-PROVIDER:
+      RFM-PROV-01:
+        prompt: query non-response/ambiguity
+        score: 0
+        notes: ''
+        degrades:
+        - query_standardized
+        - provider_adoption
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: orders (1.1.1), queries (4.2.D1), status orders
+            (2.1), encounter close (3.1.4)'
+      RFM-PROV-02:
+        prompt: documentation habits static despite feedback
+        score: 0
+        notes: ''
+        degrades:
+        - provider_adoption
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: orders (1.1.1), queries (4.2.D1), status orders
+            (2.1), encounter close (3.1.4)'
+      RFM-PROV-03:
+        prompt: encounter-close lag
+        score: 0
+        notes: ''
+        degrades:
+        - dept_charge_owners
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: orders (1.1.1), queries (4.2.D1), status orders
+            (2.1), encounter close (3.1.4)'
+    ROLE-DEPTCHG:
+      RFM-DEPT-01:
+        prompt: charging as clerical afterthought of clinical work
+        score: 0
+        notes: ''
+        degrades:
+        - dept_charge_owners
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 3.1.2–3.1.3, 3.2.1.D1'
+      RFM-DEPT-02:
+        prompt: reconciliation attested unperformed
+        score: 0
+        notes: ''
+        degrades:
+        - dept_charge_owners
+        - charge_linkage
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 3.1.2–3.1.3, 3.2.1.D1'
+      RFM-DEPT-03:
+        prompt: late-charge tolerance
+        score: 0
+        notes: ''
+        degrades:
+        - writeoff_matrix
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 3.1.2–3.1.3, 3.2.1.D1'
+    ROLE-CDMANALYST / ROLE-REVINT:
+      RFM-CDM-01:
+        prompt: speed-over-governance edits
+        score: 0
+        notes: ''
+        degrades:
+        - cdm_governance
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 3.3.1.D1, 3.4.1–3.4.2'
+      RFM-RI-01:
+        prompt: audits find, nobody fixes (findings without owners)
+        score: 0
+        notes: ''
+        degrades:
+        - audit_outcomes
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 3.3.1.D1, 3.4.1–3.4.2'
+    ROLE-CDIS:
+      RFM-CDI-01:
+        prompt: leading queries under capture pressure
+        score: 0
+        notes: ''
+        degrades:
+        - query_standardized
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 4.1.D1, 4.2.D1, 4.3.D1'
+      RFM-CDI-02:
+        prompt: chases CC/MCC only, ignores clinical-validity risk
+        score: 0
+        notes: ''
+        degrades:
+        - qa_history
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 4.1.D1, 4.2.D1, 4.3.D1'
+      RFM-CDI-03:
+        prompt: concedes every reconciliation to coding
+        score: 0
+        notes: ''
+        degrades:
+        - working_drg_recorded
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 4.1.D1, 4.2.D1, 4.3.D1'
+    ROLE-CODER-:
+      RFM-CODER-01:
+        prompt: defensive undercoding (audit fear)
+        score: 0
+        notes: ''
+        degrades:
+        - qa_history
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 5.2–5.5 decisions incl. 5.2.D1–D2, 5.4.D1'
+      RFM-CODER-02:
+        prompt: modifier reflexes to clear edits
+        score: 0
+        notes: ''
+        degrades:
+        - qa_history
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 5.2–5.5 decisions incl. 5.2.D1–D2, 5.4.D1'
+      RFM-CODER-03:
+        prompt: productivity-driven query avoidance
+        score: 0
+        notes: ''
+        degrades:
+        - query_standardized
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 5.2–5.5 decisions incl. 5.2.D1–D2, 5.4.D1'
+      RFM-CODER-04:
+        prompt: guideline updates absorbed unevenly
+        score: 0
+        notes: ''
+        degrades:
+        - reference_license
+        - qa_history
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 5.2–5.5 decisions incl. 5.2.D1–D2, 5.4.D1'
+    ROLE-CODEAUD:
+      RFM-CODEAUD-01:
+        prompt: audits for gotchas, not patterns
+        score: 0
+        notes: ''
+        degrades:
+        - qa_history
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 5.7.D1'
+      RFM-CODEAUD-02:
+        prompt: findings without education plans
+        score: 0
+        notes: ''
+        degrades:
+        - qa_history
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 5.7.D1'
+    ROLE-BILLER / ROLE-EDITANALYST:
+      RFM-BILL-01:
+        prompt: pass-the-edit fixes (content forced)
+        score: 0
+        notes: ''
+        degrades:
+        - edit_rule_governance
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 6.1.1.D1, 6.2.2.D1, 6.3.3.D1, 6.5.3.D1'
+      RFM-BILL-02:
+        prompt: rebill reflex on any rejection
+        score: 0
+        notes: ''
+        degrades:
+        - acks_retained
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 6.1.1.D1, 6.2.2.D1, 6.3.3.D1, 6.5.3.D1'
+      RFM-BILL-03:
+        prompt: filing clocks in memory
+        score: 0
+        notes: ''
+        degrades:
+        - filing_matrix
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 6.1.1.D1, 6.2.2.D1, 6.3.3.D1, 6.5.3.D1'
+    ROLE-POSTER / ROLE-RECON:
+      RFM-POST-01:
+        prompt: force-balancing with generic codes
+        score: 0
+        notes: ''
+        degrades:
+        - posting_standardized
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 7.1.2.D1–D2, 7.4.1, 7.6'
+      RFM-POST-02:
+        prompt: exception avoidance (easy lines first)
+        score: 0
+        notes: ''
+        degrades:
+        - posting_standardized
+        - hitl_capacity
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 7.1.2.D1–D2, 7.4.1, 7.6'
+      RFM-POST-03:
+        prompt: reconciliation sign-off without investigation
+        score: 0
+        notes: ''
+        degrades:
+        - bank_feeds
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 7.1.2.D1–D2, 7.4.1, 7.6'
+    ROLE-DENIAL / ROLE-APPEALW / ROLE-APPEALRN:
+      RFM-DEN-01:
+        prompt: rebill-first triage
+        score: 0
+        notes: ''
+        degrades:
+        - denial_taxonomy
+        - touch_logging
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 8.2.A1, 8.3.D1, 8.4.1–8.4.5'
+      RFM-DEN-02:
+        prompt: template appeals regardless of substance
+        score: 0
+        notes: ''
+        degrades:
+        - appeal_process
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 8.2.A1, 8.3.D1, 8.4.1–8.4.5'
+      RFM-DEN-03:
+        prompt: deadline anxiety produces volume-over-quality appeals
+        score: 0
+        notes: ''
+        degrades:
+        - appeal_outcomes
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 8.2.A1, 8.3.D1, 8.4.1–8.4.5'
+      RFM-APPRN-01:
+        prompt: clinical letters without criteria mapping
+        score: 0
+        notes: ''
+        degrades:
+        - criteria_license
+        - um_worksheets
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 8.2.A1, 8.3.D1, 8.4.1–8.4.5'
+    ROLE-ARFU / ROLE-UNDERPAY / ROLE-CREDIT:
+      RFM-AR-01:
+        prompt: status-check touching (activity theater)
+        score: 0
+        notes: ''
+        degrades:
+        - touch_logging
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 9.1.D1, 9.3.D1, 9.4.D1, 9.5 flows'
+      RFM-AR-02:
+        prompt: cherry-picking
+        score: 0
+        notes: ''
+        degrades:
+        - queue_api
+        - ranked_list_adoption
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 9.1.D1, 9.3.D1, 9.4.D1, 9.5 flows'
+      RFM-AR-03:
+        prompt: pattern-blindness (each claim its own world)
+        score: 0
+        notes: ''
+        degrades:
+        - denial_taxonomy
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 9.1.D1, 9.3.D1, 9.4.D1, 9.5 flows'
+      RFM-CR-01:
+        prompt: credits as month-end chore
+        score: 0
+        notes: ''
+        degrades:
+        - refund_matrix
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 9.1.D1, 9.3.D1, 9.4.D1, 9.5 flows'
+    ROLE-PFSREP / ROLE-FACOUNS:
+      RFM-PFS-01:
+        prompt: improvised policy under empathy pressure
+        score: 0
+        notes: ''
+        degrades:
+        - plan_matrix_unified
+        - collection_policy_unified
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 10.2.D1, 10.3.A1, 10.4.D1'
+      RFM-PFS-02:
+        prompt: dispute deflection ("that's insurance's fault")
+        score: 0
+        notes: ''
+        degrades:
+        - denial_taxonomy
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 10.2.D1, 10.3.A1, 10.4.D1'
+      RFM-FA-01:
+        prompt: gatekeeping posture toward assistance
+        score: 0
+        notes: ''
+        degrades:
+        - fa_501r_review
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 10.2.D1, 10.3.A1, 10.4.D1'
+    ROLE-CONTRACT / ROLE-PAYERREL:
+      RFM-CON-01:
+        prompt: negotiates rates, ignores operational terms (filing limits, auth turnaround, recoupment rights)
+        score: 0
+        notes: ''
+        degrades:
+        - filing_matrix
+        - recoupment_law_matrix
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 11.1.D1–D2, 11.6.D1'
+      RFM-CON-02:
+        prompt: JOC relationship-keeping over issue-forcing
+        score: 0
+        notes: ''
+        degrades:
+        - avoidable_day_taxonomy
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 11.1.D1–D2, 11.6.D1'
+    ROLE-CRED / ROLE-ENROLL:
+      RFM-CRED-01:
+        prompt: checklist completion over risk sense (expirables as paperwork)
+        score: 0
+        notes: ''
+        degrades:
+        - provider_master
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 11.4–11.5 flows'
+    ROLE-COMPLIANCE / ROLE-AUDITCOORD:
+      RFM-COMP-01:
+        prompt: police posture that drives issues underground
+        score: 0
+        notes: ''
+        degrades:
+        - compliance_charter
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 12.1.D1–D2, 12.3–12.4'
+      RFM-COMP-02:
+        prompt: deadline administration without appeal strategy
+        score: 0
+        notes: ''
+        degrades:
+        - audit_outcomes
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 12.1.D1–D2, 12.3–12.4'
+    ROLE-ANALYTICS:
+      RFM-ANL-01:
+        prompt: report factory (outputs over decisions)
+        score: 0
+        notes: ''
+        degrades:
+        - kpi_dictionary
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 13.1–13.4'
+      RFM-ANL-02:
+        prompt: personal-SQL empires (see PFM-13.1-01)
+        score: 0
+        notes: ''
+        degrades:
+        - kpi_dictionary
+        - lineage
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 13.1–13.4'
+      RFM-ANL-03:
+        prompt: answers without error bars
+        score: 0
+        notes: ''
+        degrades:
+        - kpi_dictionary
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 13.1–13.4'
+    ROLE-SYSANALYST / ROLE-EDI / ROLE-AUTOENG:
+      RFM-SYS-01:
+        prompt: hero-fix culture (undocumented changes)
+        score: 0
+        notes: ''
+        degrades:
+        - system_copy_extracts
+        - masterdata_governance
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 14.1–14.4 flows'
+      RFM-SYS-02:
+        prompt: access hoarding as job security
+        score: 0
+        notes: ''
+        degrades:
+        - dim:integration
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 14.1–14.4 flows'
+      RFM-AUTO-01:
+        prompt: builds bots, owns none
+        score: 0
+        notes: ''
+        degrades:
+        - handback_queues
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 14.1–14.4 flows'
+    ROLE-PA-SUP and all supervisors:
+      RFM-SUP-01:
+        prompt: queue-jockeying instead of coaching
+        score: 0
+        notes: ''
+        degrades:
+        - hitl_capacity
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: queue mgmt, QA, coaching across functions'
+      RFM-SUP-02:
+        prompt: shields team from metrics rather than working them
+        score: 0
+        notes: ''
+        degrades:
+        - kpi_dictionary
+        - hitl_capacity
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: queue mgmt, QA, coaching across functions'
+      RFM-SUP-03:
+        prompt: hoards exceptions personally
+        score: 0
+        notes: ''
+        degrades:
+        - hitl_capacity
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: queue mgmt, QA, coaching across functions'
+    ROLE-CFO / executive sponsor:
+      RFM-EXEC-01:
+        prompt: attention only at crisis
+        score: 0
+        notes: ''
+        degrades:
+        - gov_body
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 8.6, funding, governance'
+      RFM-EXEC-02:
+        prompt: cost-lens exclusivity (OFM-FG-01's personal form)
+        score: 0
+        notes: ''
+        degrades:
+        - dim:economics
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 8.6, funding, governance'
+      RFM-EXEC-03:
+        prompt: tolerates governance theater
+        score: 0
+        notes: ''
+        degrades:
+        - gov_body
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: 8.6, funding, governance'
+    ROLE-BOT:
+      RFM-BOT-01:
+        prompt: unowned exceptions (work vanishes)
+        score: 0
+        notes: ''
+        degrades:
+        - handback_queues
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: pervasive; every `hardened-by UC-*`'
+      RFM-BOT-02:
+        prompt: silent degradation (FM-BOTSILENT)
+        score: 0
+        notes: ''
+        degrades:
+        - model_monitoring
+        - edi_telemetry
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: pervasive; every `hardened-by UC-*`'
+      RFM-BOT-03:
+        prompt: rubber-stamp reviewers around it (FM-AI-03)
+        score: 0
+        notes: ''
+        degrades:
+        - golden_sets
+        - hitl_capacity
+        protocol:
+          ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
+          artifact: 'sampled work product from the judgment surface: pervasive; every `hardened-by UC-*`'
+source_version: 2c0952099842

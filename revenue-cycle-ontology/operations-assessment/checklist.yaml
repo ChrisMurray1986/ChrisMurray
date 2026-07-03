@@ -1,0 +1,55 @@
+# Operations assessment field checklist — one line per failure mode.
+# Score during interviews/observation: 0 = not observed, 1 = partial/suspected,
+# 2 = clearly present (requires evidence: a named artifact, a walked process, or
+# two independent interviews). Mirrors the facet-scoring discipline.
+# Cross-reference: each OFM's detail, signals, and paired best practice live in
+# the domain files; the degraded AI-stack gates are listed in README.md.
+
+operating_model:
+  OFM-OM-01: {prompt: "No single executive owns the revenue cycle end-to-end", score: 0, degrades: [routing_authority]}
+  OFM-OM-02: {prompt: "Policies (collections, discounts, write-offs) vary by site", score: 0, degrades: [collection_policy_unified, plan_matrix_unified, dim:workflow]}
+  OFM-OM-03: {prompt: "No formal defect feedback from back end to front end", score: 0, degrades: [denial_labels]}
+  OFM-OM-04: {prompt: "No physician advisor structure with real authority; CDI/UM siloed", score: 0, degrades: [provider_adoption, um_worksheets]}
+  OFM-OM-05: {prompt: "Committees meet without decision rights, budget, or follow-through", score: 0, degrades: [gov_body]}
+  OFM-OM-06: {prompt: "Supervisor spans >20 transactional / >12 judgment; no coaching time", score: 0, degrades: [hitl_capacity]}
+  OFM-OM-07: {prompt: "Centralized services without SLAs; sites run shadow staff", score: 0, degrades: [ranked_list_adoption]}
+  OFM-OM-08: {prompt: "Revenue cycle waits in a general IT queue; config changes take months", score: 0, degrades: [writeback, queue_api, fabric, dim:integration]}
+process_improvement:
+  OFM-PI-01: {prompt: "All capacity on backlog; prevention perpetually deferred", score: 0, degrades: [dim:workflow, routing_authority]}
+  OFM-PI-02: {prompt: "No standard work; outcomes vary by individual", score: 0, degrades: [dim:workflow, documentation_stability, posting_standardized]}
+  OFM-PI-03: {prompt: "Dashboards green while operations struggle; definitions drift", score: 0, degrades: [kpi_dictionary]}
+  OFM-PI-04: {prompt: "Root cause analysis stops at 'payer' or 'user error'", score: 0, degrades: [denial_labels, denial_taxonomy]}
+  OFM-PI-05: {prompt: "Improvements decay; no control plans or re-audits", score: 0, degrades: [dim:economics]}
+  OFM-PI-06: {prompt: "Productivity measured in touches, not resolutions", score: 0, degrades: [touch_logging]}
+  OFM-PI-07: {prompt: "QA inspects final output only; feedback reaches source late or never", score: 0, degrades: [qa_history]}
+workforce:
+  OFM-WF-01: {prompt: "Turnover > ~25% transactional; standing overtime; vacancy spiral", score: 0, degrades: [hitl_capacity, escalation_staffed]}
+  OFM-WF-02: {prompt: "Onboarding is shadowing; no certification before production", score: 0, degrades: [dim:org]}
+  OFM-WF-03: {prompt: "No career ladder; mastery has no rungs; best performers exit the work", score: 0, degrades: [dim:org]}
+  OFM-WF-04: {prompt: "Volume standards without quality weighting (or no standards)", score: 0, degrades: [hitl_capacity, qa_history]}
+  OFM-WF-05: {prompt: "Single-person knowledge dependencies on critical processes", score: 0, degrades: [dim:org]}
+  OFM-WF-06: {prompt: "Incentives reward cash/volume in ways that distort write-offs or picking", score: 0, degrades: [writeoff_matrix]}
+  OFM-WF-07: {prompt: "Remote work without instrumentation, coaching rhythm, or QA parity", score: 0, degrades: [dim:org]}
+  OFM-WF-08: {prompt: "Automation framed/rumored as layoffs; experts disengaging or leaving", score: 0, degrades: [provider_adoption, hitl_capacity]}
+enabling_technology:
+  OFM-ET-01: {prompt: "EHR workqueues/edits at install defaults; ownerless queue sprawl", score: 0, degrades: [queue_api, dim:workflow]}
+  OFM-ET-02: {prompt: "Overlapping bolt-ons with contradictory data and double fees", score: 0, degrades: [system_copy_extracts]}
+  OFM-ET-03: {prompt: "Versions behind; licensed features unused; upgrades feared", score: 0, degrades: [dim:integration]}
+  OFM-ET-04: {prompt: "Unregistered/unmonitored bots; silent failures discovered downstream", score: 0, degrades: [handback_queues]}
+  OFM-ET-05: {prompt: "Patient-facing agents lack integrated account context (CTI/CRM gap)", score: 0, degrades: [account_360]}
+  OFM-ET-06: {prompt: "Patient-facing tech live with low adoption and no adoption owner", score: 0, degrades: [statement_history, statement_vendor_flex]}
+  OFM-ET-07: {prompt: "Undocumented point-to-point interfaces; single-engineer dependency", score: 0, degrades: [fabric, edi_telemetry]}
+  OFM-ET-08: {prompt: "Critical processes run on spreadsheets/Access outside governance", score: 0, degrades: [masterdata_governance]}
+vendor_outsourcing:
+  OFM-VN-01: {prompt: "Vendor footprint grew by accretion; no sourcing strategy; scope overlaps", score: 0, degrades: [dim:economics]}
+  OFM-VN-02: {prompt: "Auto-renewals; SLAs unenforced; rates stale vs volume", score: 0, degrades: [dim:legal]}
+  OFM-VN-03: {prompt: "No data/telemetry/recording rights; oversight via vendor-authored decks", score: 0, degrades: [agency_data_rights]}
+  OFM-VN-04: {prompt: "Contingency attribution disputed; no control groups; double-claimed dollars", score: 0, degrades: [dim:economics]}
+  OFM-VN-05: {prompt: "No retained SME/QA for outsourced functions; insourcing impossible", score: 0, degrades: [dim:org]}
+  OFM-VN-06: {prompt: "Global delivery without unified QA, SOP parity, or attrition visibility", score: 0, degrades: [hitl_capacity]}
+performance_governance:
+  OFM-FG-01: {prompt: "RCM budgeted as pure cost; cuts made without yield modeling", score: 0, degrades: [dim:economics]}
+  OFM-FG-02: {prompt: "Multiple definitions of the same KPI in circulation", score: 0, degrades: [kpi_dictionary]}
+  OFM-FG-03: {prompt: "Month-end close dominates; reserves opaque; analysts consumed by close", score: 0, degrades: [realization_history, lineage]}
+  OFM-FG-04: {prompt: "Benchmarks used without definition/case-mix alignment", score: 0, degrades: [peer_benchmarks]}
+  OFM-FG-05: {prompt: "No standing investment roadmap; episodic unquantified capital asks", score: 0, degrades: [dim:economics]}
