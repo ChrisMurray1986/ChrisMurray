@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian Health — Revenue Cycle Assessment Report</title>
+<style>
+  :root { --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,0.10);
+    --seq:#2a78d6; --s2:#1baf7a; --good-ink:#006300; --warning-ink:#7a5200;
+    --serious-ink:#9c3f1d; --critical-ink:#d03b3b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --grid:#2c2c2a;
+      --baseline:#383835; --ring:rgba(255,255,255,0.10); --seq:#3987e5; --s2:#199e70;
+      --good-ink:#0ca30c; --warning-ink:#fab219; --serious-ink:#ec835a; --critical-ink:#d03b3b; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+         font:14.5px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  nav { position:sticky; top:0; z-index:10; background:var(--page); border-bottom:1px solid var(--grid);
+        padding:10px 22px; display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; }
+  nav a { color:var(--ink-2); text-decoration:none; font-weight:600; }
+  nav a:hover { color:var(--ink); }
+  .wrap { max-width:980px; margin:0 auto; padding:34px 24px 80px; }
+  .kicker { color:var(--muted); font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+  h1 { font-size:27px; margin:6px 0 4px; line-height:1.22; }
+  .sub { color:var(--ink-2); margin:0 0 26px; }
+  h2 { font-size:19px; margin:44px 0 10px; padding-top:18px; border-top:2px solid var(--baseline); }
+  h3 { font-size:15px; margin:24px 0 6px; }
+  p { color:var(--ink-2); margin:8px 0; } p b, li b, td b { color:var(--ink); }
+  ol, ul { color:var(--ink-2); margin:8px 0; padding-left:22px; } li { margin:6px 0; }
+  .card { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:17px; margin:12px 0; }
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+  .tile { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:12px 14px; }
+  .tile .v { font-size:22px; font-weight:660; } .tile .l { color:var(--ink-2); font-size:12px; line-height:1.35; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th { text-align:left; color:var(--muted); font-weight:600; font-size:11.5px; border-bottom:1px solid var(--baseline); padding:6px 9px; white-space:nowrap; }
+  td { border-bottom:1px solid var(--grid); padding:7px 9px; vertical-align:top; }
+  .tblwrap { overflow-x:auto; }
+  .sev { font-size:10.5px; font-weight:700; border-radius:5px; padding:1px 7px; white-space:nowrap; }
+  .sev.high { background:var(--critical-ink); color:#fff; } .sev.med { background:var(--serious-ink); color:#fff; }
+  .sev.low { background:var(--grid); color:var(--ink-2); }
+  .trk { font-size:10.5px; font-weight:700; border-radius:5px; padding:1px 7px; white-space:nowrap; }
+  .trk.F { background:var(--seq); color:#fff; } .trk.O { background:var(--s2); color:#fff; }
+  .trk.A { background:var(--warning-ink); color:#fff; } .trk.V { background:var(--baseline); color:var(--ink); }
+  .meter { display:inline-flex; gap:2px; vertical-align:middle; margin-left:8px; }
+  .meter span { width:16px; height:8px; border-radius:2px; background:var(--grid); }
+  .meter span.on { background:var(--seq); }
+  .find { border-left:3px solid var(--serious-ink); padding:2px 0 2px 12px; margin:12px 0; }
+  .find.high { border-left-color:var(--critical-ink); }
+  .find h4 { margin:0 0 2px; font-size:13.5px; }
+  .find .ev { color:var(--muted); font-size:12.5px; font-style:italic; }
+  .find .rec { color:var(--ink-2); font-size:13px; margin-top:4px; }
+  .find .rec b { color:var(--good-ink); }
+  .ids { color:var(--muted); font-size:11px; }
+  .legend { display:flex; gap:16px; font-size:12.5px; color:var(--ink-2); margin-bottom:6px; }
+  .legend .sw { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; }
+  .note { color:var(--muted); font-size:12px; }
+  footer { color:var(--muted); font-size:12px; margin-top:50px; border-top:1px solid var(--grid); padding-top:12px; }
+</style></head>
+<body>
+<nav>
+  <a href="#exec">Executive summary</a><a href="#ent">Enterprise</a><a href="#fa1">Patient Access</a>
+  <a href="#fa2">Mid Cycle</a><a href="#fa3">Claims &amp; Payments</a><a href="#fa4">Denials &amp; AR</a>
+  <a href="#fa5">Patient Financial</a><a href="#fa6">Contracting · Compliance · Analytics</a>
+  <a href="#port">Initiative portfolio</a><a href="#plan">Implementation plan</a><a href="#gov">Governance</a>
+</nav>
+<div class="wrap">
+  <div class="kicker">Simulation · Revenue Cycle Assessment · Final Report · 2026-07-03</div>
+  <h1>Meridian Health — Revenue Cycle Assessment:<br>Findings, Recommendations &amp; Two-Year Program</h1>
+  <p class="sub">Joint operations + AI/automation assessment of a $2.4B-NPR, single-instance Epic
+  health system with Fathom (ED/Radiology coding) and Humata (prior authorization) live.
+  Method: 278-item operations field instrument (enterprise/process/role) + 98-facet AI-readiness
+  assessment, mechanically reconciled; value, cost, and sequencing computed by the ontology's
+  engines. All figures are model estimates with disclosed bands, governed by quarterly true-up.</p>
+
+  <h2 id="exec">Executive summary</h2>
+  <div class="tiles">
+    <div class="tile"><div class="v">58 → 50</div><div class="l">findings, consolidated into 50 root-cause problem chains</div></div>
+    <div class="tile"><div class="v">$96.9M/yr</div><div class="l">addressable value at steady state (pool-capped)</div></div>
+    <div class="tile"><div class="v">$32M/yr</div><div class="l">at stake in the single largest chain (uncodified filing/appeal limits)</div></div>
+    <div class="tile"><div class="v">$18.3M</div><div class="l">2-year program investment (foundation + operational fixes + 70 AI launches)</div></div>
+    <div class="tile"><div class="v">$69.1M/yr</div><div class="l">net exit run-rate at end of year 2</div></div>
+    <div class="tile"><div class="v">$38.1M</div><div class="l">one-time AR cash release (reported separately, never annualized)</div></div>
+  </div>
+
+  <h3>The situation in one paragraph</h3>
+  <p>Meridian is a <b>strong-foundation, weak-connective-tissue</b> revenue cycle. Epic is
+  well-deployed (linkage, connectivity, and write-back gates largely pass), both AI point
+  solutions are performing and worth expanding, and staff competence is not the problem. What
+  the assessment found instead is a consistent pattern at the seams: <b>knowledge that lives in
+  people instead of systems</b> (filing limits in analyst memory, payer bulletins in inboxes,
+  the underpayment tracker in an Access database), <b>feedback loops that don't close</b>
+  (no defect attribution to the front end, root-cause analysis that stops at "payer," the same
+  top-5 denial categories for eight quarters), and <b>governance that observes rather than
+  decides</b> (committee theater, no AI governance stack, capital asks folded into IT).
+  These seam failures — not any single department's performance — are what lock the automation
+  portfolio at 0&nbsp;GO / 56&nbsp;CONDITIONAL / 43&nbsp;DEFER today.</p>
+
+  <h3>Five headline findings</h3>
+  <ol>
+    <li><b>Codify the knowledge that expires accounts ($32M/yr chain).</b> Filing and appeal
+      limits exist only in analyst memory (confirmed TFL write-offs $1.9M/yr — the visible tip);
+      the contract engine has never been parallel-price verified ($19.2M underpayment pool
+      blind). One 90-day codification program addresses both.</li>
+    <li><b>Denials are managed, not prevented.</b> Denial reporting stops at CARC codes with no
+      owner attribution; the prevention squad has been "paused for backlog" three consecutive
+      quarters; rebill-first is the stated team standard. The $25.9M prevention pool is
+      structurally untouchable until attribution exists.</li>
+    <li><b>Three payers' denials are invisible.</b> Zero-pay 835s auto-adjust to contractual for
+      three payers (hidden-denial audit confirmed) — the reported denial rate is understated and
+      $6M/yr of recovery is off the books.</li>
+    <li><b>The point solutions outran the operating model.</b> Fathom and Humata perform, but
+      seven pre-existing bots run unregistered (one dead six weeks before discovery), automation
+      rumors have already cost two senior coders, and no org-level AI governance exists — the
+      next 70 launches would inherit this unless fixed first.</li>
+    <li><b>Measurement can't referee.</b> Two AR-days definitions in one executive deck;
+      metrics re-derived per report from personal SQL. Every improvement claim — human or AI —
+      is unprovable until the KPI dictionary and certified metric layer exist.</li>
+  </ol>
+
+  <h3>What we recommend (the program in one view)</h3>
+  <p>A single two-year program on four tracks: <span class="trk F">F</span> <b>Foundation</b>
+  (governance, data, fabric — $2.7M, Q1–Q2), <span class="trk O">O</span> <b>Operational
+  fixes</b> from this assessment's findings ($0.8M, largely 30–90 day sprints, several
+  cash-positive in-quarter), <span class="trk A">A</span> <b>AI &amp; automation launches</b>
+  (70 use cases, Q3–Q8, budget-optimized sequence), and <span class="trk V">V</span>
+  <b>Vendor actions</b> (expand Fathom/Humata, renegotiate data rights, licenses). Total
+  $18.3M over 8 quarters; value crosses cumulative investment in Q5; exit at $69.1M/yr net.
+  Full portfolio in §<a href="#port">Initiative portfolio</a>; quarter-by-quarter in
+  §<a href="#plan">Implementation plan</a>.</p>
+
+  <!-- ============================ ENTERPRISE ============================ -->
+  <h2 id="ent">Enterprise findings — operating model, improvement, workforce, technology, vendors, governance</h2>
+  <p>Domain maturity (0–4): Operating model 2 <span class="meter"><span class="on"></span><span class="on"></span><span></span><span></span></span> ·
+  Process improvement 1 <span class="meter"><span class="on"></span><span></span><span></span><span></span></span> ·
+  Workforce 2 <span class="meter"><span class="on"></span><span class="on"></span><span></span><span></span></span> ·
+  Enabling technology 2 <span class="meter"><span class="on"></span><span class="on"></span><span></span><span></span></span> ·
+  Vendor management 2 <span class="meter"><span class="on"></span><span class="on"></span><span></span><span></span></span> ·
+  Performance governance 1 <span class="meter"><span class="on"></span><span></span><span></span><span></span></span></p>
+
+  <div class="find high"><h4><span class="sev high">HIGH</span> Root-cause theater has hollowed out prevention</h4>
+    <div class="ev">Evidence: 9 of 10 sampled RCAs conclude "payer behavior" or "user error"; prevention squad paused three consecutive quarters; no defect feed to patient access; same top-5 denial categories for 8 quarters. <span class="ids">OFM-PI-04 → PFM-8.1-02 → RFM-DEN-01 (chain) · OFM-PI-01 · OFM-OM-03 · PFM-8.5-01</span></div>
+    <div class="rec"><b>Recommend:</b> owner-attributed defect taxonomy applied at denial intake (BP-PI-04); ring-fenced prevention capacity protected by executive rule (BP-PI-01); weekly defect feeds to origin functions with denial-linked front-end QA (BP-OM-03, BP-PI-07). This is also the CAP-02 label pipeline the AI portfolio trains on — one build, two payoffs. → INIT-O1, INIT-F3</div></div>
+
+  <div class="find high"><h4><span class="sev high">HIGH</span> Measurement cannot referee performance claims</h4>
+    <div class="ev">Evidence: two AR-days definitions in one exec deck; denial-rate differs between finance and ops; metrics re-derived per report from personal SQL. <span class="ids">OFM-FG-02 → PFM-13.1-01 → RFM-ANL-02 (chain) · OFM-PI-03</span></div>
+    <div class="rec"><b>Recommend:</b> governed KPI dictionary under change control + certified metric layer that reports consume, never re-derive (BP-FG-02, PBP-13.1-01); tiered huddles on the governed numbers (BP-PI-03). Prerequisite for the benefit ledger and every AI value claim. → INIT-O2</div></div>
+
+  <div class="find high"><h4><span class="sev high">HIGH</span> Automation grew faster than its governance</h4>
+    <div class="ev">Evidence: 7 unregistered pre-Humata bots, one dead six weeks; vendor dashboards are the only model monitoring; committee decisions untracked; automation rumored as layoffs — two senior coders resigned citing it. <span class="ids">OFM-ET-04 → PFM-14.4-01 (chain) · OFM-OM-05 → RFM-EXEC-03 · OFM-WF-08 · governance dim = 1</span></div>
+    <div class="rec"><b>Recommend:</b> AI governance stack (decision logging, org telemetry wrapping vendor dashboards, demotion authority, bias testing — GOV-01/02/06); bot registry with named hand-back queues (BP-ET-04); decision-rights charter (BP-OM-05); and a published <b>automation compact</b> — capacity harvested by attrition and redeployment, experts get first claim on reviewer/curator roles (BP-WF-08). → INIT-F1, INIT-O3, INIT-O4</div></div>
+
+  <div class="find"><h4><span class="sev med">MED</span> Activity is measured; resolution is not</h4>
+    <div class="ev">Evidence: productivity = touches/day in 2 of 4 teams; status-check notes are 55% of AR touches; supervisors 100% queue-jockeying, coaching calendars empty; volume-only quotas in billing. <span class="ids">OFM-PI-06 · RFM-AR-01 · RFM-SUP-01 · OFM-WF-04 · OFM-OM-06</span></div>
+    <div class="rec"><b>Recommend:</b> resolution-based productivity with quality gates (BP-PI-06, BP-WF-04); supervisor coaching share calendar-audited (BP-OM-06); status-check work moved to automation (UC-09-02) so humans work exceptions. → INIT-O5</div></div>
+
+  <div class="find"><h4><span class="sev med">MED</span> Vendor estate: strong AI vendors, weak contracts elsewhere</h4>
+    <div class="ev">Evidence: agency contract auto-renewed 3×, SLA reports vendor-authored, no call-recording rights; early-out vendor claims all statement-cycle cash with no control group; two estimator products disagreeing; underpayment tracker in Access. <span class="ids">OFM-VN-02/03/04 · OFM-ET-02 · OFM-ET-08</span></div>
+    <div class="rec"><b>Recommend:</b> renewal-gate calendar with own-data SLA scorecards (BP-VN-02); data-rights/telemetry standard clauses at every renewal (BP-VN-03, GOV-14); pre-agreed attribution with control groups (BP-VN-04); estimator rationalization to one system-of-record; spreadsheet-amnesty migration of the Access tracker (BP-ET-08). → INIT-V3, INIT-O6</div></div>
+
+  <!-- ============================ PATIENT ACCESS ============================ -->
+  <h2 id="fa1">Patient Access &amp; Financial Clearance</h2>
+  <p>Strong base (RTE, card capture, MSPQ structured, Humata on auth) with three seam failures.</p>
+  <div class="find high"><h4><span class="sev high">HIGH</span> Authorized ≠ performed is never reconciled ($25.9M pool exposed)</h4>
+    <div class="ev">Evidence: no post-coding auth reconciliation; CPT-mismatch denials on surgical cases; tail-payer auth grid stale with no proof capture. <span class="ids">PFM-1.4-04 · PFM-1.4-01 · RFM-AUTH-01</span></div>
+    <div class="rec"><b>Recommend:</b> auth reconciliation gate before claim release (PBP-1.4-04, hardened by UC-01-10 in Q3); dated proof-capture rule for "no auth required" (PBP-1.4-01); extend Humata to tail payers Q6–Q7 rather than rebuilding. → INIT-O7, A-track</div></div>
+  <div class="find"><h4><span class="sev med">MED</span> Coverage discovery runs at the wrong end of the cycle ($7.2M pool)</h4>
+    <div class="ev">Evidence: discovery run by the collection agency post-placement only; retro Medicaid found after write-off; Medicaid applications untracked after bedside start. <span class="ids">PFM-1.3-04 · PFM-1.7-03</span></div>
+    <div class="rec"><b>Recommend:</b> discovery sweep at self-pay classification + pre-statement (PBP-1.3-04; UC-01-05 launches Q3 with ~1-month payback); application pipeline with retro-window alarms (PBP-1.7-03). → INIT-O8</div></div>
+  <div class="find"><h4><span class="sev med">MED</span> Access QA measures courtesy, not denial-linked accuracy</h4>
+    <div class="ev">Evidence: QA scores high on script adherence while eligibility/auth denials persist; no field-level attribution. <span class="ids">PFM-1.9-05 · couples to OFM-OM-03</span></div>
+    <div class="rec"><b>Recommend:</b> rebuild QA on denial-linked field accuracy with individual feedback (PBP-1.9-05); feeds the same attribution table as INIT-O1; UC-01-16 automates it in Q4. → INIT-O1</div></div>
+
+  <!-- ============================ MID CYCLE ============================ -->
+  <h2 id="fa2">Mid Cycle — UR · Charge Capture · CDI · Coding</h2>
+  <div class="find"><h4><span class="sev med">MED</span> Avoidable days blamed on payers; UM leverage unused</h4>
+    <div class="ev">Evidence: "payer delay" = 88% of avoidable-day entries, taxonomy draft unused; physician advisor agrees with requestor 96%; query escalation documented but never invoked (response 68%). <span class="ids">PFM-2.3-01 · RFM-PHYSADV-01 · PFM-4.2-02</span></div>
+    <div class="rec"><b>Recommend:</b> honest avoidable-day taxonomy with payer-caused days feeding a dollarized JOC ledger (PBP-2.3-01); advisor rationale audit with disagreement-rate monitoring (PBP-2.1-03); chief-backed query escalation (PBP-4.2-02, needs BP-OM-04 structure). → INIT-O9</div></div>
+  <div class="find"><h4><span class="sev med">MED</span> Charge reconciliation is attested, not performed; audit findings bypass the 60-day register</h4>
+    <div class="ev">Evidence: attestation 100% while OR sample found 3 gaps in 20 cases; retro-audit overcharge findings sit in spreadsheets, identification dates unrecorded. <span class="ids">PFM-3.2-01 · PFM-3.4-02 · PFM-12.4-01 (couples)</span></div>
+    <div class="rec"><b>Recommend:</b> reconciliation = log-to-charge match with sampled verification (PBP-3.2-01; UC-03-01 hardens in Q3 — $5.6M/yr net); all overpayment sources feed one 60-day register with clocks (PBP-3.4-02/12.4-01; UC-12-04). → INIT-O10</div></div>
+  <div class="find"><h4><span class="sev med">MED</span> Coding behavior distorted from both directions</h4>
+    <div class="ev">Evidence: defensive undercoding under audit anxiety (CC capture below peers) alongside a mod-59 outlier site correlated with edit clearance; QA weighting exists in coding only. <span class="ids">PFM-5.2-01 · PFM-5.3-01 · RFM-CODER-01</span></div>
+    <div class="rec"><b>Recommend:</b> code-what's-documented posture with education-not-punishment audits (PBP-5.2-01); modifier decision support + pattern surveillance as guardrail (PBP-5.3-01, UC-12-03); the automation compact (INIT-O4) directly addresses the anxiety driver. Fathom expansion (Q6) proceeds under Meridian-owned golden sets. → INIT-O11, V-track</div></div>
+
+  <!-- ============================ CLAIMS & PAYMENTS ============================ -->
+  <h2 id="fa3">Claims Production &amp; Payments</h2>
+  <div class="find high"><h4><span class="sev high">HIGH</span> Filing knowledge lives in memory — the $32M/yr chain</h4>
+    <div class="ev">Evidence: no codified filing/appeal matrix anywhere; limits recalled per analyst; TFL write-offs $1.9M/yr already visible; billers name deadline anxiety as a quality driver. <span class="ids">Chain: PFM-11.2-02 → PFM-6.5-02 → RFM-BILL-03 · priced at $32.0M/yr at stake (denial prevention + recovery pools)</span></div>
+    <div class="rec"><b>Recommend:</b> 90-day codification sprint — filing/appeal/recoupment terms into a governed master matrix (PBP-11.2-02/6.5-02), consumed by deadline-aware queues; then UC-06-06 filing sentinel (Q3) makes it self-enforcing. The single highest-leverage operational fix in this report. → INIT-O12</div></div>
+  <div class="find high"><h4><span class="sev high">HIGH</span> Hidden denials at three payers ($6M/yr) and a variance signal being destroyed</h4>
+    <div class="ev">Evidence: zero-pay 835s auto-adjusted to contractual for 3 payers (audit confirmed); "contractual—other" is the #3 adjustment code by dollars; edit staff told to "get it out the door" at month-end. <span class="ids">PFM-7.1-02 · PFM-7.4-01 · PFM-6.2-01 · RFM-POST-01, RFM-BILL-01</span></div>
+    <div class="rec"><b>Recommend:</b> CARC-mapping governance with adjustment-vs-denial audit (PBP-7.1-02; UC-07-02 hardens); restricted adjustment codes with authority matrix (PBP-7.4-01); edit-resolution standards that route content changes to owning functions (PBP-6.2-01). 30-day fix for the three payers; cash-positive in-quarter. → INIT-O13</div></div>
+  <div class="find"><h4><span class="sev med">MED</span> The edit engine never learns</h4>
+    <div class="ev">Evidence: top-10 edits unchanged four quarters; no denial→edit pipeline despite governed custom-edit capability sitting unused. <span class="ids">PFM-6.2-02</span></div>
+    <div class="rec"><b>Recommend:</b> monthly edit-mining cycle (recurring denial → pre-bill edit; false-positive retirement) per PBP-6.2-02; UC-06-03 automates the mining from Q5. → INIT-O14</div></div>
+
+  <!-- ============================ DENIALS & AR ============================ -->
+  <h2 id="fa4">Denials &amp; AR Management</h2>
+  <div class="find high"><h4><span class="sev high">HIGH</span> The denial factory runs in a loop</h4>
+    <div class="ev">Evidence: CARC-only classification, zero owner attribution; oldest-first queues with visible cherry-picking; rebill-first as stated standard; 55% of AR touches are status checks. <span class="ids">PFM-8.1-02 · PFM-8.2-01 · RFM-DEN-01 · RFM-AR-01 — the operational core of the PI-04 chain</span></div>
+    <div class="rec"><b>Recommend:</b> attribution at intake (INIT-O1) + value×overturn×deadline routing (PBP-8.2-01; UC-08-02 Q6) + loop-breaker rule: second identical denial forces root cause (PBP-8.3-01) + status automation freeing humans for exceptions (UC-09-02 Q5–Q6). Resolution-based standards (INIT-O5) remove the incentive to touch-and-note. → INIT-O1, O5, A-track</div></div>
+  <div class="find"><h4><span class="sev med">MED</span> Underpayment program undermined by its own engine; placement gates leak</h4>
+    <div class="ev">Evidence: two payer demands withdrawn after contract-load errors found (trust damage); agency kicked back 40 accounts for missing FA screening; no presumptive charity. <span class="ids">PFM-9.4-02 · PFM-9.7-01 · PFM-10.4-02</span></div>
+    <div class="rec"><b>Recommend:</b> variance-cause triage (load error → contracting; payer error → demand) per PBP-9.4-02, enabled by engine verification (INIT-O12's twin, INIT-O15); automated placement-gate verification (PBP-9.7-01; UC-09-06) and presumptive-approval charity scoring once the bias program stands (UC-10-05, Q8). → INIT-O15</div></div>
+
+  <!-- ============================ PFS ============================ -->
+  <h2 id="fa5">Patient Financial Services</h2>
+  <div class="find"><h4><span class="sev med">MED</span> Patient-facing posture is compliant but leaves value and goodwill unclaimed</h4>
+    <div class="ev">Evidence: portal billing adoption 24% with no owner; no presumptive charity (agency returns "clearly indigent" accounts); FA reached only by those who persist. <span class="ids">OFM-ET-06 · PFM-10.4-02 · RFM-FA-01</span></div>
+    <div class="rec"><b>Recommend:</b> digital adoption operation with targets beside cash metrics (BP-ET-06); assistance-first counseling stance with presumptive tools (RBP-FA-01, PBP-10.4-02); statement optimization and liability gate launch Q7–Q8 (UC-10-02/10-01) after the bias program (F-track) is live. → INIT-O16</div></div>
+
+  <!-- ============================ ENTERPRISE FUNCTIONS ============================ -->
+  <h2 id="fa6">Contracting · Compliance · Analytics · Data Operations</h2>
+  <div class="find high"><h4><span class="sev high">HIGH</span> The contract engine is loaded but unverified ($19.2M pool blind)</h4>
+    <div class="ev">Evidence: Resolute contracts never parallel-priced; variance queue distrusted by staff; bulletins reach ops after denial waves (two this year). <span class="ids">PFM-11.2-01 · PFM-11.3-01 · chain partner of INIT-O12</span></div>
+    <div class="rec"><b>Recommend:</b> parallel-price verification on load and amendment (PBP-11.2-01; UC-11-01 Q3 — restores trust in every downstream variance, estimate, and demand); bulletin monitoring with routed implementation tasks (PBP-11.3-01; UC-11-03). → INIT-O15, O17</div></div>
+  <div class="find"><h4><span class="sev med">MED</span> Overpayment clock risk; analytics as report factory</h4>
+    <div class="ev">Evidence: overpayments refunded ad hoc with identification dates unrecorded (60-day exposure); personal-SQL metric empires. <span class="ids">PFM-12.4-01 · PFM-13.1-01/RFM-ANL-02 (chain with FG-02)</span></div>
+    <div class="rec"><b>Recommend:</b> central overpayment register with clocking from every source (INIT-O10 includes); certified metric layer + decision-linked analytics charter (INIT-O2; RBP-ANL-01). → INIT-O2, O10</div></div>
+
+  <!-- ============================ PORTFOLIO ============================ -->
+  <h2 id="port">The initiative portfolio</h2>
+  <p>Twenty-six initiatives on four tracks. <b>Value at stake</b> = pool dollars the finding
+  exposes (overlapping attribution — prices problems, does not sum); <b>net/yr</b> = engine-computed
+  net for AI launches. O-track costs use the remediation playbook's standard durations.</p>
+  <div class="card tblwrap"><table>
+    <thead><tr><th></th><th>ID</th><th>Initiative</th><th>Addresses</th><th>Value link</th><th>Cost</th><th>Start</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td><span class="trk F">F</span></td><td>F1</td><td>AI governance stack (logging, telemetry wrapping vendor dashboards, demotion authority, bias testing)</td><td>gov dim 1→4; OFM-ET-04, OM-05</td><td>unlocks $61.6M/yr locked</td><td>$1.32M</td><td>Q1</td><td>Compliance + IT</td></tr>
+      <tr><td><span class="trk F">F</span></td><td>F2</td><td>Workflow standardization (exception/hand-back paths, taxonomies, matrices)</td><td>workflow dim 2→4</td><td>unlocks $48.2M/yr locked</td><td>$360k</td><td>Q1</td><td>VP Rev Cycle</td></tr>
+      <tr><td><span class="trk F">F</span></td><td>F3</td><td>Label &amp; attribution build + clinical corpus access (CAP-02, notes approval)</td><td>data dim 3→4; PI-04 chain</td><td>unlocks $37.4M + $17.3M/yr</td><td>$300k</td><td>Q1</td><td>Loop operator + CMIO</td></tr>
+      <tr><td><span class="trk F">F</span></td><td>F4</td><td>Orchestration fabric + citation harness + lineage + licenses (criteria/reference/socio) + org readiness</td><td>integration dim 3→4; legal 2→3</td><td>agent/generative wave prerequisite</td><td>$720k</td><td>Q1–Q2</td><td>IT + Legal</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O1</td><td>Denial attribution &amp; defect-feedback program (taxonomy at intake, weekly origin feeds, denial-linked access QA)</td><td>PI-04 chain, OM-03, 1.9-05, 8.1-02</td><td>$25.9M prevention pool opens</td><td>$120k</td><td>Q1</td><td>Denials + Access</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O2</td><td>KPI dictionary + certified metric layer + tiered huddles</td><td>FG-02 chain, PI-03</td><td>benefit ledger prerequisite</td><td>$90k</td><td>Q1</td><td>Analytics + Finance</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O3</td><td>Bot registry &amp; lifecycle (7 legacy bots), hand-back queues</td><td>ET-04 chain</td><td>$2.1M/yr + trust</td><td>$60k</td><td>Q1</td><td>Automation eng</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O4</td><td>Automation compact published + AI-era career lattice</td><td>WF-08, WF-03</td><td>retention of HITL experts</td><td>$40k</td><td>Q1</td><td>HR + Sponsor</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O5</td><td>Resolution-based productivity + supervisor coaching model</td><td>PI-06, RFM-AR-01, SUP-01, WF-04</td><td>touch-yield economics</td><td>$70k</td><td>Q2</td><td>Ops directors</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O6</td><td>Estimator rationalization + Access-tracker migration (spreadsheet amnesty)</td><td>ET-02, ET-08</td><td>one source of truth</td><td>$80k</td><td>Q2</td><td>RC systems</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O7</td><td>Auth-to-service reconciliation gate + proof-capture rule</td><td>1.4-04, 1.4-01, RFM-AUTH-01</td><td>$25.9M pool exposure closed</td><td>$60k</td><td>Q2</td><td>Patient access</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O8</td><td>Coverage discovery moved to classification + Medicaid app pipeline</td><td>1.3-04, 1.7-03</td><td>$7.2M pool</td><td>$50k</td><td>Q1</td><td>Access + PFS</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O9</td><td>Avoidable-day taxonomy + advisor rationale audit + query escalation</td><td>2.3-01, PHYSADV-01, 4.2-02</td><td>JOC leverage; CMI protection</td><td>$60k</td><td>Q2</td><td>CMO/UM</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O10</td><td>Charge reconciliation standard + unified 60-day overpayment register</td><td>3.2-01, 3.4-02, 12.4-01</td><td>compliance + capture</td><td>$80k</td><td>Q2</td><td>Rev integrity + Compliance</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O11</td><td>Coding culture reset: education-not-punishment audits, modifier decision support</td><td>5.2-01, 5.3-01, CODER-01</td><td>CMI + audit posture</td><td>$50k</td><td>Q2</td><td>HIM/Coding</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O12</td><td><b>Filing/appeal/recoupment matrix codification (90-day sprint)</b></td><td>11.2-02 → 6.5-02 chain</td><td><b>$32.0M/yr at stake</b></td><td>$100k</td><td>Q1</td><td>Contracting + Billing</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O13</td><td>Hidden-denial remap (3 payers) + restricted adjustment codes + edit-resolution standards</td><td>7.1-02, 7.4-01, 6.2-01</td><td>$6.0M/yr recovery on-books</td><td>$40k</td><td>Q1 (30 days)</td><td>PFS posting</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O14</td><td>Monthly edit-mining cycle (denial → pre-bill edit)</td><td>6.2-02</td><td>feeds prevention pool</td><td>$30k</td><td>Q2</td><td>Claims</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O15</td><td>Contract engine parallel-price verification (top 10 payers)</td><td>11.2-01, 9.4-02</td><td>$19.2M pool made visible</td><td>$90k</td><td>Q2 (with UC-11-01)</td><td>Managed care</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O16</td><td>Digital adoption operation + assistance-first counseling stance</td><td>ET-06, 10.4-02, FA-01</td><td>VS-4 pools + goodwill</td><td>$60k</td><td>Q3</td><td>PFS</td></tr>
+      <tr><td><span class="trk O">O</span></td><td>O17</td><td>Bulletin monitoring with routed implementation ownership</td><td>11.3-01</td><td>stops policy-change waves</td><td>$40k</td><td>Q2</td><td>Managed care</td></tr>
+      <tr><td><span class="trk A">A</span></td><td>A1</td><td>Wave 1 launches (Q3–Q4): 26 use cases — variance coverage, contract extraction/verify, coverage discovery, missing-charge, underpayment, prevention miner, CDI prioritization, autonomous charging…</td><td>gates cleared by F+O tracks</td><td>run-rate $21.2M/yr by Q4</td><td>$4.9M</td><td>Q3</td><td>per domain</td></tr>
+      <tr><td><span class="trk A">A</span></td><td>A2</td><td>Wave 2 launches (Q5–Q6): 23 use cases — denial-risk scoring, AR prioritization, overturn scoring, status bots, clinical appeals (golden-set gated, PA sign-off)…</td><td></td><td>run-rate $53.1M/yr by Q6</td><td>$5.0M</td><td>Q5</td><td>per domain</td></tr>
+      <tr><td><span class="trk A">A</span></td><td>A3</td><td>Wave 3 launches (Q7–Q8): 21 use cases — estimates, clearance scoring, liability gate, statement optimization, FA scoring, auto-posting…</td><td></td><td>run-rate $69.1M/yr by Q8</td><td>$5.0M</td><td>Q7</td><td>per domain</td></tr>
+      <tr><td><span class="trk V">V</span></td><td>V1</td><td>Fathom scope expansion (inpatient/profee) under Meridian-owned golden sets</td><td>with O11; RFM-CODER trust</td><td>~50% of coding-automation value</td><td>in A2</td><td>Q6</td><td>HIM + Vendor mgr</td></tr>
+      <tr><td><span class="trk V">V</span></td><td>V2</td><td>Humata payer-coverage expansion (tracking Q6, submission Q7)</td><td>1.4-01 tail payers</td><td>~30% of auth value</td><td>in A2/A3</td><td>Q6–Q7</td><td>Access + Vendor mgr</td></tr>
+      <tr><td><span class="trk V">V</span></td><td>V3</td><td>Vendor contract program: data-rights clauses, SLA scorecards, attribution controls, agency renegotiation</td><td>VN-02/03/04</td><td>oversight + fees</td><td>$80k + legal</td><td>Q1 renewals</td><td>Vendor mgr + Legal</td></tr>
+    </tbody></table></div>
+  <p class="note">Program totals: F $2.70M · O $1.07M · A $14.9M (incl. platform allocations and
+  vendor expansions) → <b>$18.3M</b> over 8 quarters (~$2.3M/quarter average, within the
+  approved $2.5M/quarter envelope). O-track items O8, O12, O13 are expected cash-positive within
+  two quarters of completion, before any AI launch.</p>
+
+  <!-- ============================ PLAN ============================ -->
+  <h2 id="plan">Sequenced implementation plan</h2>
+  <div class="card">
+    <div class="legend"><span><span class="sw" style="background:var(--seq)"></span>Cumulative realized net value</span>
+      <span><span class="sw" style="background:var(--s2)"></span>Cumulative investment</span></div>
+    <svg viewBox="0 0 860 290" style="width:100%" role="img" aria-label="Value crosses investment in quarter five">
+      <g font-size="11" fill="var(--muted)">
+        <text x="46" y="254" text-anchor="end">$0</text><text x="46" y="186" text-anchor="end">$16M</text>
+        <text x="46" y="118" text-anchor="end">$33M</text><text x="46" y="50" text-anchor="end">$49M</text></g>
+      <g stroke="var(--grid)"><line x1="54" x2="840" y1="250" y2="250"/><line x1="54" x2="840" y1="182" y2="182"/>
+        <line x1="54" x2="840" y1="114" y2="114"/><line x1="54" x2="840" y1="46" y2="46"/></g>
+      <g font-size="11" fill="var(--muted)" text-anchor="middle">
+        <text x="100" y="274">Q1</text><text x="205" y="274">Q2</text><text x="310" y="274">Q3</text>
+        <text x="415" y="274">Q4</text><text x="520" y="274">Q5</text><text x="625" y="274">Q6</text>
+        <text x="730" y="274">Q7</text><text x="835" y="274">Q8</text></g>
+      <path d="M100,250 L205,250 L310,242 L415,222 L520,188 L625,138 L730,79 L835,14"
+            fill="none" stroke="var(--seq)" stroke-width="2.5"/>
+      <path d="M100,242 L205,240 L310,231 L415,222 L520,212 L625,203 L730,194 L835,185"
+            fill="none" stroke="var(--s2)" stroke-width="2.5"/>
+      <text x="828" y="10" text-anchor="end" font-size="12" font-weight="650" fill="var(--ink)">$62.8M</text>
+      <text x="828" y="180" text-anchor="end" font-size="12" fill="var(--ink-2)">$18.3M</text>
+      <text x="524" y="206" font-size="11.5" fill="var(--ink-2)">crossover: Q5</text>
+    </svg>
+    <p class="note">Curve from the budget-constrained optimizer (AI value only, ramped 25/50/75/100%);
+    O-track recoveries (O8/O12/O13, several $M/yr) begin earlier and are <b>not</b> in this curve —
+    the plan is conservative by construction. One-time AR release ($38.1M) reported separately.</p>
+  </div>
+
+  <h3>Quarter-by-quarter</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Qtr</th><th>Theme</th><th>Key content</th><th>Spend</th><th>Exit run-rate</th></tr></thead>
+    <tbody>
+    <tr><td><b>Q1</b></td><td>Foundation + fast operational fixes</td><td>F1–F4 start; O1–O4, O8, O12 (filing-matrix sprint), O13 (hidden denials — 30 days), V3 renewal program. Operating model stood up (loop operator, council, hard rules).</td><td>$2.4M</td><td>—</td></tr>
+    <tr><td><b>Q2</b></td><td>Foundation lands; standards take hold</td><td>Governance stack completes; O5–O7, O9–O11, O14, O15 (engine verification), O17. Baselines captured for every Q3 launch. First O-track cash visible (O13).</td><td>$1.5M</td><td>O-track recoveries begin</td></tr>
+    <tr><td><b>Q3</b></td><td>Revenue-integrity launch wave</td><td>14 launches incl. variance coverage, contract extraction, coverage discovery, missing-charge, underpayment recovery, prevention miner, CDI prioritization. All at recommend-mode first.</td><td>$2.5M</td><td>$8.5M/yr</td></tr>
+    <tr><td><b>Q4</b></td><td>Wave 1 completes; first promotions</td><td>12 launches incl. autonomous charging, registration QA, filing sentinel, audit intake. First autonomy promotions re-price review labor.</td><td>$2.4M</td><td>$21.2M/yr</td></tr>
+    <tr><td><b>Q5</b></td><td>Predictive wave — value crosses investment</td><td>12 launches incl. denial-risk scoring, AR prioritization (adoption secured by O5), edit mining, vendor analytics.</td><td>$2.5M</td><td>$36.3M/yr</td></tr>
+    <tr><td><b>Q6</b></td><td>Clinical wave + vendor expansion</td><td>11 launches incl. clinical appeals (golden-set gated, PA sign-off permanent), status prediction, rejection auto-repair; Fathom expansion; Humata tracking expansion.</td><td>$2.5M</td><td>$53.1M/yr</td></tr>
+    <tr><td><b>Q7</b></td><td>Patient-financial wave</td><td>11 launches incl. estimate engine (on verified terms), clearance scoring, liability gate, conversational pre-registration; Humata submission expansion.</td><td>$2.5M</td><td>$62.8M/yr</td></tr>
+    <tr><td><b>Q8</b></td><td>Optimization + year-3 setup</td><td>10 launches incl. auto-posting, statement optimization, FA scoring (bias program live since Q3); backlog (15 small UCs) priced for year 3; annual re-baseline.</td><td>$2.5M</td><td><b>$69.1M/yr</b></td></tr>
+    </tbody></table></div>
+
+  <h2 id="gov">Governance, measurement &amp; caveats</h2>
+  <ul>
+    <li><b>Operating rhythm:</b> quarterly re-assessment (both instruments) → regenerated packet →
+      2-hour council with pre-read; true-up first on every agenda. The quarter-over-quarter diff is
+      the program status report.</li>
+    <li><b>Hard rules:</b> baseline before every go-live; every launch starts in recommend mode;
+      a remediation is done only when its facet/finding score moves; one benefit ledger, every
+      dollar counted once, value net of run cost; role-level findings aggregate-only.</li>
+    <li><b>Risk watchlist:</b> change capacity (10–14 go-lives/quarter is the true constraint —
+      council may stretch Phase 3 without materially changing the curve); notes-access approval
+      timing (1-quarter float held); criteria-license negotiation (blockable — fallback is
+      procedural/policy argumentation); estimate bands are wide by design and correct in public.</li>
+    <li><b>What we did not find:</b> no KILL-class blockers, no compliance emergencies beyond the
+      60-day register discipline (O10), and no case for a data-platform purchase — Clarity/Caboodle
+      plus a scoped augmentation layer passes every gate this program needs.</li>
+  </ul>
+
+  <footer>Simulation deliverable, generated from the revenue-cycle ontology stack: operations
+  field instrument (source-version 2c0952099842, 58 findings → 50 chains), 98-facet AI-readiness
+  assessment, binding-validated reconciliation with FM→pool pricing, value/cost engines, and the
+  budget-constrained roadmap optimizer. Sources and reproducibility:
+  <code>simulations/meridian-health/</code> and <code>operations-assessment/</code>. Companion
+  documents: executive-summary.html (board brief), detailed-roadmap.html (operator plan),
+  field-instrument.html (scoring tool). All estimates carry disclosed bands; the quarterly
+  true-up loop is the accuracy mechanism.</footer>
+</div></body></html>
