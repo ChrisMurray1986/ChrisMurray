@@ -1,0 +1,55 @@
+# Operations assessment field checklist — one line per failure mode.
+# Score during interviews/observation: 0 = not observed, 1 = partial/suspected,
+# 2 = clearly present (requires evidence: a named artifact, a walked process, or
+# two independent interviews). Mirrors the facet-scoring discipline.
+# Cross-reference: each OFM's detail, signals, and paired best practice live in
+# the domain files; the degraded AI-stack gates are listed in README.md.
+
+operating_model:
+  OFM-OM-01: {prompt: "No single executive owns the revenue cycle end-to-end", score: 0}
+  OFM-OM-02: {prompt: "Policies (collections, discounts, write-offs) vary by site", score: 0}
+  OFM-OM-03: {prompt: "No formal defect feedback from back end to front end", score: 0}
+  OFM-OM-04: {prompt: "No physician advisor structure with real authority; CDI/UM siloed", score: 0}
+  OFM-OM-05: {prompt: "Committees meet without decision rights, budget, or follow-through", score: 0}
+  OFM-OM-06: {prompt: "Supervisor spans >20 transactional / >12 judgment; no coaching time", score: 0}
+  OFM-OM-07: {prompt: "Centralized services without SLAs; sites run shadow staff", score: 0}
+  OFM-OM-08: {prompt: "Revenue cycle waits in a general IT queue; config changes take months", score: 0}
+process_improvement:
+  OFM-PI-01: {prompt: "All capacity on backlog; prevention perpetually deferred", score: 0}
+  OFM-PI-02: {prompt: "No standard work; outcomes vary by individual", score: 0}
+  OFM-PI-03: {prompt: "Dashboards green while operations struggle; definitions drift", score: 0}
+  OFM-PI-04: {prompt: "Root cause analysis stops at 'payer' or 'user error'", score: 0}
+  OFM-PI-05: {prompt: "Improvements decay; no control plans or re-audits", score: 0}
+  OFM-PI-06: {prompt: "Productivity measured in touches, not resolutions", score: 0}
+  OFM-PI-07: {prompt: "QA inspects final output only; feedback reaches source late or never", score: 0}
+workforce:
+  OFM-WF-01: {prompt: "Turnover > ~25% transactional; standing overtime; vacancy spiral", score: 0}
+  OFM-WF-02: {prompt: "Onboarding is shadowing; no certification before production", score: 0}
+  OFM-WF-03: {prompt: "No career ladder; mastery has no rungs; best performers exit the work", score: 0}
+  OFM-WF-04: {prompt: "Volume standards without quality weighting (or no standards)", score: 0}
+  OFM-WF-05: {prompt: "Single-person knowledge dependencies on critical processes", score: 0}
+  OFM-WF-06: {prompt: "Incentives reward cash/volume in ways that distort write-offs or picking", score: 0}
+  OFM-WF-07: {prompt: "Remote work without instrumentation, coaching rhythm, or QA parity", score: 0}
+  OFM-WF-08: {prompt: "Automation framed/rumored as layoffs; experts disengaging or leaving", score: 0}
+enabling_technology:
+  OFM-ET-01: {prompt: "EHR workqueues/edits at install defaults; ownerless queue sprawl", score: 0}
+  OFM-ET-02: {prompt: "Overlapping bolt-ons with contradictory data and double fees", score: 0}
+  OFM-ET-03: {prompt: "Versions behind; licensed features unused; upgrades feared", score: 0}
+  OFM-ET-04: {prompt: "Unregistered/unmonitored bots; silent failures discovered downstream", score: 0}
+  OFM-ET-05: {prompt: "Patient-facing agents lack integrated account context (CTI/CRM gap)", score: 0}
+  OFM-ET-06: {prompt: "Patient-facing tech live with low adoption and no adoption owner", score: 0}
+  OFM-ET-07: {prompt: "Undocumented point-to-point interfaces; single-engineer dependency", score: 0}
+  OFM-ET-08: {prompt: "Critical processes run on spreadsheets/Access outside governance", score: 0}
+vendor_outsourcing:
+  OFM-VN-01: {prompt: "Vendor footprint grew by accretion; no sourcing strategy; scope overlaps", score: 0}
+  OFM-VN-02: {prompt: "Auto-renewals; SLAs unenforced; rates stale vs volume", score: 0}
+  OFM-VN-03: {prompt: "No data/telemetry/recording rights; oversight via vendor-authored decks", score: 0}
+  OFM-VN-04: {prompt: "Contingency attribution disputed; no control groups; double-claimed dollars", score: 0}
+  OFM-VN-05: {prompt: "No retained SME/QA for outsourced functions; insourcing impossible", score: 0}
+  OFM-VN-06: {prompt: "Global delivery without unified QA, SOP parity, or attrition visibility", score: 0}
+performance_governance:
+  OFM-FG-01: {prompt: "RCM budgeted as pure cost; cuts made without yield modeling", score: 0}
+  OFM-FG-02: {prompt: "Multiple definitions of the same KPI in circulation", score: 0}
+  OFM-FG-03: {prompt: "Month-end close dominates; reserves opaque; analysts consumed by close", score: 0}
+  OFM-FG-04: {prompt: "Benchmarks used without definition/case-mix alignment", score: 0}
+  OFM-FG-05: {prompt: "No standing investment roadmap; episodic unquantified capital asks", score: 0}
