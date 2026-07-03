@@ -74,7 +74,7 @@ UC-07-03,Payments,DEFER,yes,governance 1->3; golden_sets (absent),205677,30852,v
 UC-07-06,Payments,DEFER,,recoupment_law_matrix (absent); governance 1->2; legal 1->2; takeback_linkage (partial),400000,0,build_rules,123200,31927,225040,366558,4,1.49
 UC-08-01,Denials & Appeals,DEFER,yes,governance 1->3; denial_taxonomy (partial),332000,49800,vendor,77400,106223,443455,220072,5,0.16
 UC-08-02,Denials & Appeals,DEFER,,governance 1->3; appeal_outcomes (absent); data 3->4; workflow 2->3,433600,0,build_ml,184800,70401,429849,356762,7,0.41
-UC-08-03,Denials & Appeals,DEFER,,policy_library (absent); citation_harness (absent); workflow 2->3; governance 1->2; legal 1->2; hitl_capacity (partial); appeal_process (partial),1084000,0,api,447000,217128,1170982,852595,7,0.3
+UC-08-03,Denials & Appeals,DEFER,,policy_library (absent); citation_harness (absent); appeal_outcomes (absent); workflow 2->3; governance 1->2; legal 1->2; hitl_capacity (partial); appeal_process (partial); criteria_license (partial); notes_access (partial),1084000,0,api,447000,217128,1170982,852595,7,0.3
 UC-08-06,Denials & Appeals,DEFER,,appeal_outcomes (absent); governance 1->2,140000,0,build_rules,143200,37800,262661,100685,17,-0.25
 UC-09-01,AR Management,DEFER,,governance 1->3; ranked_list_adoption (absent); data 3->4; workflow 2->3; org 2->3; touch_logging (partial),717584,0,vendor,77400,247007,899327,464139,2,0.12
 UC-09-02,AR Management,DEFER,yes,fabric (absent); workflow 2->3; governance 1->2; legal 1->2; claim_status_edi (partial); portal_automation_permitted (partial),754192,113129,build_rpa,252200,205991,959180,532604,7,0.22

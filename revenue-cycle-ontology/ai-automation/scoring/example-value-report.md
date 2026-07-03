@@ -36,9 +36,9 @@ Overlapping attribution — a use case with three gaps appears under all three; 
 | data 3->4 | 30 | $16.2M |
 | governance 1->3 | 34 | $15.3M |
 | legal 1->2 | 32 | $11.2M |
+| notes_access | 8 | $5.1M |
 | citation_harness | 7 | $4.4M |
 | contract_engine_loaded | 4 | $4.0M |
-| notes_access | 7 | $4.0M |
 | portal_automation_permitted | 7 | $3.9M |
 | connectivity 2->3 | 9 | $3.9M |
 | denial_labels | 6 | $3.8M |

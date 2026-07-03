@@ -30,10 +30,10 @@ Blocking items ranked by number of use cases they hold back (sole-blocker count 
 - **dimension data>=4** — blocks 30 use case(s) (0 solely)
 - **dimension connectivity>=3** — blocks 9 use case(s) (0 solely)
 - **facet fabric** — blocks 9 use case(s) (0 solely)
+- **facet notes_access** — blocks 8 use case(s) (0 solely)
 - **facet portal_automation_permitted** — blocks 7 use case(s) (0 solely)
 - **facet citation_harness** — blocks 7 use case(s) (0 solely)
 - **dimension integration>=4** — blocks 7 use case(s) (0 solely)
-- **facet notes_access** — blocks 7 use case(s) (0 solely)
 - **dimension legal>=3** — blocks 7 use case(s) (0 solely)
 - **facet denial_labels** — blocks 6 use case(s) (0 solely)
 - **facet contract_engine_loaded** — blocks 4 use case(s) (0 solely)
@@ -118,7 +118,7 @@ Blocking items ranked by number of use cases they hold back (sole-blocker count 
 | UC-07-06 | Recoupment validation | DEFER | recoupment_law_matrix (absent); governance 1->2; legal 1->2; takeback_linkage (partial) |  | Linkage repair in posting rules |
 | UC-08-01 | Denial classification & attribution | DEFER | governance 1->3; denial_taxonomy (partial) | yes | Paper-denial capture gap = silent coverage hole |
 | UC-08-02 | Overturn/priority scoring | DEFER | governance 1->3; appeal_outcomes (absent); data 3->4; workflow 2->3 |  | Interim: rules-based deadline x dollars prioritization |
-| UC-08-03 | Appeal letter/packet generation | DEFER | policy_library (absent); citation_harness (absent); workflow 2->3; governance 1->2; legal 1->2; hitl_capacity (partial); appeal_process (partial) |  | LLM citing policies it can't retrieve is FM-AI-02 by design |
+| UC-08-03 | Appeal letter/packet generation | DEFER | policy_library (absent); citation_harness (absent); appeal_outcomes (absent); workflow 2->3; governance 1->2; legal 1->2; hitl_capacity (partial); appeal_process (partial); criteria_license (partial); notes_access (partial) |  | LLM citing policies it can't retrieve is FM-AI-02 by design; clinical variant needs criteria rights, chart corpus, and outcome labels (see 12-clinical-appeals-engineering.md) |
 | UC-08-06 | Appeal outcome verification | DEFER | appeal_outcomes (absent); governance 1->2 |  | Low bar once 08-01/02 exist |
 | UC-09-01 | Expected-value AR prioritization | DEFER | governance 1->3; ranked_list_adoption (absent); data 3->4; workflow 2->3; org 2->3; touch_logging (partial) |  | Adoption, not the model, is the usual blocker |
 | UC-09-02 | Claim status bot fleet | DEFER | fabric (absent); workflow 2->3; governance 1->2; legal 1->2; claim_status_edi (partial); portal_automation_permitted (partial) | yes | A4 gated on fleet observability |
