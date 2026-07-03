@@ -87,7 +87,7 @@ its risk tier's ceiling**, regardless of model performance. Details and controls
 | `09-value-model.md` | Dynamic value model: 8 value streams, shared value pools with double-count capping, disposition-gated ramps, measurement designs and benefit-ledger governance |
 | `10-cost-model.md` | Cost model: three cost layers (platform/build/run), sourcing options (vendor, rules/RPA, ML, frontier API, fine-tune, SLM) with TCO-based decision procedure, SLM break-even math, payer-connectivity pricing, cost governance |
 | `11-investment-loop-playbook.md` | Operating playbook for the full stack: roles, quarterly cadence, eight plays (stand-up, re-assessment, council meeting, remediation, launch, autonomy promotion, true-up, kills/renewals), consolidated decision rules, loop failure modes |
-| `scoring/` | Runnable toolkit: feasibility scoring (`score.py`) and value modeling (`value.py`) with templates, machine-readable drivers, and example reports |
+| `scoring/` | Runnable toolkit: feasibility (`score.py`), value (`value.py`), cost (`cost.py`), quarterly packets (`packet.py`), and a self-contained browser app (`rcm-investment-app.html`) with input UI, scored portfolio, and budget-optimized roadmap |
 
 ## Design principles encoded in this ontology
 

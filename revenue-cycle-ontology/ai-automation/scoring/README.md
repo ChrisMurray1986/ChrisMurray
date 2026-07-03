@@ -24,6 +24,8 @@ remediations that unlock the most portfolio value.
 | `example-cost-report.md/.html` | Cost-model example (with ROI join) for the same fictional org. |
 | `packet.py` | Quarterly investment-packet generator — runs all three engines and writes a packet directory (reports, combined portfolio.csv, packet.json, index.md with headline numbers, quarter-over-quarter deltas via `--prev`, and the pre-filled council agenda). See `../11-investment-loop-playbook.md`. |
 | `example-packet/` | A generated example packet. |
+| `rcm-investment-app.html` | **Self-contained browser app**: enter org financials + the readiness assessment, get the scored portfolio and a budget-optimized quarterly roadmap. No server, nothing leaves the browser. Built from the driver YAMLs by `build_app.py` — rebuild after any driver change. |
+| `app-template.html`, `build_app.py` | App source template (JS ports of the three engines + roadmap optimizer) and its build script. |
 
 ## How to run
 

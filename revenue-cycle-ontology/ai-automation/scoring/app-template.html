@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RCM AI Investment Planner</title>
+<style>
+  :root {
+    --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,0.10);
+    --seq:#2a78d6; --s2:#1baf7a;
+    --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+    --good-ink:#006300; --warning-ink:#7a5200; --serious-ink:#9c3f1d; --critical-ink:#d03b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --grid:#2c2c2a;
+      --baseline:#383835; --ring:rgba(255,255,255,0.10); --seq:#3987e5; --s2:#199e70;
+      --good-ink:#0ca30c; --warning-ink:#fab219; --serious-ink:#ec835a; --critical-ink:#d03b3b; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+         font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:1160px; margin:0 auto; padding:24px 20px 80px; }
+  h1 { font-size:21px; margin:0; } h2 { font-size:16px; margin:30px 0 10px; }
+  h3 { font-size:13.5px; margin:18px 0 8px; color:var(--ink-2); }
+  .sub { color:var(--ink-2); margin:2px 0 18px; }
+  .card { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:16px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:820px){ .row2{grid-template-columns:1fr;} }
+  nav { position:sticky; top:0; z-index:9; background:var(--page); padding:10px 0;
+        display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--grid); }
+  nav button { border:1px solid var(--ring); background:var(--surface); color:var(--ink-2);
+        border-radius:999px; padding:7px 16px; font:inherit; font-weight:600; cursor:pointer; }
+  nav button[aria-selected="true"] { color:var(--ink); border-color:var(--baseline);
+        box-shadow:inset 0 0 0 1px var(--baseline); }
+  nav .spacer { margin-left:auto; display:flex; gap:8px; }
+  section { display:none; } section.active { display:block; }
+  label { display:block; font-size:12.5px; color:var(--ink-2); margin:10px 0 3px; }
+  input[type=text], input[type=number], select {
+    width:100%; background:var(--surface); color:var(--ink); border:1px solid var(--ring);
+    border-radius:8px; padding:7px 10px; font:inherit; }
+  .grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:0 16px; }
+  .hint { color:var(--muted); font-size:11.5px; margin-top:2px; }
+  details { margin-top:12px; } summary { cursor:pointer; color:var(--ink-2); font-weight:600; font-size:13px; }
+  .btn { border:1px solid var(--ring); background:var(--surface); color:var(--ink);
+         border-radius:8px; padding:7px 14px; font:inherit; font-weight:600; cursor:pointer; }
+  .btn.primary { background:var(--seq); border-color:var(--seq); color:#fff; }
+  .btn.small { padding:3px 10px; font-size:12px; font-weight:500; }
+  .toolbar { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0; align-items:center; }
+  /* facet assessment */
+  .dimhead { display:flex; align-items:center; gap:10px; margin:22px 0 6px; }
+  .dimhead h3 { margin:0; text-transform:capitalize; }
+  .facet { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
+           padding:7px 8px; border-bottom:1px solid var(--grid); border-radius:6px; }
+  .facet:hover { background:var(--grid); }
+  .facet .p { font-size:12.5px; color:var(--ink-2); }
+  .facet .p b { color:var(--ink); font-weight:600; font-size:12.5px; }
+  .seg { display:flex; gap:4px; }
+  .seg button { border:1px solid var(--ring); background:var(--surface); color:var(--muted);
+        border-radius:6px; padding:3px 9px; font:inherit; font-size:12px; cursor:pointer; white-space:nowrap; }
+  .seg button[aria-pressed="true"] { color:var(--ink); font-weight:650; border-color:var(--baseline);
+        box-shadow:inset 0 0 0 1px var(--baseline); }
+  .seg button.blk[aria-pressed="true"] { color:var(--critical-ink); border-color:var(--critical); box-shadow:inset 0 0 0 1px var(--critical); }
+  .dimscore { display:flex; gap:4px; align-items:center; }
+  /* results */
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+  .tile { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:12px 14px; border-top:3px solid var(--baseline); }
+  .tile .v { font-size:22px; font-weight:650; } .tile .l { color:var(--ink-2); font-size:12.5px; }
+  .bars .brow { display:grid; grid-template-columns:280px 1fr; gap:10px; align-items:center; padding:3px 0; border-radius:6px; }
+  .bars .brow:hover { background:var(--grid); }
+  .bars .lbl { font-size:12.5px; color:var(--ink-2); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bars .track { position:relative; height:14px; }
+  .bars .bar { position:absolute; inset:0 auto 0 0; background:var(--seq); border-radius:0 4px 4px 0; min-width:2px; }
+  .bars .val { position:absolute; top:-1px; font-size:12px; color:var(--ink-2); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th { text-align:left; color:var(--muted); font-weight:600; font-size:12px; border-bottom:1px solid var(--baseline); padding:6px 10px; white-space:nowrap; }
+  td { border-bottom:1px solid var(--grid); padding:6px 10px; vertical-align:top; font-variant-numeric:tabular-nums; }
+  tr:hover td { background:var(--grid); }
+  .tblwrap { overflow-x:auto; }
+  .badge { display:inline-flex; gap:5px; align-items:center; font-weight:650; font-size:12px; white-space:nowrap; }
+  .badge .dot { width:9px; height:9px; border-radius:3px; }
+  .b-GO .dot{background:var(--good);} .b-GO{color:var(--good-ink);}
+  .b-CONDITIONAL .dot{background:var(--warning);} .b-CONDITIONAL{color:var(--warning-ink);}
+  .b-DEFER .dot{background:var(--serious);} .b-DEFER{color:var(--serious-ink);}
+  .b-KILL .dot{background:var(--critical);} .b-KILL{color:var(--critical-ink);}
+  .pos{color:var(--good-ink);font-weight:650;} .neg{color:var(--critical-ink);font-weight:650;}
+  /* roadmap */
+  .q { border-left:3px solid var(--seq); padding:2px 0 2px 14px; margin:14px 0; }
+  .q h3 { margin:0 0 4px; color:var(--ink); }
+  .q .meta { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .act { display:flex; gap:8px; align-items:baseline; padding:3px 0; font-size:13px; }
+  .act .tag { font-size:11px; font-weight:700; border-radius:5px; padding:1px 7px; white-space:nowrap; }
+  .tag.rem { background:var(--grid); color:var(--ink-2); }
+  .tag.launch { background:var(--seq); color:#fff; }
+  .act .cost { margin-left:auto; color:var(--ink-2); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .chart { width:100%; }
+  .legend { display:flex; gap:16px; font-size:12.5px; color:var(--ink-2); margin:4px 0 8px; }
+  .legend .sw { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; }
+  footer { color:var(--muted); font-size:12px; margin-top:44px; }
+  .warn { color:var(--serious-ink); font-size:12.5px; }
+</style></head>
+<body>
+<div class="wrap">
+  <h1>RCM AI Investment Planner</h1>
+  <p class="sub">Enter your organization's financials and readiness facts; get the scored use-case
+  portfolio and a budget-optimized, quarter-by-quarter implementation roadmap. Runs entirely in
+  this page — nothing leaves your browser. Companion to the ontology's scoring toolkit
+  (feasibility × value × cost, files 07–11).</p>
+
+  <nav id="nav">
+    <button data-tab="org" aria-selected="true">1 · Organization</button>
+    <button data-tab="assess">2 · Readiness assessment</button>
+    <button data-tab="results">3 · Portfolio</button>
+    <button data-tab="roadmap">4 · Roadmap</button>
+    <span class="spacer">
+      <button class="btn small" id="loadExample">Load example</button>
+      <button class="btn small" id="saveState">Save…</button>
+      <button class="btn small" id="loadState">Open…</button>
+      <button class="btn small" id="exportYaml">Export YAML for CLI</button>
+      <input type="file" id="fileIn" accept=".json" hidden>
+    </span>
+  </nav>
+
+  <section id="tab-org" class="active">
+    <h2>Organization profile</h2>
+    <div class="card">
+      <div class="grid3" id="orgFields"></div>
+      <details><summary>Advanced rates &amp; labor mix (defaults are industry-plausible — replace with your actuals)</summary>
+        <div class="grid3" id="advFields"></div>
+        <h3>RCM labor cost mix (must sum to 1.00)</h3>
+        <div class="grid3" id="laborFields"></div>
+      </details>
+    </div>
+    <h2>Planning parameters</h2>
+    <div class="card grid3" id="planFields"></div>
+  </section>
+
+  <section id="tab-assess">
+    <h2>Readiness assessment</h2>
+    <p class="sub">Score what is operational <em>today</em> — when torn between two levels, take the
+    lower. A facet is "Ready" only if you could demo it this week; a vendor promise is "Partial".
+    <em>Blocked</em> = legally/contractually prohibited (kills dependent use cases).</p>
+    <div class="toolbar">
+      <input type="text" id="facetSearch" placeholder="Filter facets…" style="max-width:280px">
+      <span class="hint" id="assessProgress"></span>
+    </div>
+    <div id="assessBody"></div>
+  </section>
+
+  <section id="tab-results">
+    <h2>Portfolio results</h2>
+    <div id="resultsBody"><p class="sub">Complete the organization profile and assessment, then results appear here.</p></div>
+  </section>
+
+  <section id="tab-roadmap">
+    <h2>Optimized roadmap</h2>
+    <p class="sub">A greedy budget-constrained scheduler: each quarter it funds the gate remediations
+    that unlock the most net value per dollar, then launches every use case whose gates are clear,
+    ranked by net value per build dollar. Deterministic and transparent — every scheduled item shows
+    its reason. Assumed remediation costs/durations are listed under the roadmap.</p>
+    <div id="roadmapBody"></div>
+  </section>
+
+  <footer>Generated from the revenue-cycle ontology's driver files (gate-vectors, value-drivers,
+  cost-drivers) — see <code>revenue-cycle-ontology/ai-automation/</code>. Engines are JavaScript
+  ports of score.py / value.py / cost.py; the YAML drivers remain the source of truth (rebuild via
+  <code>build_app.py</code>). Estimates use shared-pool capping, disposition-gated ramps, and
+  TCO-based sourcing decisions; ranges and governance rules per files 07–11.</footer>
+</div>
+
+<script>
+const DRIVERS = __DRIVERS__;
+const DISPOS = ["GO","CONDITIONAL","DEFER","KILL"];
+const GLYPH = {GO:"✓",CONDITIONAL:"◑",DEFER:"■",KILL:"✕"};
+const DIM_ORDER = ["data","integration","connectivity","workflow","org","governance","economics","legal"];
+const DIM_KEYS = {D:"data",I:"integration",C:"connectivity",W:"workflow",O:"org",V:"governance",E:"economics",L:"legal"};
+const fmt = x => Math.abs(x)>=1e9 ? "$"+(x/1e9).toFixed(2)+"B" : Math.abs(x)>=1e6 ? "$"+(x/1e6).toFixed(1)+"M" : "$"+Math.round(x/1e3)+"k";
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const badge = d => `<span class="badge b-${d}"><span class="dot"></span>${GLYPH[d]} ${d}</span>`;
+
+/* ---------------- state ---------------- */
+const S = {
+  org: { name:"", npr:1000000000, wacc:0.06 },
+  rates: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.rates)),
+  costs: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.costs)),
+  labor: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.labor_function_shares)),
+  model: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.model)),
+  dims: Object.fromEntries(DIM_ORDER.map(d=>[d,0])),
+  facets: Object.fromEntries(Object.keys(DRIVERS.facetCatalog).map(f=>[f,0])),
+  plan: { budgetQ: 2000000, horizonQ: 8 },
+};
+
+/* ---------------- engine: feasibility (port of score.py) ---------------- */
+function scoreUC(ucId){
+  const uc = DRIVERS.useCases[ucId];
+  const blocked=[], structural=[], conditional=[];
+  for (const [letter,req] of Object.entries(uc.vector)){
+    if (req===null) continue;
+    const dim = DIM_KEYS[letter], have = S.dims[dim]||0;
+    if (have>=req) continue;
+    const g = {desc:`${dim} ${have}->${req}`, dim, key:`dimension ${dim}>=${req}`, kind:"dim", req};
+    (req-have>=2 || (have<=1 && req>=3)) ? structural.push(g) : conditional.push(g);
+  }
+  for (const fid of uc.facets||[]){
+    const v = S.facets[fid], fdim = DRIVERS.facetCatalog[fid].dim;
+    if (v==="blocked") blocked.push({desc:`${fid} [BLOCKED]`,dim:fdim,key:`facet ${fid}`,kind:"facet",fid});
+    else if (v===0) structural.push({desc:`${fid} (absent)`,dim:fdim,key:`facet ${fid}`,kind:"facet",fid});
+    else if (v===1) conditional.push({desc:`${fid} (partial)`,dim:fdim,key:`facet ${fid}`,kind:"facet",fid});
+  }
+  const dispo = blocked.length?"KILL":structural.length?"DEFER":conditional.length?"CONDITIONAL":"GO";
+  const gaps = blocked.concat(structural,conditional);
+  const dataGap = gaps.some(g=>g.dim==="data");
+  return {dispo,gaps,downgrade:(dispo==="CONDITIONAL"||dispo==="DEFER")&&!dataGap&&!blocked.length};
+}
+const scoreAll = () => Object.fromEntries(Object.keys(DRIVERS.useCases).map(id=>[id,scoreUC(id)]));
+
+/* ---------------- engine: value (port of value.py) ---------------- */
+function profileObj(){
+  return { financials:{npr:S.org.npr,wacc:S.org.wacc}, rates:S.rates, costs:S.costs,
+           labor_function_shares:S.labor, model:S.model };
+}
+function valueCompute(dispos){
+  const p = profileObj(), r = p.rates, c = p.costs, npr = p.financials.npr, m = p.model;
+  const laborTotal = npr*c.cost_to_collect_pct*c.labor_share_of_ctc;
+  const A = {
+    denial_prevention: npr*r.denial_writeoff_pct*r.denial_preventable_share,
+    denial_recovery: npr*r.denial_writeoff_pct*(1-r.denial_preventable_share)*r.denial_recovery_headroom,
+    underpayment: npr*r.underpayment_pct*r.underpayment_detectable,
+    charge_capture: npr*r.charge_leakage_pct, doc_yield: npr*r.doc_yield_pct,
+    coverage_conversion: npr*r.coverage_convertible_pct, contract_yield: npr*r.contract_yield_pct,
+    pos_yield: npr*r.pos_upside_pct, bad_debt_reduction: npr*r.bad_debt_pct*r.bad_debt_addressable,
+    cost_external: npr*c.external_spend_pct, audit_risk: npr*r.audit_exposure_pct*r.audit_mitigable,
+  };
+  for (const [fn,sh] of Object.entries(S.labor)) A["labor_"+fn] = laborTotal*sh;
+  const dayRec = npr/365*p.financials.wacc, dayOne = npr/365;
+  const claims = {};
+  for (const [uc,spec] of Object.entries(DRIVERS.valueUCs))
+    for (const d of spec.draws) claims[d.pool]=(claims[d.pool]||0)+(d.pool==="ar_days"?d.days:d.share);
+  const scale = {};
+  for (const [pool,cl] of Object.entries(claims)){
+    const limit = pool==="ar_days" ? m.max_reducible_days*m.pool_max_extraction : m.pool_max_extraction;
+    scale[pool] = cl>0?Math.min(1,limit/cl):1;
+  }
+  const res = {};
+  for (const [uc,spec] of Object.entries(DRIVERS.valueUCs)){
+    let base=0,risk=0,one=0;
+    for (const d of spec.draws){
+      const stream = DRIVERS.valuePools[d.pool].stream;
+      if (d.pool==="ar_days"){ base+=d.days*scale[d.pool]*dayRec; one+=d.days*scale[d.pool]*dayOne; }
+      else { const v = A[d.pool]*d.share*scale[d.pool]; stream==="VS-8"?risk+=v:base+=v; }
+    }
+    const dispo = dispos[uc]?.dispo||"UNASSESSED";
+    const [y1f,y2f] = m.ramp[dispo]||m.ramp.UNASSESSED;
+    const y1 = dispo==="DEFER"&&dispos[uc]?.downgrade ? Math.max(y1f,m.downgrade_y1_floor) : y1f;
+    res[uc] = dispo==="KILL" ? {base:0,risk:0,one:0,y1:0,y2:0}
+      : {base,risk,one,y1:base*y1,y2:base*y2f};
+  }
+  return res;
+}
+
+/* ---------------- engine: cost (port of cost.py) ---------------- */
+function resolveVolumes(){
+  const vols={}, pend={...DRIVERS.volumes};
+  for (let i=0;i<10 && Object.keys(pend).length;i++)
+    for (const [k,d] of Object.entries(pend)){
+      if ("flat" in d){vols[k]=d.flat; delete pend[k];}
+      else if ("npr_per_unit" in d){vols[k]=S.org.npr/d.npr_per_unit; delete pend[k];}
+      else if (d.of in vols){vols[k]=vols[d.of]*d.mult; delete pend[k];}
+    }
+  return vols;
+}
+function costCompute(dispos, valueRes){
+  const R = DRIVERS.costRates, W = DRIVERS.workloads, F = DRIVERS.slmFamilies;
+  const vols = resolveVolumes();
+  const famMembers = {};
+  for (const [uc,s] of Object.entries(DRIVERS.costUCs)){
+    const wl=W[s.workload]; if (wl.family && wl.options.includes("slm"))
+      (famMembers[wl.family]=famMembers[wl.family]||[]).push(uc);
+  }
+  const active = Object.keys(DRIVERS.costUCs).filter(uc=>(dispos[uc]?.dispo||"UNASSESSED")!=="KILL");
+  // platform allocation
+  const allocB={},allocR={},assetDeps={};
+  for (const [name,a] of Object.entries(DRIVERS.platformAssets)){
+    const deps = active.filter(uc=>{
+      const s=DRIVERS.costUCs[uc];
+      return a.tags.includes(s.workload) || (s.flags||[]).some(f=>a.tags.includes(f));
+    });
+    assetDeps[name]=deps.length;
+    for (const uc of deps){ allocB[uc]=(allocB[uc]||0)+a.build/deps.length; allocR[uc]=(allocR[uc]||0)+a.run_yr/deps.length; }
+  }
+  const platBuild = Object.entries(DRIVERS.platformAssets).filter(([n])=>assetDeps[n]).reduce((s,[,a])=>s+a.build,0);
+  const platRun = Object.entries(DRIVERS.platformAssets).filter(([n])=>assetDeps[n]).reduce((s,[,a])=>s+a.run_yr,0);
+  const Y = R.tco_years, rows=[];
+  for (const uc of active){
+    const s = DRIVERS.costUCs[uc], wl = W[s.workload];
+    const vol = vols[s.vol]*(s.mult??1);
+    const tokens = s.tokens??wl.tokens, hs = s.hitl_share??wl.hitl_share, hm = s.hitl_min??wl.hitl_min;
+    const baseBuild = R.tier_weeks[s.tier]*R.eng_week_rate + (s.integ??2)*R.per_integration + R.validation[s.tier];
+    const hitl = vol*hs*hm/60*R.hitl_hourly;
+    let pB=0,pF=0,pV=0;
+    if (s.payer==="edi"||s.payer==="both"){ pB+=R.payer.n_payers*R.payer.edi_enrollment; pV+=vol*R.payer.edi_per_txn; }
+    if (s.payer==="portal"||s.payer==="both"){ pF+=R.payer.n_payers*R.payer.portal_bot_per_payer_yr; }
+    const opts={};
+    for (const opt of wl.options){
+      if (opt==="vendor" && !("vendor_txn" in s)) continue;
+      let build = baseBuild*R.option_build_mult[opt]+pB;
+      let fixed = pF+R.maintenance_pct[opt]*build, vr = hitl+pV;
+      if (opt==="vendor") vr+=vol*s.vendor_txn;
+      else if (opt==="api") vr+=vol*tokens/1e6*R.token_price_per_m.api;
+      else if (opt==="finetune"){ build+=R.finetune_fixed; fixed+=R.finetune_annual_retune; vr+=vol*tokens/1e6*R.token_price_per_m.finetune; }
+      else if (opt==="slm"){ const n=Math.max(1,(famMembers[wl.family]||[]).length);
+        build+=F[wl.family].adapt_cost/n; fixed+=F[wl.family].hosting_yr/n; vr+=vol*tokens/1e6*R.token_price_per_m.slm; }
+      else if (opt==="build_ml"){ fixed+=R.ml_retrain_pct*build; vr+=vol*R.ml_per_prediction; }
+      let tco = build+Y*(fixed+vr);
+      if (opt==="vendor") tco+=R.vendor_switching_pct*vol*s.vendor_txn;
+      opts[opt]={build,fixed,vr,run:fixed+vr,tco};
+    }
+    const ranked = Object.entries(opts).sort((a,b)=>a[1].tco-b[1].tco);
+    let [rec,rc] = ranked[0], override=null;
+    if (s.diff && rec==="vendor" && ranked.length>1){
+      const nb = ranked.slice(1).find(([o])=>o!=="vendor");
+      if (nb && rc.tco>=(1-R.differentiator_threshold)*nb[1].tco){ [rec,rc]=nb; override="differentiator"; }
+    }
+    const v = valueRes[uc]||{base:0};
+    const runTotal = rc.run+(allocR[uc]||0), buildTotal = rc.build+(allocB[uc]||0);
+    rows.push({ id:uc, domain:DRIVERS.domains[uc.split("-")[1]], option:rec, override,
+      build:rc.build, run:rc.run, platB:allocB[uc]||0, platR:allocR[uc]||0,
+      tcoAlloc: rc.tco+(allocB[uc]||0)+Y*(allocR[uc]||0),
+      value:v.base, net:v.base-runTotal, buildTotal,
+      payback: v.base-runTotal>0 ? buildTotal/(v.base-runTotal)*12 : null });
+  }
+  return {rows, platBuild, platRun};
+}
+
+/* ---------------- optimizer: roadmap ---------------- */
+const REMED = {
+  facetCost:{data:120e3,integration:150e3,connectivity:60e3,workflow:60e3,org:40e3,governance:120e3,legal:30e3},
+  facetDur:{data:2,integration:2,connectivity:1,workflow:1,org:1,governance:2,legal:1},
+  dimCostPerLevel:{data:300e3,integration:250e3,connectivity:150e3,workflow:120e3,org:80e3,governance:200e3,legal:60e3,economics:40e3},
+  dimDur:{data:2,integration:2,governance:2,connectivity:1,workflow:1,org:1,legal:1,economics:1},
+  rampByAge:[0.25,0.5,0.75,1.0],
+};
+function optimizeRoadmap(costRows){
+  const netBy = Object.fromEntries(costRows.map(r=>[r.id,r]));
+  const simDims={...S.dims}, simFacets={...S.facets};
+  const inProg=[], live={}, quarters=[];
+  const H=S.plan.horizonQ, B=S.plan.budgetQ;
+  let cumSpend=0, cumValue=0;
+  const scoreSim = ucId => {   // scoreUC against sim state
+    const saveD=S.dims, saveF=S.facets; S.dims=simDims; S.facets=simFacets;
+    const r=scoreUC(ucId); S.dims=saveD; S.facets=saveF; return r;
+  };
+  for (let q=1;q<=H;q++){
+    // complete remediations
+    for (const p of inProg.filter(p=>p.done===q)){
+      if (p.kind==="facet") simFacets[p.fid]=2;
+      else simDims[p.dim]=Math.max(simDims[p.dim],p.level);
+    }
+    const acts=[], scored={}, spendCap=B; let spend=0;
+    for (const uc of Object.keys(DRIVERS.useCases)) scored[uc]=scoreSim(uc);
+    // candidates
+    const cands=[];
+    const gapUnlock={};   // gap key -> {net, ucs, gap}
+    for (const [uc,sc] of Object.entries(scored)){
+      if (live[uc]||sc.dispo==="KILL"||!netBy[uc]) continue;
+      const structGaps = sc.gaps.filter(g=>g.kind==="dim"||simFacets[g.fid]===0);
+      if (!structGaps.length){
+        const partials = sc.gaps.filter(g=>g.kind==="facet"&&simFacets[g.fid]===1);
+        const cost = netBy[uc].buildTotal + partials.reduce((s,g)=>s+REMED.facetCost[g.dim]/2,0);
+        if (netBy[uc].net>0)
+          cands.push({type:"launch",uc,cost,score:netBy[uc].net/cost,partials,
+            why:`net ${fmt(netBy[uc].net)}/yr, ${netBy[uc].option}`});
+      } else {
+        for (const g of structGaps){
+          const key = g.kind==="facet"?`facet:${g.fid}`:`dim:${g.dim}:${g.req}`;
+          const e = gapUnlock[key]=gapUnlock[key]||{net:0,n:0,g};
+          e.net+=Math.max(0,netBy[uc].net); e.n++;
+        }
+      }
+    }
+    for (const [key,e] of Object.entries(gapUnlock)){
+      if (inProg.some(p=>p.key===key&&p.done>q)) continue;
+      let cost,dur,label;
+      if (e.g.kind==="facet"){
+        if (simFacets[e.g.fid]==="blocked") continue;
+        cost=REMED.facetCost[e.g.dim]*(simFacets[e.g.fid]===1?0.5:1); dur=REMED.facetDur[e.g.dim];
+        label=`Remediate ${e.g.fid}`;
+      } else {
+        const lift=e.g.req-simDims[e.g.dim]; if (lift<=0) continue;
+        cost=REMED.dimCostPerLevel[e.g.dim]*lift; dur=REMED.dimDur[e.g.dim];
+        label=`Raise ${e.g.dim} maturity to ${e.g.req}`;
+      }
+      cands.push({type:"rem",key,cost,dur,label,
+        score:0.5*e.net/Math.max(cost,1), why:`unlocks ${e.n} UCs (${fmt(e.net)}/yr held)`,g:e.g});
+    }
+    cands.sort((a,b)=>b.score-a.score);
+    for (const c of cands){
+      if (spend+c.cost>spendCap) continue;
+      spend+=c.cost;
+      if (c.type==="launch"){
+        live[c.uc]={q}; for (const g of c.partials) simFacets[g.fid]=2;
+        acts.push({kind:"launch",label:`Launch ${c.uc} — ${DRIVERS.useCases[c.uc].name}`,cost:c.cost,why:c.why});
+      } else {
+        inProg.push({key:c.key,done:q+c.dur,kind:c.g.kind,fid:c.g.fid,dim:c.g.dim,level:c.g.req});
+        acts.push({kind:"rem",label:c.label,cost:c.cost,why:`${c.why}; ready Q${q+c.dur}`});
+      }
+    }
+    let qValue=0;
+    for (const [uc,l] of Object.entries(live)){
+      const age=q-l.q, ramp=REMED.rampByAge[Math.min(age,REMED.rampByAge.length-1)];
+      qValue += netBy[uc].net/4*ramp;
+    }
+    cumSpend+=spend; cumValue+=qValue;
+    quarters.push({q,acts,spend,qValue,cumSpend,cumValue,liveN:Object.keys(live).length});
+  }
+  const backlog = Object.keys(DRIVERS.useCases)
+    .filter(uc=>!live[uc] && (scoreSim(uc).dispo!=="KILL") && netBy[uc])
+    .map(uc=>({uc,net:netBy[uc].net})).sort((a,b)=>b.net-a.net);
+  const killed = Object.keys(DRIVERS.useCases).filter(uc=>scoreSim(uc).dispo==="KILL");
+  return {quarters,live,backlog,killed};
+}
+
+/* ---------------- UI: org tab ---------------- */
+const ORG_FIELDS = [
+  ["org.name","Organization name","text",""],
+  ["org.npr","Annual net patient revenue ($)","number","Your audited NPR — the only truly required input"],
+  ["org.wacc","Cost of capital","number","For AR carrying value (e.g., 0.06)"],
+];
+const ADV_FIELDS = Object.keys(DRIVERS.profileDefaults.rates).map(k=>["rates."+k,k.replaceAll("_"," "),"number",""])
+  .concat(Object.keys(DRIVERS.profileDefaults.costs).map(k=>["costs."+k,k.replaceAll("_"," "),"number",""]));
+const PLAN_FIELDS = [
+  ["plan.budgetQ","Quarterly investment budget ($)","number","Build + remediation capacity per quarter"],
+  ["plan.horizonQ","Roadmap horizon (quarters)","number","4–12"],
+];
+function getPath(p){ const [a,b]=p.split("."); return S[a][b]; }
+function setPath(p,v){ const [a,b]=p.split("."); S[a][b]=v; }
+function fieldHTML([path,label,type,hint]){
+  const v=getPath(path);
+  return `<div><label>${esc(label)}</label>
+    <input type="${type}" data-path="${path}" value="${esc(v)}" ${type==="number"?'step="any"':""}>
+    ${hint?`<div class="hint">${esc(hint)}</div>`:""}</div>`;
+}
+function renderOrg(){
+  document.getElementById("orgFields").innerHTML = ORG_FIELDS.map(fieldHTML).join("");
+  document.getElementById("advFields").innerHTML = ADV_FIELDS.map(fieldHTML).join("");
+  document.getElementById("laborFields").innerHTML = Object.keys(S.labor)
+    .map(k=>fieldHTML(["labor."+k,k,"number",""])).join("");
+  document.getElementById("planFields").innerHTML = PLAN_FIELDS.map(fieldHTML).join("");
+}
+document.addEventListener("input",e=>{
+  const p=e.target.dataset?.path; if(!p) return;
+  const v = e.target.type==="number"?parseFloat(e.target.value)||0:e.target.value;
+  if (p.startsWith("labor.")) S.labor[p.slice(6)]=v;
+  else setPath(p,v);
+  recompute();
+});
+
+/* ---------------- UI: assessment tab ---------------- */
+function renderAssess(filter=""){
+  const body=document.getElementById("assessBody");
+  let html="";
+  for (const dim of DIM_ORDER){
+    const facets=Object.entries(DRIVERS.facetCatalog).filter(([,m])=>m.dim===dim)
+      .filter(([id,m])=>!filter||id.includes(filter)||m.prompt.toLowerCase().includes(filter));
+    html+=`<div class="dimhead"><h3>${dim}</h3>
+      <span class="dimscore"><span class="hint">overall maturity</span>
+      <select data-dim="${dim}">${[0,1,2,3,4].map(i=>`<option ${S.dims[dim]===i?"selected":""}>${i}</option>`).join("")}</select></span>
+      ${facets.length?`<span class="hint">${facets.length} facets</span>
+      <span style="margin-left:auto" class="seg">
+        <button class="btn small" data-setall="${dim}:0">all absent</button>
+        <button class="btn small" data-setall="${dim}:1">all partial</button>
+        <button class="btn small" data-setall="${dim}:2">all ready</button></span>`:""}
+    </div>`;
+    if (dim==="economics"){ html+=`<div class="hint" style="margin:0 0 8px">Economics has no facets — set the maturity level (0 = unquantified … 3 = benefit tracking in place).</div>`; }
+    for (const [id,m] of facets){
+      const v=S.facets[id];
+      html+=`<div class="facet" data-fid="${id}"><div class="p"><b>${id}</b> — ${esc(m.prompt)}</div>
+        <div class="seg" data-facet="${id}">
+          <button aria-pressed="${v===0}" data-v="0">Absent</button>
+          <button aria-pressed="${v===1}" data-v="1">Partial</button>
+          <button aria-pressed="${v===2}" data-v="2">Ready</button>
+          ${m.blockable?`<button class="blk" aria-pressed="${v==='blocked'}" data-v="blocked">Blocked</button>`:""}
+        </div></div>`;
+    }
+  }
+  body.innerHTML=html;
+  updateProgress();
+}
+document.addEventListener("click",e=>{
+  const seg=e.target.closest(".seg[data-facet] button");
+  if (seg){ const id=seg.parentElement.dataset.facet;
+    S.facets[id]=seg.dataset.v==="blocked"?"blocked":+seg.dataset.v;
+    for (const b of seg.parentElement.children) b.setAttribute("aria-pressed",b===seg);
+    updateProgress(); recompute(); return; }
+  const sa=e.target.closest("[data-setall]");
+  if (sa){ const [dim,v]=sa.dataset.setall.split(":");
+    for (const [id,m] of Object.entries(DRIVERS.facetCatalog)) if (m.dim===dim) S.facets[id]=+v;
+    renderAssess(document.getElementById("facetSearch").value.toLowerCase()); recompute(); }
+});
+document.addEventListener("change",e=>{
+  if (e.target.dataset?.dim){ S.dims[e.target.dataset.dim]=+e.target.value; recompute(); }
+});
+document.getElementById("facetSearch").addEventListener("input",
+  e=>renderAssess(e.target.value.toLowerCase()));
+function updateProgress(){
+  const n=Object.keys(DRIVERS.facetCatalog).length;
+  const done=Object.values(S.facets).filter(v=>v!==0).length;
+  document.getElementById("assessProgress").textContent=
+    `${done}/${n} facets scored above absent — unscored facets count as absent (conservative by design)`;
+}
+
+/* ---------------- UI: results ---------------- */
+function bars(items,labelKey,valKey,extra){
+  const max=Math.max(1,...items.map(i=>i[valKey]));
+  return `<div class="bars">`+items.map(i=>{
+    const pct=i[valKey]/max*100;
+    return `<div class="brow"><div class="lbl">${esc(i[labelKey])}</div>
+      <div class="track"><div class="bar" style="width:${pct}%"></div>
+      <div class="val" style="left:calc(${pct}% + 6px)">${fmt(i[valKey])}${extra?extra(i):""}</div></div></div>`;
+  }).join("")+`</div>`;
+}
+function recompute(){
+  if (!S.org.npr) return;
+  const dispos=scoreAll();
+  const valueRes=valueCompute(dispos);
+  const cost=costCompute(dispos,valueRes);
+  renderResults(dispos,valueRes,cost);
+  renderRoadmap(cost);
+}
+function renderResults(dispos,valueRes,cost){
+  const counts=Object.fromEntries(DISPOS.map(d=>[d,0]));
+  for (const r of Object.values(dispos)) counts[r.dispo]++;
+  const totBase=Object.values(valueRes).reduce((s,v)=>s+v.base,0);
+  const totY1=Object.values(valueRes).reduce((s,v)=>s+v.y1,0);
+  const run=cost.rows.reduce((s,r)=>s+r.run,0)+cost.platRun;
+  const build=cost.rows.reduce((s,r)=>s+r.build,0);
+  const net=cost.rows.reduce((s,r)=>s+r.net,0);
+  // locked value by gate
+  const locked={};
+  for (const [uc,sc] of Object.entries(dispos)){
+    if (sc.dispo==="GO") continue;
+    const v=valueRes[uc]?.base||0;
+    for (const g of sc.gaps){ const e=locked[g.key]=locked[g.key]||{n:0,value:0}; e.n++; e.value+=v; }
+  }
+  const lockedTop=Object.entries(locked).map(([item,e])=>({item,...e}))
+    .sort((a,b)=>b.value-a.value).slice(0,12);
+  const rows=Object.keys(DRIVERS.useCases).map(id=>({
+    id, name:DRIVERS.useCases[id].name, dispo:dispos[id].dispo,
+    gaps:dispos[id].gaps.map(g=>g.desc), value:valueRes[id]?.base||0,
+    cost:cost.rows.find(r=>r.id===id), dg:dispos[id].downgrade,
+  })).sort((a,b)=>b.value-a.value);
+  const ACC={GO:"var(--good)",CONDITIONAL:"var(--warning)",DEFER:"var(--serious)",KILL:"var(--critical)"};
+  document.getElementById("resultsBody").innerHTML=`
+    <div class="tiles">
+      ${DISPOS.map(d=>`<div class="tile" style="border-top-color:${ACC[d]}"><div class="v">${counts[d]}</div><div class="l">${GLYPH[d]} ${d}</div></div>`).join("")}
+      <div class="tile"><div class="v">${fmt(totBase)}</div><div class="l">steady-state value / yr (capped)</div></div>
+      <div class="tile"><div class="v">${fmt(totY1)}</div><div class="l">year-1 value (disposition-adjusted)</div></div>
+      <div class="tile"><div class="v">${fmt(build)}</div><div class="l">use-case build + ${fmt(cost.platBuild)} platform</div></div>
+      <div class="tile"><div class="v">${fmt(run)}</div><div class="l">total run / yr</div></div>
+      <div class="tile"><div class="v">${fmt(net)}</div><div class="l">steady-state net / yr</div></div>
+    </div>
+    <h2>Value locked by gate</h2><div class="card">${bars(lockedTop,"item","value",i=>` (${i.n} UCs)`)}</div>
+    <h2>Use cases</h2>
+    <div class="card tblwrap"><table><thead><tr>
+      <th>UC</th><th>Name</th><th>Disposition</th><th>Value/yr</th><th>Net/yr</th><th>Option</th><th>Payback</th><th>Gaps</th>
+    </tr></thead><tbody>
+    ${rows.map(r=>`<tr><td>${r.id}</td><td>${esc(r.name)}</td><td>${badge(r.dispo)}${r.dg?' <span class="hint">A0/A1 ok</span>':""}</td>
+      <td>${fmt(r.value)}</td>
+      <td class="${(r.cost?.net||0)>=0?"pos":"neg"}">${r.cost?fmt(r.cost.net):"—"}</td>
+      <td>${r.cost?.option||"—"}</td>
+      <td>${r.cost?.payback?Math.round(r.cost.payback)+" mo":"—"}</td>
+      <td class="hint">${esc(r.gaps.join("; "))||"—"}</td></tr>`).join("")}
+    </tbody></table></div>`;
+}
+
+/* ---------------- UI: roadmap ---------------- */
+function lineChart(quarters){
+  const w=1080,h=260,padL=60,padR=20,padT=14,padB=28;
+  const xs=q=>padL+(q-1)/(Math.max(quarters.length-1,1))*(w-padL-padR);
+  const maxY=Math.max(...quarters.map(q=>Math.max(q.cumSpend,q.cumValue)),1);
+  const ys=v=>padT+(1-v/maxY)*(h-padT-padB);
+  const path=key=>quarters.map((q,i)=>`${i?"L":"M"}${xs(q.q)},${ys(q[key])}`).join("");
+  const ticks=[0,0.25,0.5,0.75,1].map(f=>({y:ys(f*maxY),v:f*maxY}));
+  const last=quarters[quarters.length-1];
+  return `<div class="legend">
+      <span><span class="sw" style="background:var(--seq)"></span>Cumulative realized net value</span>
+      <span><span class="sw" style="background:var(--s2)"></span>Cumulative investment</span></div>
+    <svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Cumulative value vs investment by quarter">
+      ${ticks.map(t=>`<line x1="${padL}" x2="${w-padR}" y1="${t.y}" y2="${t.y}" stroke="var(--grid)" stroke-width="1"/>
+        <text x="${padL-8}" y="${t.y+4}" text-anchor="end" font-size="11" fill="var(--muted)">${fmt(t.v)}</text>`).join("")}
+      ${quarters.map(q=>`<text x="${xs(q.q)}" y="${h-8}" text-anchor="middle" font-size="11" fill="var(--muted)">Q${q.q}</text>`).join("")}
+      <path d="${path("cumValue")}" fill="none" stroke="var(--seq)" stroke-width="2"/>
+      <path d="${path("cumSpend")}" fill="none" stroke="var(--s2)" stroke-width="2"/>
+      ${quarters.map(q=>`<g><circle cx="${xs(q.q)}" cy="${ys(q.cumValue)}" r="3.5" fill="var(--seq)" stroke="var(--surface)" stroke-width="2"><title>Q${q.q} value ${fmt(q.cumValue)}</title></circle>
+        <circle cx="${xs(q.q)}" cy="${ys(q.cumSpend)}" r="3.5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"><title>Q${q.q} invested ${fmt(q.cumSpend)}</title></circle></g>`).join("")}
+      <text x="${xs(last.q)-6}" y="${ys(last.cumValue)-8}" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--ink)">${fmt(last.cumValue)}</text>
+      <text x="${xs(last.q)-6}" y="${ys(last.cumSpend)-8}" text-anchor="end" font-size="11.5" fill="var(--ink-2)">${fmt(last.cumSpend)}</text>
+    </svg>`;
+}
+function renderRoadmap(cost){
+  const rm=optimizeRoadmap(cost.rows);
+  const last=rm.quarters[rm.quarters.length-1];
+  document.getElementById("roadmapBody").innerHTML=`
+    <div class="tiles">
+      <div class="tile"><div class="v">${Object.keys(rm.live).length}</div><div class="l">use cases launched in ${S.plan.horizonQ} quarters</div></div>
+      <div class="tile"><div class="v">${fmt(last.cumSpend)}</div><div class="l">total invested</div></div>
+      <div class="tile"><div class="v">${fmt(last.cumValue)}</div><div class="l">cumulative net value realized</div></div>
+      <div class="tile"><div class="v">${fmt(last.qValue*4)}</div><div class="l">exit run-rate (net value / yr)</div></div>
+      <div class="tile"><div class="v">${rm.backlog.length}</div><div class="l">backlog beyond horizon</div></div>
+    </div>
+    <div class="card" style="margin-top:14px">${lineChart(rm.quarters)}</div>
+    ${rm.quarters.map(q=>`<div class="q"><h3>Quarter ${q.q}</h3>
+      <div class="meta">spend ${fmt(q.spend)} · live use cases ${q.liveN} · quarterly net value ${fmt(q.qValue)}</div>
+      ${q.acts.length?q.acts.map(a=>`<div class="act">
+        <span class="tag ${a.kind==="launch"?"launch":"rem"}">${a.kind==="launch"?"LAUNCH":"REMEDIATE"}</span>
+        <span>${esc(a.label)} <span class="hint">— ${esc(a.why)}</span></span>
+        <span class="cost">${fmt(a.cost)}</span></div>`).join(""):`<div class="hint">No new starts — budget carried by in-flight remediations; value ramping.</div>`}
+    </div>`).join("")}
+    ${rm.backlog.length?`<h2>Backlog (beyond horizon, by net value)</h2><div class="card hint">
+      ${rm.backlog.slice(0,20).map(b=>`${b.uc} (${fmt(b.net)}/yr)`).join(" · ")}${rm.backlog.length>20?" · …":""}</div>`:""}
+    ${rm.killed.length?`<h2>Killed (blocked facets)</h2><div class="card warn">${rm.killed.join(", ")}</div>`:""}
+    <h2>Optimizer assumptions</h2>
+    <div class="card hint">Remediation costs by dimension (facet-level): ${Object.entries(REMED.facetCost).map(([k,v])=>`${k} ${fmt(v)}`).join(", ")}.
+    Dimension-maturity lift per level: ${Object.entries(REMED.dimCostPerLevel).map(([k,v])=>`${k} ${fmt(v)}`).join(", ")}.
+    Durations 1–2 quarters by dimension. Launch cost = build + platform allocation + half-cost bundling of
+    remaining partial facets. Value ramps 25/50/75/100% per quarter after launch. Only net-positive use
+    cases are scheduled — net-negative ones appear in the portfolio table for kill/descope review.
+    These are planning defaults: recalibrate against actuals per the true-up rule (playbook Play 6).</div>`;
+}
+
+/* ---------------- nav / persistence ---------------- */
+document.getElementById("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-tab]"); if(!b) return;
+  for (const x of document.querySelectorAll("nav button[data-tab]")) x.setAttribute("aria-selected",x===b);
+  for (const s of document.querySelectorAll("section")) s.classList.toggle("active",s.id==="tab-"+b.dataset.tab);
+});
+document.getElementById("loadExample").onclick=()=>{
+  const ex=DRIVERS.example;
+  S.org={name:ex.org.name,npr:ex.financials.npr,wacc:ex.financials.wacc};
+  S.dims={...ex.dimensions}; S.facets={...S.facets,...ex.facets};
+  renderOrg(); renderAssess(); recompute();
+};
+document.getElementById("saveState").onclick=()=>{
+  const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="rcm-planner-state.json"; a.click();
+};
+document.getElementById("loadState").onclick=()=>document.getElementById("fileIn").click();
+document.getElementById("fileIn").onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  Object.assign(S,JSON.parse(await f.text()));
+  renderOrg(); renderAssess(); recompute();
+};
+document.getElementById("exportYaml").onclick=()=>{
+  const y=[`# generated by RCM AI Investment Planner — usable with score.py/value.py/cost.py/packet.py`,
+    `org:`,`  name: "${S.org.name}"`,`  date: "${new Date().toISOString().slice(0,10)}"`,
+    `dimensions:`,...DIM_ORDER.map(d=>`  ${d}: ${S.dims[d]}`),
+    `facets:`,...Object.keys(DRIVERS.facetCatalog).map(f=>`  ${f}: ${S.facets[f]}`),
+    ``,`# --- org profile (separate file for the CLI) ---`,
+    `# financials: {npr: ${S.org.npr}, wacc: ${S.org.wacc}}`].join("\n");
+  const blob=new Blob([y],{type:"text/yaml"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="assessment.yaml"; a.click();
+};
+
+renderOrg(); renderAssess(); recompute();
+</script>
+</body></html>
