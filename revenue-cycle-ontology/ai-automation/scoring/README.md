@@ -22,6 +22,8 @@ remediations that unlock the most portfolio value.
 | `cost-drivers.yaml` | Cost model drivers: rates, volume drivers, platform assets, SLM families, per-UC sourcing bindings (`../10-cost-model.md`). |
 | `cost.py` | Cost engine — prices every UC across its viable sourcing options, picks by 3-yr TCO with strategic overrides, prices platform/payer/SLM economics; `--roi` joins the value model for net value, ROI, and payback. |
 | `example-cost-report.md/.html` | Cost-model example (with ROI join) for the same fictional org. |
+| `packet.py` | Quarterly investment-packet generator — runs all three engines and writes a packet directory (reports, combined portfolio.csv, packet.json, index.md with headline numbers, quarter-over-quarter deltas via `--prev`, and the pre-filled council agenda). See `../11-investment-loop-playbook.md`. |
+| `example-packet/` | A generated example packet. |
 
 ## How to run
 
