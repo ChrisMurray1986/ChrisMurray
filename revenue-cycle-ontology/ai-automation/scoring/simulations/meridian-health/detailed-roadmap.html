@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian Health — Detailed Implementation Roadmap (2 years)</title>
+<style>
+  :root { --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,0.10);
+    --seq:#2a78d6; --s2:#1baf7a; --good-ink:#006300; --warning-ink:#7a5200;
+    --serious-ink:#9c3f1d; --critical-ink:#d03b3b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --grid:#2c2c2a;
+      --baseline:#383835; --ring:rgba(255,255,255,0.10); --seq:#3987e5; --s2:#199e70;
+      --good-ink:#0ca30c; --warning-ink:#fab219; --serious-ink:#ec835a; --critical-ink:#d03b3b; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+         font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:1000px; margin:0 auto; padding:32px 24px 80px; }
+  .kicker { color:var(--muted); font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+  h1 { font-size:23px; margin:4px 0 4px; }
+  .sub { color:var(--ink-2); margin:0 0 22px; }
+  h2 { font-size:17px; margin:36px 0 10px; padding-top:14px; border-top:2px solid var(--baseline); }
+  h3 { font-size:14px; margin:20px 0 6px; }
+  p { color:var(--ink-2); margin:7px 0; } p b, li b, td b { color:var(--ink); }
+  ul,ol { color:var(--ink-2); margin:6px 0; padding-left:22px; } li { margin:5px 0; }
+  .card { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:16px; margin:10px 0; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th { text-align:left; color:var(--muted); font-weight:600; font-size:11.5px; border-bottom:1px solid var(--baseline); padding:6px 9px; }
+  td { border-bottom:1px solid var(--grid); padding:6px 9px; vertical-align:top; }
+  .tblwrap { overflow-x:auto; }
+  .tag { display:inline-block; font-size:10.5px; font-weight:700; border-radius:5px; padding:1px 7px; white-space:nowrap; }
+  .tag.rem { background:var(--grid); color:var(--ink-2); }
+  .tag.launch { background:var(--seq); color:#fff; }
+  .tag.exp { background:var(--s2); color:#fff; }
+  .qhead { display:flex; align-items:baseline; gap:12px; margin:26px 0 6px; }
+  .qhead h3 { margin:0; font-size:15px; }
+  .qhead .meta { color:var(--muted); font-size:12.5px; }
+  .note { color:var(--muted); font-size:12px; }
+  .warn { color:var(--serious-ink); }
+  .ok { color:var(--good-ink); font-weight:600; }
+  footer { color:var(--muted); font-size:12px; margin-top:48px; border-top:1px solid var(--grid); padding-top:12px; }
+</style></head>
+<body><div class="wrap">
+  <div class="kicker">Simulation · Operator implementation plan · companion to executive-summary.html</div>
+  <h1>Meridian Health — Two-Year AI &amp; Automation Roadmap</h1>
+  <p class="sub">Operator-ready plan: every workstream with owner, budget, dependencies, and a
+  falsifiable exit criterion. Generated from the assessment + optimizer output
+  (<code>roadmap.json</code>), phased by the investment-loop playbook (file 11), implemented
+  per the Epic-shop patterns (file 14). Budget $2.5M/quarter; 8 quarters; 70 use-case
+  launches; exit run-rate $69.1M/yr net.</p>
+
+  <h2>0 · Operating model (stand up in the first 30 days — Playbook Play 0)</h2>
+  <div class="card"><ul>
+    <li><b>Loop operator</b> (named program lead, 1.0 FTE): runs the tools, owns the YAML files,
+      produces the quarterly packet. The plan dies without this role.</li>
+    <li><b>Automation council</b> (CFO sponsor + VP Rev Cycle + CMO/UM + Compliance + CIO
+      delegate + Finance partner): 2-hour quarterly decision meeting; packet pre-read mandatory.</li>
+    <li><b>Governance body</b> (council subcommittee): risk tiering, autonomy promotions/demotions.</li>
+    <li><b>Benefit owners</b>: the operational director of each area signs realized value
+      quarterly — never the automation team.</li>
+    <li><b>Hard rules adopted day one:</b> baseline before every go-live; every launch starts in
+      recommend mode (A1); a remediation is done only when its facet score moves; one benefit
+      ledger, one dollar counted once.</li>
+  </ul></div>
+
+  <h2>1 · Phase 0 — Foundation sprint (Q1–Q2, $2.7M, no launches)</h2>
+  <p>Fourteen projects. Nothing else in this plan is buildable until these land — they hold
+  $61.6M/yr (governance), $48.2M/yr (workflow), and $37.4M/yr (data) behind them. <b>No data
+  platform purchase is in this list</b>: every data project below runs on Clarity/Caboodle plus
+  a scoped augmentation schema (file 14, Rule 2 — no lakehouse trigger fires at Meridian).</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Workstream</th><th>What gets built (Epic-shop pattern)</th><th>Owner</th><th>Cost</th><th>Ready</th><th>Exit criterion (facet moves)</th></tr></thead>
+    <tbody>
+    <tr><td><b>AI governance stack</b></td><td>Council + tiering charter; decision-logging &amp; model/prompt registry; org telemetry with drift alerts and demotion runbook (wraps Fathom/Humata vendor dashboards); bias-testing harness. Dashboards + runbooks — not an "AI observability suite" purchase.</td><td>Compliance + IT</td><td>$1.32M</td><td>Q3–Q4</td><td>gov_body→2, decision_logging→2, model_monitoring→2, bias_program→2 (governance dim 1→4 by Q4)</td></tr>
+    <tr><td><b>Workflow standardization</b></td><td>Denial taxonomy with root-cause owners; appeal process by level; filing-limit matrix; avoidable-day taxonomy; org-wide exception/hand-back queue standard (extends the vendor exception queues); placement gates codified.</td><td>VP Rev Cycle</td><td>$360k</td><td>Q2–Q3</td><td>workflow dim 2→4; denial_taxonomy→2, appeal_process→2, filing_matrix→2, handback_queues→2</td></tr>
+    <tr><td><b>Label &amp; attribution build</b></td><td>Denial→defect-owner attribution table over Clarity remit history; appeal-outcome fielding; clearance-outcome capture; audit-outcome table. Modeling work in the warehouse — weeks each.</td><td>Loop operator + data eng</td><td rowspan="2">$300k (data dim 3→4)</td><td>Q3</td><td>denial_labels→2, appeal_outcomes→2, clearance_outcomes→2, audit_outcomes→2</td></tr>
+    <tr><td><b>Clinical corpus access</b></td><td>Bulk-FHIR note extract to governed document store; AI-use approval through privacy/security; encounter-scoped retrieval (minimum necessary).</td><td>CMIO + Privacy</td><td>Q3</td><td>notes_access→2</td></tr>
+    <tr><td><b>Orchestration fabric</b></td><td>Event feeds (HL7v2/FHIR subscriptions) + queue APIs + non-human service identities + fleet telemetry. Plumbing + identity, built once; all agents and bots ride it.</td><td>IT integration</td><td>$250k</td><td>Q3</td><td>fabric→2 (integration dim 3→4)</td></tr>
+    <tr><td><b>Citation-verification harness</b></td><td>String-alignment verifier + verify-mode second-model call (file 12 §4). Built once, reused by appeals, auth packets, queries, contract extraction, policy monitoring.</td><td>ML eng</td><td>$120k</td><td>Q3</td><td>citation_harness→2; seeded fake citation caught in test</td></tr>
+    <tr><td><b>License &amp; legal package</b></td><td>Criteria (MCG/InterQual) programmatic-use amendment; AMA/reference license; socioeconomic-data license for FA scoring; bankruptcy/death registry feeds; outreach-consent capture in plan enrollment; privilege protocol.</td><td>Legal/contracting</td><td>$150k + license fees</td><td>Q2–Q3</td><td>criteria_license→2, reference_license→2, socio_data_license→2, external_registries→2, legal dim 2→3</td></tr>
+    <tr><td><b>Lineage</b></td><td>dbt-style transform lineage over the augmentation schema (auditor-grade for reserve models). The one legitimate "modern data stack" line item.</td><td>Data eng</td><td>$120k</td><td>Q3</td><td>lineage→2</td></tr>
+    <tr><td><b>Org readiness</b></td><td>HITL capacity model + staffing plan; cross-functional routing authority charter (prevention actions are obligations); ranked-worklist adoption commitment from AR management.</td><td>VP Rev Cycle + HR</td><td>$80k</td><td>Q2</td><td>org dim 2→3; hitl_capacity→2, routing_authority→2, ranked_list_adoption→2</td></tr>
+    </tbody></table></div>
+  <p class="note">Also in Q1 at near-zero cost: turn on prospective capture that cannot be
+  backfilled — statement response history, EDI telemetry aggregates, system-copy extracts.
+  Q2 is deliberately light ($0.6M): the governance stack's final stage lands while teams
+  prepare Q3 launch baselines.</p>
+
+  <h2>2 · Phase 1 — Revenue-integrity &amp; intelligence wave (Q3–Q4, $4.9M, 26 launches)</h2>
+  <p>Every launch below follows the same protocol: <b>measurement baseline captured first</b>
+  (09 §4 design for its streams), launch at A1 (recommend-only), UC-id stamped on every work
+  item, agreement-rate tracked weekly, value claims begin only after the first true-up.</p>
+  <div class="qhead"><h3>Quarter 3 — 14 launches, $2.45M</h3><span class="meta">exit run-rate $8.5M/yr</span></div>
+  <div class="card"><div class="tblwrap"><table>
+    <thead><tr><th></th><th>Launch</th><th>Net/yr</th><th>Owner</th><th>First-quarter exit criterion</th></tr></thead>
+    <tbody>
+    <tr><td><span class="tag launch">L</span></td><td><b>UC-03-01 Missing charge detection</b> (build: classical ML on Clarity)</td><td>$5.6M</td><td>Revenue integrity</td><td>Dept owners working ranked lists; ≥60% of surfaced items confirmed valid</td></tr>
+    <tr><td><span class="tag launch">L</span></td><td><b>UC-07-05 Payment variance coverage</b> (rules on verified engine)</td><td>$4.7M</td><td>PFS director</td><td>100% of postings priced; unpriced-claim alarm live</td></tr>
+    <tr><td><span class="tag launch">L</span></td><td><b>UC-01-05 Coverage discovery sweep</b></td><td>$3.9M</td><td>Patient access</td><td>False-attach rate &lt;2% on validated sample</td></tr>
+    <tr><td><span class="tag launch">L</span></td><td><b>UC-09-03 Underpayment recovery</b></td><td>$3.8M</td><td>Underpayments lead</td><td>First batch demand packages issued with calculation exhibits</td></tr>
+    <tr><td><span class="tag launch">L</span></td><td><b>UC-11-01 Contract extraction &amp; load verification</b> — parallel-prices the Resolute engine; gates estimates &amp; variance work</td><td>$3.1M</td><td>Managed care</td><td>Top-10 payer contracts verified; variance false-positive rate re-baselined</td></tr>
+    <tr><td><span class="tag launch">L</span></td><td>UC-03-04 Charge surveillance · UC-08-05 Prevention miner · UC-04-01 CDI prioritization · UC-11-05 Payer scorecards · UC-13-01 KPI narratives · UC-02-02 Criteria abstraction · UC-14-01 Plan-master intelligence + 2 more</td><td>$9.0M comb.</td><td>per domain</td><td>Per-UC baseline + agreement-rate floors per the packet</td></tr>
+    </tbody></table></div></div>
+  <div class="qhead"><h3>Quarter 4 — 12 launches, $2.43M</h3><span class="meta">exit run-rate $21.2M/yr</span></div>
+  <div class="card"><p><b>Headliners:</b> UC-03-06 autonomous charging ($3.2M/yr — enabled
+  domain-by-domain where documentation is stable, golden-set gated), UC-11-02 amendment
+  watchdog, UC-04-02 CDI evidence surfacing, UC-03-07 device/implant reconciliation, UC-06-06
+  timely-filing sentinel, UC-01-16 registration QA (now trainable on the Q3 label pipeline),
+  UC-12-01 audit intake. <b>First autonomy promotions</b> from the Q3 cohort reach the council
+  this quarter — each promotion re-prices review labor in the cost model.</p></div>
+
+  <h2>3 · Phase 2 — Predictive &amp; clinical wave (Q5–Q6, $5.0M, 23 launches)</h2>
+  <div class="qhead"><h3>Quarter 5 — 12 launches, $2.49M</h3><span class="meta">exit run-rate $36.3M/yr — value curve crosses total investment this quarter</span></div>
+  <div class="card"><p><b>Headliners:</b> UC-06-01 denial-risk scoring at claim release (trained
+  on the now-12-month attribution pipeline), UC-09-01 AR expected-value prioritization (adoption
+  commitment from Phase 0 makes this real), UC-06-03 edit-rule mining, UC-07-06 recoupment
+  validation, UC-14-07 vendor performance analytics — which also gives Meridian quantified
+  oversight of Fathom and Humata under the same telemetry standard.</p></div>
+  <div class="qhead"><h3>Quarter 6 — 11 launches, $2.48M</h3><span class="meta">exit run-rate $53.1M/yr</span></div>
+  <div class="card"><p><b>Headliners:</b></p><ul>
+    <li><span class="tag launch">L</span> <b>UC-08-03 Clinical appeals generation</b> — per the
+      engineering deep-dive (file 12): golden set assembled from the now-fielded appeal
+      outcomes; citation harness and criteria license landed in Phase 0; UM worksheets already
+      structured. Tier-1 blinded evaluation vs physician-advisor baseline is the launch gate;
+      PA sign-off on every letter, permanently.</li>
+    <li><span class="tag exp">EXPAND</span> <b>Fathom scope expansion</b> — inpatient/profee
+      coding, under Meridian's (not only the vendor's) golden sets and monitoring; acceptance
+      criteria mirror the original ED/Rad validation.</li>
+    <li><span class="tag exp">EXPAND</span> <b>Humata tracking expansion</b> to remaining payers;
+      UC-02-01 admission-status prediction; UC-06-05 rejection auto-repair (rides the fabric);
+      UC-14-06 downtime orchestration; UC-08-02 overturn scoring.</li></ul></div>
+
+  <h2>4 · Phase 3 — Patient-financial &amp; optimization wave (Q7–Q8, $5.0M, 21 launches)</h2>
+  <div class="qhead"><h3>Quarter 7 — 11 launches, $2.48M</h3><span class="meta">exit run-rate $62.8M/yr</span></div>
+  <div class="card"><p><b>Headliners:</b> <span class="tag exp">EXPAND</span> Humata submission
+  expansion (remaining payer set); UC-01-12 estimate accuracy engine (contract terms verified in
+  Q3; GFE storage already ready); UC-01-13 clearance risk scoring; UC-10-01 patient liability
+  verification gate (statement-vendor suppression amendment signed in Phase 0); UC-01-14
+  conversational pre-registration (escalation staffing from the HITL capacity plan).</p></div>
+  <div class="qhead"><h3>Quarter 8 — 10 launches, $2.48M</h3><span class="meta">exit run-rate $69.1M/yr</span></div>
+  <div class="card"><p><b>Headliners:</b> UC-07-01 intelligent auto-posting, UC-10-02 statement
+  optimization and UC-10-05 presumptive FA scoring (both gated on the bias program — live since
+  Q3, quarterly adverse-impact tests on file), UC-10-04 plan-default rescue, UC-14-02 master-data
+  drift monitoring. <b>Year-3 backlog (15 small use cases, ~$1.5M/yr combined):</b> edit
+  resolution agent, paper-EOB IDP (low paper volume at Meridian), reg-change intelligence,
+  rebill-loop breaker, and other sub-$300k/yr items — revisit at the Q8 council with updated
+  volumes.</p></div>
+
+  <h2>5 · Vendor strategy (runs across all phases)</h2>
+  <div class="card"><ul>
+    <li><b>Keep and expand both vendors.</b> The build-vs-buy math confirms the original
+      decisions; expansions (Q6–Q7) are priced at ~20–30% of greenfield build.</li>
+    <li><b>Q1 renewals agenda:</b> data-rights clauses (Meridian's data does not train vendor
+      models without consent), telemetry access (vendor decisions feed Meridian's monitoring),
+      exit provisions priced. Criteria/reference license amendments negotiated in the same
+      motion.</li>
+    <li><b>Vendor claims discipline:</b> any vendor "fine-tuned on 10 years of data" claim is
+      evaluated on Meridian's golden sets, blinded, against the internal baseline — never on
+      the pitch (file 12 protocol).</li>
+    <li><b>Oversight:</b> from Q5, UC-14-07 scores both vendors on the same SLA/telemetry
+      standard as internal automations.</li></ul></div>
+
+  <h2>6 · Measurement &amp; governance cadence</h2>
+  <div class="card"><ul>
+    <li><b>Weekly:</b> delivery standups; exception-queue and fleet health (from the fabric telemetry).</li>
+    <li><b>Monthly:</b> run-rate review — HITL hours, token/vendor invoices vs plan; ±20% drift flags early.</li>
+    <li><b>Quarterly:</b> re-assessment (facet owners, evidence rule) → regenerate packet →
+      council: true-up first, readiness velocity, remediation funding, launches, autonomy
+      promotions, kills. The packet's quarter-over-quarter delta is the program status report.</li>
+    <li><b>Value integrity:</b> benefit ledger with single counting; value net of run cost;
+      one-time AR release counted once; risk EV segregated. Realized-vs-estimated variance
+      &gt;30% for two quarters recalibrates the driver files.</li></ul></div>
+
+  <h2>7 · Risk register (top items)</h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr></thead><tbody>
+    <tr><td>Change-capacity saturation (10–14 go-lives/quarter)</td><td class="warn">High</td><td>Launches at A1 (worklists) minimize workflow disruption; per-domain sequencing; council may stretch Phase 3 into Q9 without materially changing the curve</td></tr>
+    <tr><td>Foundation sprint slips (governance/fabric late)</td><td>Medium</td><td>Q3 launch gate is facet-score movement, not calendar; the A0/A1-available list (46 use cases) provides interim value if slip occurs</td></tr>
+    <tr><td>Notes-access approval stalls in privacy review</td><td>Medium</td><td>Escalation path to sponsor; scope minimum-necessary by encounter; clinical wave (Q5–Q6) has 1-quarter float</td></tr>
+    <tr><td>Criteria licensor refuses programmatic use</td><td>Low–Med</td><td>Blockable facet — criteria-abstraction and appeals fall back to policy/procedural arguments; negotiate at renewal with build-BATNA on the table</td></tr>
+    <tr><td>Model value over-estimated (drivers wrong)</td><td class="warn">Certain in detail</td><td>By design: wide bands, quarterly true-up, benefit-owner sign-off; the model corrects in public</td></tr>
+    <tr><td>Vendor lock-in deepens with expansions</td><td>Medium</td><td>Exit costs priced in TCO at every renewal; data-rights clauses Q1; crossover register reopens decisions on volume drift</td></tr>
+    </tbody></table></div>
+
+  <h2>8 · Assumptions &amp; provenance</h2>
+  <div class="card"><ul>
+    <li>Simulated organization; financial profile: $2.4B NPR, 1.8% denial write-offs, 2.9%
+      cost-to-collect, 44 AR days; all other rates at framework defaults pending Meridian actuals.</li>
+    <li>Vendor coverage assumptions: Fathom ≈50% of the autonomous-coding value pool (ED/Rad);
+      Humata ≈70% of auth submission/tracking value; expansions priced at 20–30% of greenfield.</li>
+    <li>Scheduler: greedy, budget-constrained, deterministic (roadmap_sim.py — a port of the
+      planner app's optimizer); remediation costs/durations are planning defaults from the
+      framework, to be re-estimated per project in Q1.</li>
+    <li>Sources in this folder: <code>meridian-assessment.yaml</code>,
+      <code>meridian-org-profile.yaml</code>, <code>packet/</code> (feasibility/value/cost
+      reports), <code>roadmap.json</code>. Regenerate everything with the stack's standard
+      commands; never hand-edit outputs.</li></ul></div>
+
+  <footer>Meridian Health simulation — generated by the revenue-cycle ontology investment stack
+  (files 01–14 + scoring toolkit). Companion: executive-summary.html. All dollar figures are
+  model estimates with disclosed bands; the quarterly true-up loop is the accuracy mechanism.</footer>
+</div></body></html>
