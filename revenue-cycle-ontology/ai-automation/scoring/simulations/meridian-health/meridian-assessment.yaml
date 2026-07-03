@@ -1,0 +1,129 @@
+# SIMULATION: Meridian Health (fictional) — readiness assessment
+# Archetype: single-instance Epic (Chronicles/Clarity/Caboodle, Resolute HB/PB,
+# Interconnect/FHIR/CDS Hooks) with two point solutions live:
+#   - Fathom autonomous coding for ED and Radiology (~2 yrs live)
+#   - Humata prior-authorization automation (~1 yr live: requirement checks,
+#     submission, status tracking for major payers)
+# Scored per 14-implementation-patterns.md sufficiency floors ("demo it this week").
+
+org:
+  name: "Meridian Health (simulated)"
+  assessed_by: "RCM automation working group (simulation)"
+  date: "2026-07-03"
+
+dimensions:
+  data: 3          # Clarity/Caboodle mature; label attribution thin
+  integration: 3   # Interconnect/FHIR write-back; no org-wide fabric
+  connectivity: 3  # RTE/ERA/276 strong; Humata carries auth channels
+  workflow: 2      # single Epic build unified many policies; exception paths informal
+  org: 2           # vendor deployments built adoption muscle; HITL sizing informal
+  governance: 1    # vendor dashboards only; no org AI-governance stack
+  economics: 2     # baselines measured; ROI models per vendor exist
+  legal: 2         # two AI vendor contracts vetted (BAA/ToS muscle exists)
+
+facets:
+  # ---- data ----
+  orders_digitized: 2        # e-fax -> OnBase indexed to patient
+  mspq_structured: 2         # Epic registration items
+  auth_structured: 2         # Humata writes structured auth records back
+  denial_labels: 1           # CARC history in Clarity; defect/owner attribution table not built
+  appeal_outcomes: 1         # level-1 outcomes in workqueue notes; not fielded
+  touch_logging: 2           # HB/PB account activity native
+  clinical_structured: 2     # Clarity flowsheets/labs/MAR
+  notes_access: 1            # Bulk FHIR enabled; governance approval for AI use pending
+  charge_linkage: 2          # native Clarity encounter keys
+  supply_chain_feed: 1       # ERP item master feed exists; invoice join partial
+  acks_retained: 2           # clearinghouse archive loaded nightly
+  lockbox_imaging: 2         # bank imaging service live
+  bank_feeds: 2
+  takeback_linkage: 1        # reversal posting convention inconsistent pre-2025
+  contract_repository: 1     # top-15 payers digitized; amendments scattered
+  contract_engine_loaded: 1  # Resolute contracts loaded; never parallel-price verified
+  policy_library: 1          # Humata holds payer auth requirements internally; no org-side citable library
+  provider_master: 1         # Epic SER + credentialing system not reconciled
+  gfe_stored: 2              # Epic estimates module output retained
+  consents_indexed: 1        # eSignature live 2025+; backfile paper
+  qa_history: 2              # coding QA fielded (incl. Fathom audit results)
+  audit_outcomes: 1
+  plan_payment_history: 2
+  payment_timing_history: 2
+  realization_history: 2
+  deficiency_structured: 2
+  working_drg_recorded: 2    # CDI module in use
+  clearance_outcomes: 1
+  statement_history: 1
+  audit_channels_digitized: 1
+  peer_benchmarks: 1
+  system_copy_extracts: 1
+  card_images: 2             # MyChart pre-check-in + kiosk capture
+  um_worksheets: 2           # UM documents criteria in-system
+  edi_telemetry: 1
+  # ---- integration ----
+  writeback: 2               # Interconnect licensed; workqueue APIs in use
+  fabric: 1                  # vendor-specific event feeds exist; no org event bus/bot identity/telemetry
+  prebill_hold: 2
+  statement_suppression: 1
+  statement_vendor_flex: 1
+  ap_refund_path: 1
+  cds_ordering_hook: 2       # BPA/CDS Hooks governance active
+  account_360: 1             # MyChart billing proves data; no composite API
+  queue_api: 2
+  him_retrieval: 2           # ROI module + Bulk FHIR
+  # ---- connectivity ----
+  rte_eligibility: 2
+  era_coverage: 2
+  claim_status_edi: 2
+  auth_transactions: 2       # Humata channels to major payers
+  portal_automation_permitted: 1   # auth portals vetted via Humata contract; other portals unreviewed
+  attachment_channels: 1
+  medicaid_files: 2
+  external_registries: 0
+  agency_data_rights: 1
+  vbc_data_sharing: 1        # one ACO extract flowing quarterly
+  bulletin_access: 1
+  # ---- workflow ----
+  denial_taxonomy: 1         # CARC buckets; no root-cause ownership
+  appeal_process: 1
+  cdm_governance: 2
+  masterdata_governance: 1
+  collection_policy_unified: 2   # single Epic build forced unification
+  plan_matrix_unified: 2
+  writeoff_matrix: 2
+  query_standardized: 2
+  avoidable_day_taxonomy: 1
+  filing_matrix: 1
+  kpi_dictionary: 1
+  downtime_procedures: 2
+  refund_matrix: 2
+  placement_gates: 1
+  edit_rule_governance: 2    # Epic claim edit WQs + governed custom edits
+  audit_workflow: 1
+  handback_queues: 1         # vendor exception queues exist; no org-wide standard
+  documentation_stability: 1
+  posting_standardized: 2
+  # ---- org ----
+  routing_authority: 1
+  escalation_staffed: 1
+  hitl_capacity: 1
+  mpi_capacity: 2
+  dept_charge_owners: 1
+  ranked_list_adoption: 1
+  provider_adoption: 1       # Fathom/Humata rollouts built change muscle
+  compliance_charter: 1
+  # ---- governance ----
+  gov_body: 1                # forming; vendor oversight only
+  decision_logging: 1        # vendor-side logs; no org registry
+  model_monitoring: 1        # vendor dashboards; no org telemetry/demotion
+  bias_program: 0
+  citation_harness: 0
+  golden_sets: 1             # coding validation sets exist from Fathom acceptance
+  lineage: 0
+  # ---- legal ----
+  baa_program: 2             # two AI vendors executed
+  outreach_consent: 1
+  criteria_license: 1        # license silent on org programmatic use
+  reference_license: 1
+  socio_data_license: 0
+  privilege_protocol: 1
+  recoupment_law_matrix: 1
+  fa_501r_review: 2

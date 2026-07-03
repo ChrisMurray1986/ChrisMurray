@@ -1,0 +1,1098 @@
+{
+ "org": "Meridian Health (simulated)",
+ "budget_q": 2500000,
+ "horizon": 8,
+ "baseline_vendor_net": 1107109.941523225,
+ "quarters": [
+  {
+   "q": 1,
+   "acts": [
+    {
+     "kind": "rem",
+     "label": "Raise workflow maturity to 3",
+     "cost": 120000.0,
+     "why": "unlocks 49 UCs (37.7M/yr held)",
+     "ready": 2
+    },
+    {
+     "kind": "rem",
+     "label": "Raise governance maturity to 2",
+     "cost": 200000.0,
+     "why": "unlocks 64 UCs (52.7M/yr held)",
+     "ready": 3
+    },
+    {
+     "kind": "rem",
+     "label": "Raise data maturity to 4",
+     "cost": 300000.0,
+     "why": "unlocks 30 UCs (30.7M/yr held)",
+     "ready": 3
+    },
+    {
+     "kind": "rem",
+     "label": "Remediate citation_harness",
+     "cost": 120000.0,
+     "why": "unlocks 7 UCs (8.0M/yr held)",
+     "ready": 3
+    },
+    {
+     "kind": "rem",
+     "label": "Raise governance maturity to 3",
+     "cost": 400000.0,
+     "why": "unlocks 34 UCs (25.6M/yr held)",
+     "ready": 3
+    },
+    {
+     "kind": "rem",
+     "label": "Raise legal maturity to 3",
+     "cost": 60000.0,
+     "why": "unlocks 7 UCs (3.1M/yr held)",
+     "ready": 2
+    },
+    {
+     "kind": "rem",
+     "label": "Raise org maturity to 3",
+     "cost": 80000.0,
+     "why": "unlocks 1 UCs (1.2M/yr held)",
+     "ready": 2
+    },
+    {
+     "kind": "rem",
+     "label": "Remediate bias_program",
+     "cost": 120000.0,
+     "why": "unlocks 3 UCs (1.7M/yr held)",
+     "ready": 3
+    },
+    {
+     "kind": "rem",
+     "label": "Raise workflow maturity to 4",
+     "cost": 240000.0,
+     "why": "unlocks 1 UCs (3.2M/yr held)",
+     "ready": 2
+    },
+    {
+     "kind": "rem",
+     "label": "Remediate socio_data_license",
+     "cost": 30000.0,
+     "why": "unlocks 1 UCs (0.3M/yr held)",
+     "ready": 2
+    },
+    {
+     "kind": "rem",
+     "label": "Raise integration maturity to 4",
+     "cost": 250000.0,
+     "why": "unlocks 7 UCs (2.1M/yr held)",
+     "ready": 3
+    },
+    {
+     "kind": "rem",
+     "label": "Remediate external_registries",
+     "cost": 60000.0,
+     "why": "unlocks 1 UCs (0.2M/yr held)",
+     "ready": 2
+    },
+    {
+     "kind": "rem",
+     "label": "Remediate lineage",
+     "cost": 120000.0,
+     "why": "unlocks 1 UCs (0.0M/yr held)",
+     "ready": 3
+    }
+   ],
+   "spend": 2100000.0,
+   "q_value": 0,
+   "cum_spend": 2100000.0,
+   "cum_value": 0.0,
+   "live_n": 0,
+   "exit_runrate": 0
+  },
+  {
+   "q": 2,
+   "acts": [
+    {
+     "kind": "rem",
+     "label": "Raise governance maturity to 4",
+     "cost": 600000.0,
+     "why": "unlocks 1 UCs (0.3M/yr held)",
+     "ready": 4
+    }
+   ],
+   "spend": 600000.0,
+   "q_value": 0,
+   "cum_spend": 2700000.0,
+   "cum_value": 0.0,
+   "live_n": 0,
+   "exit_runrate": 0
+  },
+  {
+   "q": 3,
+   "acts": [
+    {
+     "kind": "launch",
+     "label": "Launch UC-07-05 \u2014 Variance detection coverage",
+     "cost": 184715.15151515152,
+     "net": 4655026.024955437,
+     "uc": "UC-07-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-11-01 \u2014 Contract extraction & load verify",
+     "cost": 150023.92632411607,
+     "net": 3087671.356580213,
+     "uc": "UC-11-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-03-04 \u2014 Charge trigger surveillance",
+     "cost": 129734.59629930218,
+     "net": 2358939.201523569,
+     "uc": "UC-03-04"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-05 \u2014 Coverage discovery sweep",
+     "cost": 219334.59629930218,
+     "net": 3923369.843680432,
+     "uc": "UC-01-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-03-01 \u2014 Missing charge detection",
+     "cost": 344134.5962993022,
+     "net": 5631388.667209843,
+     "uc": "UC-03-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-09-03 \u2014 Underpayment pattern recovery",
+     "cost": 259334.59629930218,
+     "net": 3763760.431915726,
+     "uc": "UC-09-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-11-05 \u2014 Payer scorecards & negotiation",
+     "cost": 199334.59629930218,
+     "net": 2098115.1548569025,
+     "uc": "UC-11-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-04-01 \u2014 CDI case prioritization",
+     "cost": 226623.92632411607,
+     "net": 2297500.677135402,
+     "uc": "UC-04-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-11-03 \u2014 Policy monitoring & routing",
+     "cost": 125966.78346697323,
+     "net": 1201806.175199796,
+     "uc": "UC-11-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-08-05 \u2014 Prevention insight miner",
+     "cost": 246623.92632411607,
+     "net": 2301382.7657011645,
+     "uc": "UC-08-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-06 \u2014 COB/MSP primacy inference",
+     "cost": 78315.15151515152,
+     "net": 709061.2397604595,
+     "uc": "UC-01-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-15 \u2014 POS next-best-action",
+     "cost": 78315.15151515152,
+     "net": 656367.201426025,
+     "uc": "UC-01-15"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-10 \u2014 Auth-to-service reconciliation",
+     "cost": 124715.15151515152,
+     "net": 951020.2721464476,
+     "uc": "UC-01-10"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-02-04 \u2014 Auth-days runway monitor",
+     "cost": 78315.15151515152,
+     "net": 454268.3250215304,
+     "uc": "UC-02-04"
+    }
+   ],
+   "spend": 2445487.3015115894,
+   "q_value": 2130604.833569559,
+   "cum_spend": 5145487.301511589,
+   "cum_value": 2130604.833569559,
+   "live_n": 14,
+   "exit_runrate": 8522419.334278235
+  },
+  {
+   "q": 4,
+   "acts": [
+    {
+     "kind": "launch",
+     "label": "Launch UC-03-06 \u2014 Autonomous charging",
+     "cost": 360623.92632411607,
+     "net": 3177052.677135402,
+     "uc": "UC-03-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-11-02 \u2014 Amendment watchdog",
+     "cost": 108623.92632411608,
+     "net": 939477.1947824608,
+     "uc": "UC-11-02"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-04-02 \u2014 Evidence surfacing",
+     "cost": 166623.92632411607,
+     "net": 1264540.6771354019,
+     "uc": "UC-04-02"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-03-07 \u2014 Device/implant reconciliation",
+     "cost": 259334.59629930218,
+     "net": 1854532.1966216085,
+     "uc": "UC-03-07"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-11-06 \u2014 VBC settlement validation",
+     "cost": 229334.59629930218,
+     "net": 1594118.9698569025,
+     "uc": "UC-11-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-07 \u2014 Auth requirement engine",
+     "cost": 201858.00865800865,
+     "net": 1371541.496582289,
+     "uc": "UC-01-07"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-03-03 \u2014 Drug units validator",
+     "cost": 154715.15151515152,
+     "net": 1022837.789661319,
+     "uc": "UC-03-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-04 \u2014 Eligibility orchestration",
+     "cost": 174715.15151515152,
+     "net": 1149963.260059421,
+     "uc": "UC-01-04"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-04-03 \u2014 Compliant query drafting",
+     "cost": 166623.92632411607,
+     "net": 1044500.2065471667,
+     "uc": "UC-04-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-16 \u2014 Real-time registration QA",
+     "cost": 199334.59629930218,
+     "net": 1055668.5350221368,
+     "uc": "UC-01-16"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-10-07 \u2014 Agency oversight analytics",
+     "cost": 196623.92632411607,
+     "net": 1024935.971253049,
+     "uc": "UC-10-07"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-11-04 \u2014 Credentialing/enrollment lifecycle",
+     "cost": 209617.8542178542,
+     "net": 1070640.2838472538,
+     "uc": "UC-11-04"
+    }
+   ],
+   "spend": 2428029.586424653,
+   "q_value": 5296822.745795645,
+   "cum_spend": 7573516.887936242,
+   "cum_value": 7427427.579365203,
+   "live_n": 26,
+   "exit_runrate": 21187290.98318258
+  },
+  {
+   "q": 5,
+   "acts": [
+    {
+     "kind": "launch",
+     "label": "Launch UC-14-07 \u2014 Vendor performance analytics",
+     "cost": 129734.59629930218,
+     "net": 668231.0201510201,
+     "uc": "UC-14-07"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-06-01 \u2014 Denial risk scoring",
+     "cost": 324134.5962993022,
+     "net": 1522028.4557095123,
+     "uc": "UC-06-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-07-06 \u2014 Recoupment validation",
+     "cost": 199715.15151515152,
+     "net": 924981.0367201426,
+     "uc": "UC-07-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-06-03 \u2014 Edit rule mining",
+     "cost": 199334.59629930218,
+     "net": 892419.1496949722,
+     "uc": "UC-06-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-06-06 \u2014 Timely filing sentinel",
+     "cost": 154715.15151515152,
+     "net": 603042.4162310478,
+     "uc": "UC-06-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-02-03 \u2014 Payer notification/submission bots",
+     "cost": 180817.8542178542,
+     "net": 651876.0674698611,
+     "uc": "UC-02-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-09-02 \u2014 Claim status bot fleet",
+     "cost": 369417.8542178542,
+     "net": 1321155.2178469587,
+     "uc": "UC-09-02"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-10-04 \u2014 Plan default prediction & rescue",
+     "cost": 214334.59629930218,
+     "net": 746941.6083863142,
+     "uc": "UC-10-04"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-14-01 \u2014 Payer/plan master intelligence",
+     "cost": 129734.59629930218,
+     "net": 443332.1437465256,
+     "uc": "UC-14-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-09-01 \u2014 Expected-value AR prioritization",
+     "cost": 344134.5962993022,
+     "net": 1173104.5092726965,
+     "uc": "UC-09-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-03-05 \u2014 CDM update automation",
+     "cost": 139715.15151515152,
+     "net": 443296.69118147757,
+     "uc": "UC-03-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-05-03 \u2014 Disposition validator",
+     "cost": 108623.92632411608,
+     "net": 340953.6183118726,
+     "uc": "UC-05-03"
+    }
+   ],
+   "spend": 2494412.667101092,
+   "q_value": 9071250.77894188,
+   "cum_spend": 10067929.555037335,
+   "cum_value": 16498678.358307084,
+   "live_n": 38,
+   "exit_runrate": 36285003.11576752
+  },
+  {
+   "q": 6,
+   "acts": [
+    {
+     "kind": "launch",
+     "label": "Launch UC-08-02 \u2014 Overturn/priority scoring",
+     "cost": 259334.59629930218,
+     "net": 841096.9025039613,
+     "uc": "UC-08-02"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-02-01 \u2014 Admission status prediction",
+     "cost": 199334.59629930218,
+     "net": 613450.9408383959,
+     "uc": "UC-02-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-06-05 \u2014 Rejection auto-repair",
+     "cost": 224623.92632411607,
+     "net": 682073.8007309075,
+     "uc": "UC-06-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-14-06 \u2014 Downtime orchestration",
+     "cost": 162715.15151515152,
+     "net": 474133.103279369,
+     "uc": "UC-14-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-08-03 \u2014 Appeal letter/packet generation",
+     "cost": 661766.7834669732,
+     "net": 1905685.1309169147,
+     "uc": "UC-08-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-14-03 \u2014 EDI pipeline observability (Wave-0)",
+     "cost": 189734.59629930218,
+     "net": 532944.4347081156,
+     "uc": "UC-14-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-04-04 \u2014 HCC suspecting & recapture",
+     "cost": 290623.92632411607,
+     "net": 787124.2065471667,
+     "uc": "UC-04-04"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-06-04 \u2014 Submission integrity reconciler",
+     "cost": 144715.15151515152,
+     "net": 384142.1364639156,
+     "uc": "UC-06-04"
+    },
+    {
+     "kind": "launch",
+     "label": "Expand Fathom scope (inpatient/profee coding)",
+     "cost": 189124.78526482324,
+     "net": 499323.9917469965,
+     "uc": "UC-05-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Expand Humata payer coverage (auth tracking)",
+     "cost": 36163.570843570844,
+     "net": 83622.60080936553,
+     "uc": "UC-01-09"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-05-04 \u2014 Deficiency chase automation",
+     "cost": 124715.15151515152,
+     "net": 253903.24010451004,
+     "uc": "UC-05-04"
+    }
+   ],
+   "spend": 2482852.23566696,
+   "q_value": 13286772.592628712,
+   "cum_spend": 12550781.790704295,
+   "cum_value": 29785450.950935796,
+   "live_n": 49,
+   "exit_runrate": 53147090.37051485
+  },
+  {
+   "q": 7,
+   "acts": [
+    {
+     "kind": "launch",
+     "label": "Expand Humata payer coverage (auth submission)",
+     "cost": 70153.35669339464,
+     "net": 176857.09195187537,
+     "uc": "UC-01-08"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-12 \u2014 Estimate accuracy engine",
+     "cost": 354134.5962993022,
+     "net": 846012.1966216085,
+     "uc": "UC-01-12"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-13 \u2014 Clearance risk scoring",
+     "cost": 259334.59629930218,
+     "net": 560965.1377980789,
+     "uc": "UC-01-13"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-10-01 \u2014 Liability verification gate",
+     "cost": 199715.15151515152,
+     "net": 417882.495543672,
+     "uc": "UC-10-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-06-07 \u2014 Attachment prediction/assembly",
+     "cost": 249334.59629930218,
+     "net": 518467.4217481372,
+     "uc": "UC-06-07"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-06-08 \u2014 COB/secondary automation",
+     "cost": 144715.15151515152,
+     "net": 299865.1224574512,
+     "uc": "UC-06-08"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-14 \u2014 Conversational pre-registration",
+     "cost": 314153.33808882197,
+     "net": 623190.6771354021,
+     "uc": "UC-01-14"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-01-03 \u2014 Card OCR & plan mapping",
+     "cost": 211623.92632411607,
+     "net": 415261.774293366,
+     "uc": "UC-01-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-09-06 \u2014 Aged-AR disposition modeling",
+     "cost": 229334.59629930218,
+     "net": 437608.90250396135,
+     "uc": "UC-09-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-08-06 \u2014 Appeal outcome verification",
+     "cost": 144715.15151515152,
+     "net": 260284.84848484848,
+     "uc": "UC-08-06"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-08-01 \u2014 Denial classification & attribution",
+     "cost": 300623.92632411607,
+     "net": 511830.0889001079,
+     "uc": "UC-08-01"
+    }
+   ],
+   "spend": 2477838.387173112,
+   "q_value": 15688453.682585899,
+   "cum_spend": 15028620.177877408,
+   "cum_value": 45473904.63352169,
+   "live_n": 60,
+   "exit_runrate": 62753814.730343595
+  },
+  {
+   "q": 8,
+   "acts": [
+    {
+     "kind": "launch",
+     "label": "Launch UC-10-02 \u2014 Statement optimization",
+     "cost": 334334.5962993022,
+     "net": 575346.3142686673,
+     "uc": "UC-10-02"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-10-05 \u2014 Presumptive FA scoring",
+     "cost": 199334.59629930218,
+     "net": 337807.49073925545,
+     "uc": "UC-10-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-14-02 \u2014 Master data drift monitoring",
+     "cost": 138315.15151515152,
+     "net": 226816.4102826012,
+     "uc": "UC-14-02"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-07-01 \u2014 Intelligent auto-posting",
+     "cost": 324134.5962993022,
+     "net": 479535.1297400612,
+     "uc": "UC-07-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-05-02 \u2014 DRG risk scoring",
+     "cost": 259334.59629930218,
+     "net": 376672.1437465256,
+     "uc": "UC-05-02"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-09-04 \u2014 Credit balance & refund automation",
+     "cost": 135734.59629930218,
+     "net": 194095.137798079,
+     "uc": "UC-09-04"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-09-05 \u2014 Special-account monitoring",
+     "cost": 124715.15151515152,
+     "net": 178320.14260249556,
+     "uc": "UC-09-05"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-10-03 \u2014 Conversational billing agent",
+     "cost": 558153.338088822,
+     "net": 775447.7359589314,
+     "uc": "UC-10-03"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-13-01 \u2014 KPI anomaly narratives",
+     "cost": 138623.92632411607,
+     "net": 186131.46144912747,
+     "uc": "UC-13-01"
+    },
+    {
+     "kind": "launch",
+     "label": "Launch UC-02-02 \u2014 Criteria auto-abstraction",
+     "cost": 270623.92632411607,
+     "net": 331095.97125304904,
+     "uc": "UC-02-02"
+    }
+   ],
+   "spend": 2483304.475263868,
+   "q_value": 17283350.94000148,
+   "cum_spend": 17511924.653141275,
+   "cum_value": 62757255.57352317,
+   "live_n": 70,
+   "exit_runrate": 69133403.76000592
+  }
+ ],
+ "launched": {
+  "UC-07-05": {
+   "q": 3,
+   "net": 4655026.024955437,
+   "name": "Variance detection coverage"
+  },
+  "UC-11-01": {
+   "q": 3,
+   "net": 3087671.356580213,
+   "name": "Contract extraction & load verify"
+  },
+  "UC-03-04": {
+   "q": 3,
+   "net": 2358939.201523569,
+   "name": "Charge trigger surveillance"
+  },
+  "UC-01-05": {
+   "q": 3,
+   "net": 3923369.843680432,
+   "name": "Coverage discovery sweep"
+  },
+  "UC-03-01": {
+   "q": 3,
+   "net": 5631388.667209843,
+   "name": "Missing charge detection"
+  },
+  "UC-09-03": {
+   "q": 3,
+   "net": 3763760.431915726,
+   "name": "Underpayment pattern recovery"
+  },
+  "UC-11-05": {
+   "q": 3,
+   "net": 2098115.1548569025,
+   "name": "Payer scorecards & negotiation"
+  },
+  "UC-04-01": {
+   "q": 3,
+   "net": 2297500.677135402,
+   "name": "CDI case prioritization"
+  },
+  "UC-11-03": {
+   "q": 3,
+   "net": 1201806.175199796,
+   "name": "Policy monitoring & routing"
+  },
+  "UC-08-05": {
+   "q": 3,
+   "net": 2301382.7657011645,
+   "name": "Prevention insight miner"
+  },
+  "UC-01-06": {
+   "q": 3,
+   "net": 709061.2397604595,
+   "name": "COB/MSP primacy inference"
+  },
+  "UC-01-15": {
+   "q": 3,
+   "net": 656367.201426025,
+   "name": "POS next-best-action"
+  },
+  "UC-01-10": {
+   "q": 3,
+   "net": 951020.2721464476,
+   "name": "Auth-to-service reconciliation"
+  },
+  "UC-02-04": {
+   "q": 3,
+   "net": 454268.3250215304,
+   "name": "Auth-days runway monitor"
+  },
+  "UC-03-06": {
+   "q": 4,
+   "net": 3177052.677135402,
+   "name": "Autonomous charging"
+  },
+  "UC-11-02": {
+   "q": 4,
+   "net": 939477.1947824608,
+   "name": "Amendment watchdog"
+  },
+  "UC-04-02": {
+   "q": 4,
+   "net": 1264540.6771354019,
+   "name": "Evidence surfacing"
+  },
+  "UC-03-07": {
+   "q": 4,
+   "net": 1854532.1966216085,
+   "name": "Device/implant reconciliation"
+  },
+  "UC-11-06": {
+   "q": 4,
+   "net": 1594118.9698569025,
+   "name": "VBC settlement validation"
+  },
+  "UC-01-07": {
+   "q": 4,
+   "net": 1371541.496582289,
+   "name": "Auth requirement engine"
+  },
+  "UC-03-03": {
+   "q": 4,
+   "net": 1022837.789661319,
+   "name": "Drug units validator"
+  },
+  "UC-01-04": {
+   "q": 4,
+   "net": 1149963.260059421,
+   "name": "Eligibility orchestration"
+  },
+  "UC-04-03": {
+   "q": 4,
+   "net": 1044500.2065471667,
+   "name": "Compliant query drafting"
+  },
+  "UC-01-16": {
+   "q": 4,
+   "net": 1055668.5350221368,
+   "name": "Real-time registration QA"
+  },
+  "UC-10-07": {
+   "q": 4,
+   "net": 1024935.971253049,
+   "name": "Agency oversight analytics"
+  },
+  "UC-11-04": {
+   "q": 4,
+   "net": 1070640.2838472538,
+   "name": "Credentialing/enrollment lifecycle"
+  },
+  "UC-14-07": {
+   "q": 5,
+   "net": 668231.0201510201,
+   "name": "Vendor performance analytics"
+  },
+  "UC-06-01": {
+   "q": 5,
+   "net": 1522028.4557095123,
+   "name": "Denial risk scoring"
+  },
+  "UC-07-06": {
+   "q": 5,
+   "net": 924981.0367201426,
+   "name": "Recoupment validation"
+  },
+  "UC-06-03": {
+   "q": 5,
+   "net": 892419.1496949722,
+   "name": "Edit rule mining"
+  },
+  "UC-06-06": {
+   "q": 5,
+   "net": 603042.4162310478,
+   "name": "Timely filing sentinel"
+  },
+  "UC-02-03": {
+   "q": 5,
+   "net": 651876.0674698611,
+   "name": "Payer notification/submission bots"
+  },
+  "UC-09-02": {
+   "q": 5,
+   "net": 1321155.2178469587,
+   "name": "Claim status bot fleet"
+  },
+  "UC-10-04": {
+   "q": 5,
+   "net": 746941.6083863142,
+   "name": "Plan default prediction & rescue"
+  },
+  "UC-14-01": {
+   "q": 5,
+   "net": 443332.1437465256,
+   "name": "Payer/plan master intelligence"
+  },
+  "UC-09-01": {
+   "q": 5,
+   "net": 1173104.5092726965,
+   "name": "Expected-value AR prioritization"
+  },
+  "UC-03-05": {
+   "q": 5,
+   "net": 443296.69118147757,
+   "name": "CDM update automation"
+  },
+  "UC-05-03": {
+   "q": 5,
+   "net": 340953.6183118726,
+   "name": "Disposition validator"
+  },
+  "UC-08-02": {
+   "q": 6,
+   "net": 841096.9025039613,
+   "name": "Overturn/priority scoring"
+  },
+  "UC-02-01": {
+   "q": 6,
+   "net": 613450.9408383959,
+   "name": "Admission status prediction"
+  },
+  "UC-06-05": {
+   "q": 6,
+   "net": 682073.8007309075,
+   "name": "Rejection auto-repair"
+  },
+  "UC-14-06": {
+   "q": 6,
+   "net": 474133.103279369,
+   "name": "Downtime orchestration"
+  },
+  "UC-08-03": {
+   "q": 6,
+   "net": 1905685.1309169147,
+   "name": "Appeal letter/packet generation"
+  },
+  "UC-14-03": {
+   "q": 6,
+   "net": 532944.4347081156,
+   "name": "EDI pipeline observability (Wave-0)"
+  },
+  "UC-04-04": {
+   "q": 6,
+   "net": 787124.2065471667,
+   "name": "HCC suspecting & recapture"
+  },
+  "UC-06-04": {
+   "q": 6,
+   "net": 384142.1364639156,
+   "name": "Submission integrity reconciler"
+  },
+  "UC-05-01": {
+   "q": 6,
+   "net": 499323.9917469965,
+   "name": "Autonomous/assisted coding"
+  },
+  "UC-01-09": {
+   "q": 6,
+   "net": 83622.60080936553,
+   "name": "Auth status tracking bots"
+  },
+  "UC-05-04": {
+   "q": 6,
+   "net": 253903.24010451004,
+   "name": "Deficiency chase automation"
+  },
+  "UC-01-08": {
+   "q": 7,
+   "net": 176857.09195187537,
+   "name": "Auth submission agent"
+  },
+  "UC-01-12": {
+   "q": 7,
+   "net": 846012.1966216085,
+   "name": "Estimate accuracy engine"
+  },
+  "UC-01-13": {
+   "q": 7,
+   "net": 560965.1377980789,
+   "name": "Clearance risk scoring"
+  },
+  "UC-10-01": {
+   "q": 7,
+   "net": 417882.495543672,
+   "name": "Liability verification gate"
+  },
+  "UC-06-07": {
+   "q": 7,
+   "net": 518467.4217481372,
+   "name": "Attachment prediction/assembly"
+  },
+  "UC-06-08": {
+   "q": 7,
+   "net": 299865.1224574512,
+   "name": "COB/secondary automation"
+  },
+  "UC-01-14": {
+   "q": 7,
+   "net": 623190.6771354021,
+   "name": "Conversational pre-registration"
+  },
+  "UC-01-03": {
+   "q": 7,
+   "net": 415261.774293366,
+   "name": "Card OCR & plan mapping"
+  },
+  "UC-09-06": {
+   "q": 7,
+   "net": 437608.90250396135,
+   "name": "Aged-AR disposition modeling"
+  },
+  "UC-08-06": {
+   "q": 7,
+   "net": 260284.84848484848,
+   "name": "Appeal outcome verification"
+  },
+  "UC-08-01": {
+   "q": 7,
+   "net": 511830.0889001079,
+   "name": "Denial classification & attribution"
+  },
+  "UC-10-02": {
+   "q": 8,
+   "net": 575346.3142686673,
+   "name": "Statement optimization"
+  },
+  "UC-10-05": {
+   "q": 8,
+   "net": 337807.49073925545,
+   "name": "Presumptive FA scoring"
+  },
+  "UC-14-02": {
+   "q": 8,
+   "net": 226816.4102826012,
+   "name": "Master data drift monitoring"
+  },
+  "UC-07-01": {
+   "q": 8,
+   "net": 479535.1297400612,
+   "name": "Intelligent auto-posting"
+  },
+  "UC-05-02": {
+   "q": 8,
+   "net": 376672.1437465256,
+   "name": "DRG risk scoring"
+  },
+  "UC-09-04": {
+   "q": 8,
+   "net": 194095.137798079,
+   "name": "Credit balance & refund automation"
+  },
+  "UC-09-05": {
+   "q": 8,
+   "net": 178320.14260249556,
+   "name": "Special-account monitoring"
+  },
+  "UC-10-03": {
+   "q": 8,
+   "net": 775447.7359589314,
+   "name": "Conversational billing agent"
+  },
+  "UC-13-01": {
+   "q": 8,
+   "net": 186131.46144912747,
+   "name": "KPI anomaly narratives"
+  },
+  "UC-02-02": {
+   "q": 8,
+   "net": 331095.97125304904,
+   "name": "Criteria auto-abstraction"
+  }
+ },
+ "backlog": [
+  {
+   "uc": "UC-06-02",
+   "net": 299022.127578593
+  },
+  {
+   "uc": "UC-07-03",
+   "net": 293442.6690773842
+  },
+  {
+   "uc": "UC-12-05",
+   "net": 204036.32800878497
+  },
+  {
+   "uc": "UC-08-04",
+   "net": 122475.18453458177
+  },
+  {
+   "uc": "UC-07-02",
+   "net": 103505.38301775492
+  },
+  {
+   "uc": "UC-05-06",
+   "net": 90488.19662160838
+  },
+  {
+   "uc": "UC-10-08",
+   "net": 64018.966131907306
+  },
+  {
+   "uc": "UC-04-05",
+   "net": 62610.024955436726
+  },
+  {
+   "uc": "UC-13-02",
+   "net": 29760.431915726018
+  },
+  {
+   "uc": "UC-07-04",
+   "net": 25467.255445137765
+  },
+  {
+   "uc": "UC-13-03",
+   "net": 21579.201523569165
+  },
+  {
+   "uc": "UC-12-02",
+   "net": 17705.38301775494
+  },
+  {
+   "uc": "UC-01-17",
+   "net": 16828.667209843683
+  },
+  {
+   "uc": "UC-13-04",
+   "net": 699.2015235691651
+  },
+  {
+   "uc": "UC-05-05",
+   "net": 176.90250396128977
+  }
+ ]
+}
