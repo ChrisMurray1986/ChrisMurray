@@ -6,10 +6,10 @@ Assessment dated 2026-07-03; generated from committed inputs (never hand-edit th
 
 | | |
 |---|---|
-| Dispositions | GO 0 / COND 43 / DEFER 56 / KILL 0 |
-| A0/A1 launchable now | 44 |
+| Dispositions | GO 0 / COND 42 / DEFER 57 / KILL 0 |
+| A0/A1 launchable now | 41 |
 | Steady-state value (base, capped) | $42.2M/yr |
-| Year-1 value (disposition-adjusted) | $6.2M |
+| Year-1 value (disposition-adjusted) | $6.0M |
 | One-time cash release | $15.9M |
 | Total run cost | $11.4M/yr |
 | 3-yr portfolio TCO | $51.3M |

@@ -1,5 +1,11 @@
 # Use Case Gate Profiles
 
+> **Audit note:** these profiles were verified at engineering depth by the portfolio dependency
+> audit (`13-dependency-audit.md`); 19 profiles were amended with additional decisive facets
+> (corpus, license, outcome-label, execution-hook, and release-gating dependencies).
+> **`scoring/gate-vectors.yaml` is the authoritative machine-readable record** — where this
+> file's narrative and the YAML differ, the YAML governs.
+
 Application of the feasibility gating framework (`07-feasibility-gating.md`) to every use case
 in the catalog. Each profile was derived by: (1) taking the max of the UC's patterns' baseline
 vectors, (2) applying autonomy and risk-tier modifiers for the UC's mature state, (3) overriding

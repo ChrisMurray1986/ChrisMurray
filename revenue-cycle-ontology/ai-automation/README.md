@@ -88,6 +88,7 @@ its risk tier's ceiling**, regardless of model performance. Details and controls
 | `10-cost-model.md` | Cost model: three cost layers (platform/build/run), sourcing options (vendor, rules/RPA, ML, frontier API, fine-tune, SLM) with TCO-based decision procedure, SLM break-even math, payer-connectivity pricing, cost governance |
 | `11-investment-loop-playbook.md` | Operating playbook for the full stack: roles, quarterly cadence, eight plays (stand-up, re-assessment, council meeting, remediation, launch, autonomy promotion, true-up, kills/renewals), consolidated decision rules, loop failure modes |
 | `12-clinical-appeals-engineering.md` | Worked engineering deep-dive (UC-08-03 clinical variant): pipeline decomposition, retrieval/verification architecture, three-tier efficacy evaluation vs a UM physician advisor, minimally viable resource set, and the dependency gaps the exercise surfaced (profile amended) |
+| `13-dependency-audit.md` | Portfolio-wide dependency audit: the deep-dive's five dependency classes applied to all 99 use cases — 80 confirmed, 19 amended, 2 new facets, and the sequencing implications (chart corpus, evaluation harness, and policy library elevated to shared Wave-0-adjacent assets) |
 | `scoring/` | Runnable toolkit: feasibility (`score.py`), value (`value.py`), cost (`cost.py`), quarterly packets (`packet.py`), a self-contained planner app (`rcm-investment-app.html`), and a use-case catalog explorer (`use-case-explorer.html`) |
 
 ## Design principles encoded in this ontology

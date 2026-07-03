@@ -45,6 +45,8 @@ facet_catalog:
   audit_channels_digitized: {dim: data, prompt: "Every audit-correspondence channel (mail, portal, fax) is digitized/polled into one intake"}
   peer_benchmarks:         {dim: data, prompt: "Peer benchmark data (E/M distributions etc.) is licensed and available"}
   system_copy_extracts:    {dim: data, prompt: "Every system copy of CDM/payer/provider masters (billing, estimator, MRF, engine) is extractable"}
+  card_images:             {dim: data, prompt: "Insurance card images are captured digitally at registration/pre-registration (front and back)"}
+  um_worksheets:           {dim: data, prompt: "UR criteria worksheets and determinations (incl. final status outcomes) are stored structured"}
   edi_telemetry:           {dim: data, prompt: "EDI transaction telemetry (volumes, acks, timestamps by payer/route) is retained"}
 
   # ---- integration ----
@@ -128,16 +130,16 @@ use_cases:
   # ---------------- RC-01 Patient Access ----------------
   UC-01-01: {name: "Order intake document AI",            vector: {D: 2, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [orders_digitized, golden_sets], note: "Defer if orders remain physical paper; kill if volume immaterial"}
   UC-01-02: {name: "Identity resolution / dup MRN",       vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [mpi_capacity], note: "Merge is always human (GOV-09)"}
-  UC-01-03: {name: "Card OCR & plan mapping",             vector: {D: 4, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [denial_labels, masterdata_governance], note: "Fix payer master governance before training a mapper into it"}
+  UC-01-03: {name: "Card OCR & plan mapping",             vector: {D: 4, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [denial_labels, masterdata_governance, card_images], note: "Fix payer master governance before training a mapper into it"}
   UC-01-04: {name: "Eligibility orchestration",           vector: {D: 3, I: 3, C: 2, W: 3, O: 1, V: 2, E: 2, L: 2}, facets: [rte_eligibility, portal_automation_permitted], note: "RTE enrollment campaign; scope-cut payers with no electronic path"}
   UC-01-05: {name: "Coverage discovery sweep",            vector: {D: 3, I: 3, C: 2, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [medicaid_files, rte_eligibility], note: "Monitor false-attach rate from day one"}
   UC-01-06: {name: "COB/MSP primacy inference",           vector: {D: 3, I: 2, C: 2, W: 2, O: 2, V: 2, E: 1, L: 1}, facets: [mspq_structured], note: "Capture-first if MSPQ is paper-only"}
-  UC-01-07: {name: "Auth requirement engine",             vector: {D: 3, I: 3, C: 3, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [bulletin_access, portal_automation_permitted], note: "Stale grid worse than none — needs policy-monitoring feed"}
-  UC-01-08: {name: "Auth submission agent",               vector: {D: 3, I: 4, C: 3, W: 3, O: 2, V: 2, E: 2, L: 2}, facets: [fabric, auth_transactions, notes_access, citation_harness, portal_automation_permitted], note: "Wave-0 fabric + GOV-03 harness prerequisites"}
+  UC-01-07: {name: "Auth requirement engine",             vector: {D: 3, I: 3, C: 3, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [bulletin_access, portal_automation_permitted, masterdata_governance], note: "Stale grid worse than none — needs policy-monitoring feed"}
+  UC-01-08: {name: "Auth submission agent",               vector: {D: 3, I: 4, C: 3, W: 3, O: 2, V: 2, E: 2, L: 2}, facets: [fabric, auth_transactions, notes_access, citation_harness, portal_automation_permitted, policy_library], note: "Wave-0 fabric + GOV-03 harness prerequisites"}
   UC-01-09: {name: "Auth status tracking bots",           vector: {D: 2, I: 3, C: 3, W: 3, O: 1, V: 2, E: 2, L: 2}, facets: [portal_automation_permitted, fabric], note: "Kill per payer segment if ToS prohibits with no 278/API alternative"}
   UC-01-10: {name: "Auth-to-service reconciliation",      vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [auth_structured], note: "Structure auth capture first if details live in notes"}
-  UC-01-11: {name: "Necessity screening & dx assist",     vector: {D: 3, I: 3, C: null, W: 2, O: 2, V: 2, E: 2, L: 2}, facets: [cds_ordering_hook, provider_adoption], note: "Post-hoc screening loses most value — needs ordering-workflow hook"}
-  UC-01-12: {name: "Estimate accuracy engine",            vector: {D: 4, I: 3, C: 2, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [contract_engine_loaded, rte_eligibility], note: "Estimates without loaded contract terms are fiction"}
+  UC-01-11: {name: "Necessity screening & dx assist",     vector: {D: 3, I: 3, C: null, W: 2, O: 2, V: 2, E: 2, L: 2}, facets: [cds_ordering_hook, provider_adoption, policy_library], note: "Post-hoc screening loses most value — needs ordering-workflow hook"}
+  UC-01-12: {name: "Estimate accuracy engine",            vector: {D: 4, I: 3, C: 2, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [contract_engine_loaded, rte_eligibility, gfe_stored], note: "Estimates without loaded contract terms are fiction"}
   UC-01-13: {name: "Clearance risk scoring",              vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [clearance_outcomes, hitl_capacity], note: "Deferral recommendations stay A1 forever (GOV-09)"}
   UC-01-14: {name: "Conversational pre-registration",     vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 3}, facets: [outreach_consent, escalation_staffed], note: "Kill without staffed human escalation coverage"}
   UC-01-15: {name: "POS next-best-action",                vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 2}, facets: [collection_policy_unified], note: "Standardize collection policy across sites first"}
@@ -145,9 +147,9 @@ use_cases:
   UC-01-17: {name: "No-show revenue protection",          vector: {D: 4, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 3}, facets: [outreach_consent], note: "Kill for low-volume lines; pool with UC-01-14 infrastructure"}
 
   # ---------------- RC-02 Utilization Review ----------------
-  UC-02-01: {name: "Admission status prediction",         vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [clinical_structured], note: "Defer if clinical data is text-only"}
-  UC-02-02: {name: "Criteria auto-abstraction",           vector: {D: 3, I: 2, C: null, W: 2, O: 2, V: 2, E: 2, L: 2}, facets: [notes_access, criteria_license], note: "Contractual gate: licensor must permit programmatic use"}
-  UC-02-03: {name: "Payer notification/submission bots",  vector: {D: 3, I: 3, C: 3, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [portal_automation_permitted], note: "Scope-cut to payers with viable channels"}
+  UC-02-01: {name: "Admission status prediction",         vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [clinical_structured, um_worksheets], note: "Defer if clinical data is text-only"}
+  UC-02-02: {name: "Criteria auto-abstraction",           vector: {D: 3, I: 2, C: null, W: 2, O: 2, V: 2, E: 2, L: 2}, facets: [notes_access, criteria_license, um_worksheets], note: "Contractual gate: licensor must permit programmatic use"}
+  UC-02-03: {name: "Payer notification/submission bots",  vector: {D: 3, I: 3, C: 3, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [portal_automation_permitted, notes_access], note: "Scope-cut to payers with viable channels"}
   UC-02-04: {name: "Auth-days runway monitor",            vector: {D: 3, I: 3, C: null, W: 3, O: 1, V: 2, E: 1, L: 1}, facets: [auth_structured], note: "Same structured-auth gate as UC-01-10"}
   UC-02-05: {name: "Avoidable-day classification",        vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [avoidable_day_taxonomy, notes_access], note: "Define the taxonomy first"}
 
@@ -156,20 +158,20 @@ use_cases:
   UC-03-02: {name: "Dup/anomaly charge screening",        vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [prebill_hold], note: "Downgrade to post-bill lists without pre-bill hold"}
   UC-03-03: {name: "Drug units validator",                vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [masterdata_governance], note: "Govern the NDC crosswalk table first"}
   UC-03-04: {name: "Charge trigger surveillance",         vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [], note: "Low bar — Wave-1 candidate almost everywhere"}
-  UC-03-05: {name: "CDM update automation",               vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [cdm_governance], note: "Defer if CDM changes happen by direct edit"}
-  UC-03-06: {name: "Autonomous charging",                 vector: {D: 4, I: 3, C: null, W: 4, O: 2, V: 3, E: 2, L: 1}, facets: [documentation_stability], note: "Enable domain-by-domain; capture-first where documentation incomplete"}
+  UC-03-05: {name: "CDM update automation",               vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [cdm_governance, reference_license], note: "Defer if CDM changes happen by direct edit"}
+  UC-03-06: {name: "Autonomous charging",                 vector: {D: 4, I: 3, C: null, W: 4, O: 2, V: 3, E: 2, L: 1}, facets: [documentation_stability, notes_access, golden_sets], note: "Enable domain-by-domain; capture-first where documentation incomplete"}
   UC-03-07: {name: "Device/implant reconciliation",       vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [supply_chain_feed], note: "Point-of-use capture project first if OR supplies are paper stickers"}
   UC-03-08: {name: "MRF/transparency pipeline",           vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 2}, facets: [contract_engine_loaded], note: "Bad terms data automates noncompliance"}
 
   # ---------------- RC-04 CDI ----------------
-  UC-04-01: {name: "CDI case prioritization",             vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 2, E: 2, L: 1}, facets: [notes_access], note: "Label backfill from encoder + query tool history"}
+  UC-04-01: {name: "CDI case prioritization",             vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 2, E: 2, L: 1}, facets: [notes_access, working_drg_recorded], note: "Label backfill from encoder + query tool history"}
   UC-04-02: {name: "Evidence surfacing",                  vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [notes_access], note: "A0, low risk, feasible early"}
-  UC-04-03: {name: "Compliant query drafting",            vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 1}, facets: [query_standardized, citation_harness], note: "Standardize the human query process first"}
+  UC-04-03: {name: "Compliant query drafting",            vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 1}, facets: [query_standardized, citation_harness, notes_access], note: "Standardize the human query process first"}
   UC-04-04: {name: "HCC suspecting & recapture",          vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [notes_access, provider_adoption], note: "Kill if no VBC/MA population"}
   UC-04-05: {name: "DRG reconciliation triage",           vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [working_drg_recorded], note: "Trivial where CDI+coding share a platform"}
 
   # ---------------- RC-05 Coding ----------------
-  UC-05-01: {name: "Autonomous/assisted coding",          vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [golden_sets, model_monitoring, notes_access], note: "Scope by case type; never kill wholesale"}
+  UC-05-01: {name: "Autonomous/assisted coding",          vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [golden_sets, model_monitoring, notes_access, reference_license], note: "Scope by case type; never kill wholesale"}
   UC-05-02: {name: "DRG risk scoring",                    vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [audit_outcomes, hitl_capacity], note: "Instrument audit outcomes first if unrecorded"}
   UC-05-03: {name: "Disposition validator",               vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [], note: "Rules-only version feasible everywhere; external signals need HIE"}
   UC-05-04: {name: "Deficiency chase automation",         vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [deficiency_structured], note: "W2 the deficiency process first if ad hoc"}
@@ -179,12 +181,12 @@ use_cases:
 
   # ---------------- RC-06 Claims ----------------
   UC-06-01: {name: "Denial risk scoring",                 vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [denial_labels, writeback], note: "Pilot A0 score display while hold policy is negotiated"}
-  UC-06-02: {name: "Edit resolution agent",               vector: {D: 3, I: 4, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [fabric, edit_rule_governance], note: "A3 only per governed class"}
+  UC-06-02: {name: "Edit resolution agent",               vector: {D: 3, I: 4, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [fabric, edit_rule_governance, golden_sets], note: "A3 only per governed class"}
   UC-06-03: {name: "Edit rule mining",                    vector: {D: 4, I: 2, C: null, W: 3, O: 1, V: 2, E: 2, L: 1}, facets: [denial_labels, edit_rule_governance], note: "Defer if edit rules are vendor-locked"}
   UC-06-04: {name: "Submission integrity reconciler",     vector: {D: 3, I: 3, C: 1, W: 3, O: 1, V: 2, E: 1, L: 1}, facets: [acks_retained], note: "Turn on ack retention, then straightforward — Wave-1"}
-  UC-06-05: {name: "Rejection auto-repair",               vector: {D: 3, I: 4, C: 1, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [fabric, edit_rule_governance], note: "A1 first, same pattern as 06-02"}
+  UC-06-05: {name: "Rejection auto-repair",               vector: {D: 3, I: 4, C: 1, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [fabric, edit_rule_governance, golden_sets], note: "A1 first, same pattern as 06-02"}
   UC-06-06: {name: "Timely filing sentinel",              vector: {D: 3, I: 3, C: null, W: 3, O: 1, V: 2, E: 1, L: 1}, facets: [filing_matrix], note: "Contract-matrix load is the prerequisite"}
-  UC-06-07: {name: "Attachment prediction/assembly",      vector: {D: 4, I: 3, C: 2, W: 2, O: 2, V: 2, E: 2, L: 1}, facets: [attachment_channels], note: "Scope-cut fax-only payers"}
+  UC-06-07: {name: "Attachment prediction/assembly",      vector: {D: 4, I: 3, C: 2, W: 2, O: 2, V: 2, E: 2, L: 1}, facets: [attachment_channels, him_retrieval], note: "Scope-cut fax-only payers"}
   UC-06-08: {name: "COB/secondary automation",            vector: {D: 3, I: 3, C: 1, W: 3, O: 1, V: 3, E: 2, L: 1}, facets: [era_coverage], note: "UC-07-03 feeds this for paper-remit payers"}
 
   # ---------------- RC-07 Payments ----------------
@@ -198,7 +200,7 @@ use_cases:
   # ---------------- RC-08 Denials & Appeals ----------------
   UC-08-01: {name: "Denial classification & attribution", vector: {D: 3, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [denial_taxonomy, lockbox_imaging], note: "Paper-denial capture gap = silent coverage hole"}
   UC-08-02: {name: "Overturn/priority scoring",           vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [appeal_outcomes], note: "Interim: rules-based deadline x dollars prioritization"}
-  UC-08-03: {name: "Appeal letter/packet generation",     vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 2}, facets: [policy_library, citation_harness, hitl_capacity, appeal_process, criteria_license, notes_access, appeal_outcomes], note: "LLM citing policies it can't retrieve is FM-AI-02 by design; clinical variant needs criteria rights, chart corpus, and outcome labels (see 12-clinical-appeals-engineering.md)"}
+  UC-08-03: {name: "Appeal letter/packet generation",     vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 2}, facets: [policy_library, citation_harness, hitl_capacity, appeal_process, criteria_license, notes_access, appeal_outcomes, um_worksheets], note: "LLM citing policies it can't retrieve is FM-AI-02 by design; clinical variant needs criteria rights, chart corpus, and outcome labels (see 12-clinical-appeals-engineering.md)"}
   UC-08-04: {name: "Rebill-loop breaker",                 vector: {D: 3, I: 2, C: null, W: 3, O: 1, V: 2, E: 1, L: 1}, facets: [touch_logging], note: "Instrumentation-first where touches aren't logged"}
   UC-08-05: {name: "Prevention insight miner",            vector: {D: 4, I: 2, C: null, W: 3, O: 2, V: 2, E: 2, L: 1}, facets: [routing_authority, denial_labels], note: "Kill-as-designed without routing ownership"}
   UC-08-06: {name: "Appeal outcome verification",         vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [appeal_outcomes], note: "Low bar once 08-01/02 exist"}
@@ -212,9 +214,9 @@ use_cases:
   UC-09-06: {name: "Aged-AR disposition modeling",        vector: {D: 4, I: 2, C: null, W: 3, O: 2, V: 2, E: 2, L: 2}, facets: [placement_gates, fa_501r_review], note: "Codify placement gates, then automate verification"}
 
   # ---------------- RC-10 Patient Financial Services ----------------
-  UC-10-01: {name: "Liability verification gate",         vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [statement_suppression], note: "Vendor/contract change first if no suppression hook"}
+  UC-10-01: {name: "Liability verification gate",         vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [statement_suppression, posting_standardized], note: "Vendor/contract change first if no suppression hook"}
   UC-10-02: {name: "Statement optimization",              vector: {D: 4, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 3}, facets: [statement_vendor_flex, bias_program, statement_history], note: "Treatment differences must not track protected classes"}
-  UC-10-03: {name: "Conversational billing agent",        vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 3}, facets: [account_360, plan_matrix_unified, escalation_staffed], note: "A bot that can't explain the bill is a complaint generator"}
+  UC-10-03: {name: "Conversational billing agent",        vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 3}, facets: [account_360, plan_matrix_unified, escalation_staffed, golden_sets], note: "A bot that can't explain the bill is a complaint generator"}
   UC-10-04: {name: "Plan default prediction & rescue",    vector: {D: 4, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 3}, facets: [plan_payment_history, outreach_consent, bias_program], note: "Consent capture in plan enrollment flow"}
   UC-10-05: {name: "Presumptive FA scoring",              vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 4, E: 2, L: 3}, facets: [bias_program, socio_data_license, fa_501r_review], note: "Cap at A0 lists until bias program; auto-denial killed permanently"}
   UC-10-06: {name: "NSA protection classifier",           vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 3}, facets: [consents_indexed], note: "Index NSA consents first; err-protective default"}

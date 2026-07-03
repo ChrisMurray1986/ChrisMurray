@@ -55,6 +55,8 @@ facets:
   audit_channels_digitized: 0  # Every audit-correspondence channel (mail, portal, fax) is digitized/polled into one intake
   peer_benchmarks: 0  # Peer benchmark data (E/M distributions etc.) is licensed and available
   system_copy_extracts: 0  # Every system copy of CDM/payer/provider masters (billing, estimator, MRF, engine) is extractable
+  card_images: 0  # Insurance card images are captured digitally at registration/pre-registration (front and back)
+  um_worksheets: 0  # UR criteria worksheets and determinations (incl. final status outcomes) are stored structured
   edi_telemetry: 0  # EDI transaction telemetry (volumes, acks, timestamps by payer/route) is retained
   # ---- integration ----
   writeback: 0  # Write-back path exists: transactions, flags, and queue routing can be set programmatically (I3)

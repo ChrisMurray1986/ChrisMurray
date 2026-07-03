@@ -2,13 +2,12 @@ uc_id,domain,disposition,a0_a1_start,gaps,value_yr_base,value_y1,option,build,ru
 UC-01-02,Patient Access,CONDITIONAL,yes,governance 1->2,95703,23926,vendor,46200,168585,609329,-79318,,-0.69
 UC-01-04,Patient Access,CONDITIONAL,yes,workflow 2->3; governance 1->2; legal 1->2; portal_automation_permitted (partial),738142,184536,build_rules,143200,211800,784661,524827,3,0.83
 UC-01-06,Patient Access,CONDITIONAL,yes,governance 1->2,343820,85955,build_rules,76800,24565,156555,317740,3,3.28
-UC-01-11,Patient Access,CONDITIONAL,yes,governance 1->2; legal 1->2; cds_ordering_hook (partial); provider_adoption (partial),229213,57303,api,154000,227806,910014,-12869,,-0.51
 UC-01-15,Patient Access,CONDITIONAL,yes,governance 1->2; legal 1->2; collection_policy_unified (partial),300000,75000,build_rules,76800,37082,194108,261402,4,2.01
 UC-02-02,Utilization Review,CONDITIONAL,,governance 1->2; legal 1->2; notes_access (partial); criteria_license (partial),314400,78600,api,258000,166641,787663,142054,23,-0.22
 UC-02-04,Utilization Review,CONDITIONAL,,workflow 2->3; governance 1->2; auth_structured (partial),229213,57303,build_rules,76800,27582,165608,200116,5,1.7
 UC-03-01,Charge Capture,CONDITIONAL,,data 3->4; governance 1->2; charge_linkage (partial); dept_charge_owners (partial),2500000,625000,build_ml,309600,205086,958704,2288477,2,4.08
 UC-03-04,Charge Capture,CONDITIONAL,yes,governance 1->2,1000000,250000,build_ml,115200,34624,252917,958939,2,6.71
-UC-03-05,Charge Capture,CONDITIONAL,yes,workflow 2->3; governance 1->2,219910,54978,build_rules,123200,30914,222003,187481,8,0.93
+UC-03-05,Charge Capture,CONDITIONAL,yes,workflow 2->3; governance 1->2; reference_license (partial),219910,54978,build_rules,123200,30914,222003,187481,8,0.93
 UC-03-07,Charge Capture,CONDITIONAL,,governance 1->2; supply_chain_feed (partial),800000,200000,build_ml,184800,56936,389454,736627,3,3.01
 UC-03-08,Charge Capture,CONDITIONAL,,governance 1->2; legal 1->2; contract_engine_loaded (partial),0,0,build_rules,123200,30800,221662,-32316,,-1.0
 UC-04-01,CDI,CONDITIONAL,,data 3->4; governance 1->2; notes_access (partial),1000000,250000,api,154000,53806,345157,940489,2,4.65
@@ -21,7 +20,7 @@ UC-05-06,Coding,CONDITIONAL,,data 3->4; governance 1->2; qa_history (partial),69
 UC-06-03,Claims,CONDITIONAL,,data 3->4; workflow 2->3; governance 1->2; denial_labels (partial),458427,114607,build_ml,184800,70401,429849,381589,6,1.08
 UC-06-04,Claims,CONDITIONAL,yes,workflow 2->3; governance 1->2,278529,69632,build_rules,143200,115800,496661,161213,11,0.09
 UC-06-06,Claims,CONDITIONAL,yes,workflow 2->3; governance 1->2; filing_matrix (partial),343820,85955,build_rules,123200,75506,355778,266799,6,0.88
-UC-06-07,Claims,CONDITIONAL,,data 3->4; governance 1->2; attachment_channels (partial),294967,73742,build_ml,204800,89175,506172,199354,13,0.14
+UC-06-07,Claims,CONDITIONAL,,data 3->4; governance 1->2; attachment_channels (partial); him_retrieval (partial),294967,73742,build_ml,204800,89175,506172,199354,13,0.14
 UC-07-02,Payments,CONDITIONAL,,data 3->4; governance 1->2; denial_taxonomy (partial),84000,21000,api,154000,43571,314451,34724,58,-0.48
 UC-07-04,Payments,CONDITIONAL,yes,governance 1->2,92160,23040,build_ml,184800,102566,526346,-16844,,-0.66
 UC-07-05,Payments,CONDITIONAL,,workflow 2->3; governance 1->2; contract_engine_loaded (partial),2000000,500000,build_rules,123200,77741,362484,1920744,1,9.76
@@ -43,31 +42,32 @@ UC-14-03,Master Data & Tech,CONDITIONAL,,workflow 2->3; governance 1->2; edi_tel
 UC-14-05,Master Data & Tech,CONDITIONAL,,governance 1->2; touch_logging (partial),48000,12000,build_ml,115200,109364,477138,-67801,,-0.8
 UC-14-07,Master Data & Tech,CONDITIONAL,yes,connectivity 2->3; governance 1->2; legal 1->2; agency_data_rights (partial),300000,75000,build_ml,115200,39048,266191,254515,6,1.2
 UC-01-01,Patient Access,DEFER,yes,governance 1->3; golden_sets (absent),191407,28711,api,258000,194778,984575,-31577,,-0.7
-UC-01-03,Patient Access,DEFER,,governance 1->3; data 3->4; denial_labels (partial); masterdata_governance (partial),382220,0,api,154000,172935,815045,181080,14,-0.34
+UC-01-03,Patient Access,DEFER,,governance 1->3; data 3->4; denial_labels (partial); masterdata_governance (partial); card_images (partial),382220,0,api,154000,172935,815045,181080,14,-0.34
 UC-01-05,Patient Access,DEFER,yes,governance 1->3,1700000,255000,vendor,66200,98996,426447,1594567,1,5.18
-UC-01-07,Patient Access,DEFER,yes,governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; bulletin_access (partial); portal_automation_permitted (partial),687640,103146,build_rules,123200,96165,460612,581389,3,1.31
-UC-01-08,Patient Access,DEFER,,fabric (absent); citation_harness (absent); integration 3->4; connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2; auth_transactions (partial); notes_access (partial); portal_automation_permitted (partial),651020,0,api,283000,390601,1604398,233143,18,-0.43
+UC-01-07,Patient Access,DEFER,yes,governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; bulletin_access (partial); portal_automation_permitted (partial); masterdata_governance (partial),687640,103146,build_rules,123200,96165,460612,581389,3,1.31
+UC-01-08,Patient Access,DEFER,,fabric (absent); citation_harness (absent); policy_library (absent); integration 3->4; connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2; auth_transactions (partial); notes_access (partial); portal_automation_permitted (partial),651020,0,api,283000,390601,1604398,233143,18,-0.43
 UC-01-09,Patient Access,DEFER,yes,fabric (absent); connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2; portal_automation_permitted (partial),192000,28800,build_rpa,138600,106572,547321,69832,31,-0.46
 UC-01-10,Patient Access,DEFER,,governance 1->3; workflow 2->3; auth_structured (partial),458427,0,build_rules,123200,33661,230244,423251,4,1.79
-UC-01-12,Patient Access,DEFER,,governance 1->3; data 3->4; legal 1->2; contract_engine_loaded (partial),450000,0,build_ml,339600,154243,836174,289320,15,-0.25
+UC-01-11,Patient Access,DEFER,,policy_library (absent); governance 1->2; legal 1->2; cds_ordering_hook (partial); provider_adoption (partial),229213,0,api,154000,227806,910014,-12869,,-0.65
+UC-01-12,Patient Access,DEFER,,governance 1->3; data 3->4; legal 1->2; contract_engine_loaded (partial); gfe_stored (partial),450000,0,build_ml,339600,154243,836174,289320,15,-0.25
 UC-01-13,Patient Access,DEFER,,governance 1->3; clearance_outcomes (absent); data 3->4; workflow 2->3; hitl_capacity (partial),315200,0,build_ml,184800,100322,519613,208440,11,-0.15
 UC-01-14,Patient Access,DEFER,yes,legal 1->3; workflow 2->3; governance 1->2; outreach_consent (partial); escalation_staffed (partial),584000,87600,api,283000,310968,1242407,267915,13,-0.27
 UC-01-16,Patient Access,DEFER,,governance 1->3; data 3->4; denial_labels (partial),649834,0,build_ml,184800,175126,744025,468270,5,0.22
 UC-01-17,Patient Access,DEFER,,legal 1->3; data 3->4; governance 1->2; outreach_consent (partial),60000,0,vendor,28800,79558,322496,-25995,,-0.74
 UC-02-01,Utilization Review,DEFER,,governance 1->3; data 3->4,343820,0,build_ml,184800,83491,469121,253892,9,0.03
-UC-02-03,Utilization Review,DEFER,yes,governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; portal_automation_permitted (partial),382813,57422,build_rpa,138600,122591,595380,244626,9,-0.0
+UC-02-03,Utilization Review,DEFER,,governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; portal_automation_permitted (partial); notes_access (partial),382813,0,build_rpa,138600,122591,595380,244626,9,-0.1
 UC-02-05,Utilization Review,DEFER,,avoidable_day_taxonomy (absent); governance 1->2; notes_access (partial),46080,0,api,96000,142341,552763,-101966,,-0.88
 UC-03-02,Charge Capture,DEFER,yes,governance 1->3; workflow 2->3,300000,45000,build_rules,123200,433153,1428719,-134668,,-0.67
 UC-03-03,Charge Capture,DEFER,yes,governance 1->3; workflow 2->3; masterdata_governance (partial),500000,75000,build_rules,123200,91153,402719,407332,4,0.92
-UC-03-06,Charge Capture,DEFER,,workflow 2->4; governance 1->3; data 3->4; documentation_stability (partial),1551840,0,api,258000,243406,1017957,1302729,2,1.13
-UC-04-03,CDI,DEFER,yes,citation_harness (absent); workflow 2->3; governance 1->2,546080,81912,api,154000,117649,536688,422725,5,0.58
+UC-03-06,Charge Capture,DEFER,,workflow 2->4; governance 1->3; golden_sets (absent); data 3->4; documentation_stability (partial); notes_access (partial),1551840,0,api,258000,243406,1017957,1302729,2,1.13
+UC-04-03,CDI,DEFER,,citation_harness (absent); workflow 2->3; governance 1->2; notes_access (partial),546080,0,api,154000,117649,536688,422725,5,0.42
 UC-04-04,CDI,DEFER,,governance 1->3; data 3->4; legal 1->2; notes_access (partial); provider_adoption (partial),500000,0,api,258000,192229,864428,302065,11,-0.19
-UC-05-01,Coding,DEFER,,governance 1->3; golden_sets (absent); model_monitoring (absent); data 3->4; workflow 2->3; legal 1->2; notes_access (partial),887999,0,api,422000,430182,1742287,452111,12,-0.29
+UC-05-01,Coding,DEFER,,governance 1->3; golden_sets (absent); model_monitoring (absent); data 3->4; workflow 2->3; legal 1->2; notes_access (partial); reference_license (partial),887999,0,api,422000,430182,1742287,452111,12,-0.29
 UC-05-02,Coding,DEFER,,governance 1->3; data 3->4; audit_outcomes (partial); hitl_capacity (partial),229213,0,build_ml,184800,79003,455656,143773,17,-0.3
 UC-05-07,Coding,DEFER,yes,citation_harness (absent); governance 1->2; legal 1->2; reference_license (partial),148160,22224,api,154000,419307,1484518,-285424,,-0.85
 UC-06-01,Claims,DEFER,,governance 1->3; data 3->4; workflow 2->3; denial_labels (partial),916854,0,build_ml,309600,242488,1070910,667929,6,0.2
-UC-06-02,Claims,DEFER,yes,governance 1->3; fabric (absent); integration 3->4; workflow 2->3,341392,51209,api,258000,207280,986581,115406,32,-0.46
-UC-06-05,Claims,DEFER,yes,governance 1->3; fabric (absent); integration 3->4; workflow 2->3,367453,55118,api,174000,54806,445157,293942,9,0.28
+UC-06-02,Claims,DEFER,yes,governance 1->3; fabric (absent); golden_sets (absent); integration 3->4; workflow 2->3,341392,51209,api,258000,207280,986581,115406,32,-0.46
+UC-06-05,Claims,DEFER,yes,governance 1->3; fabric (absent); golden_sets (absent); integration 3->4; workflow 2->3,367453,55118,api,174000,54806,445157,293942,9,0.28
 UC-06-08,Claims,DEFER,yes,governance 1->3; workflow 2->3,168592,25289,build_rules,143200,55800,316661,111277,16,-0.17
 UC-07-01,Payments,DEFER,yes,governance 1->3; workflow 2->3,436077,65412,vendor,77400,222105,808444,207534,5,-0.16
 UC-07-03,Payments,DEFER,yes,governance 1->3; golden_sets (absent),205677,30852,vendor,77400,93305,525497,84166,19,-0.39
@@ -82,7 +82,7 @@ UC-09-04,AR Management,DEFER,,governance 1->3; data 3->4; workflow 2->3; legal 1
 UC-09-05,AR Management,DEFER,yes,external_registries (absent); connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2,90000,13500,vendor,46200,33957,168838,54528,11,-0.17
 UC-10-01,Patient Financial Svcs,DEFER,yes,governance 1->3; workflow 2->3; legal 1->2; statement_suppression (partial),255600,38340,build_rules,123200,88918,396014,165167,9,0.0
 UC-10-02,Patient Financial Svcs,DEFER,,governance 1->3; legal 1->3; bias_program (absent); data 3->4; statement_vendor_flex (partial); statement_history (partial),460000,0,vendor,46200,257212,882270,196351,4,-0.27
-UC-10-03,Patient Financial Svcs,DEFER,yes,governance 1->3; legal 1->3; account_360 (absent); workflow 2->3; plan_matrix_unified (partial); escalation_staffed (partial),628000,94200,api,472000,294565,1382198,328318,18,-0.3
+UC-10-03,Patient Financial Svcs,DEFER,yes,governance 1->3; legal 1->3; account_360 (absent); golden_sets (absent); workflow 2->3; plan_matrix_unified (partial); escalation_staffed (partial),628000,94200,api,472000,294565,1382198,328318,18,-0.3
 UC-10-04,Patient Financial Svcs,DEFER,,governance 1->3; legal 1->3; bias_program (absent); data 3->4; outreach_consent (partial),340000,0,build_ml,184800,58432,393943,275131,9,0.21
 UC-10-05,Patient Financial Svcs,DEFER,,governance 1->4; legal 1->3; bias_program (absent); socio_data_license (absent); data 3->4; workflow 2->3,180000,0,vendor,46200,100428,423682,73135,10,-0.41
 UC-10-06,Patient Financial Svcs,DEFER,,governance 1->3; legal 1->3; consents_indexed (absent); workflow 2->3,0,0,build_rules,123200,34376,232390,-35892,,-1.0

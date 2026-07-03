@@ -10,7 +10,7 @@ Profile date 2026-07-03; NPR $1.00B. 99 use cases valued. All figures annual ste
 | Recurring range (low–high) | $21.1M – $67.6M |
 | One-time cash release (AR days) | $15.9M |
 | Risk & compliance EV (VS-8, segregated) | $1.3M |
-| Year-1 value, disposition-adjusted | $6.2M |
+| Year-1 value, disposition-adjusted | $6.0M |
 
 ## By value stream (recurring, capped, base case)
 
@@ -36,8 +36,9 @@ Overlapping attribution — a use case with three gaps appears under all three; 
 | data 3->4 | 30 | $16.2M |
 | governance 1->3 | 34 | $15.3M |
 | legal 1->2 | 32 | $11.2M |
-| notes_access | 8 | $5.1M |
+| notes_access | 11 | $7.5M |
 | citation_harness | 7 | $4.4M |
+| golden_sets | 7 | $4.2M |
 | contract_engine_loaded | 4 | $4.0M |
 | portal_automation_permitted | 7 | $3.9M |
 | connectivity 2->3 | 9 | $3.9M |
@@ -45,7 +46,6 @@ Overlapping attribution — a use case with three gaps appears under all three; 
 | fabric | 9 | $2.6M |
 | charge_linkage | 1 | $2.5M |
 | dept_charge_owners | 1 | $2.5M |
-| legal 1->3 | 7 | $2.3M |
 
 ## Pool utilization
 
@@ -103,7 +103,7 @@ Overlapping attribution — a use case with three gaps appears under all three; 
 | UC-01-14 | Patient Access | VS-4 VS-6 | $292k | **$584k** | $934k | — | — | DEFER | $88k |
 | UC-04-02 | CDI | VS-3 VS-6 | $288k | **$577k** | $923k | — | — | CONDITIONAL | $144k |
 | UC-11-03 | Contracting | VS-1 | $287k | **$573k** | $917k | — | — | DEFER | $86k |
-| UC-04-03 | CDI | VS-3 VS-6 | $273k | **$546k** | $874k | — | — | DEFER | $82k |
+| UC-04-03 | CDI | VS-3 VS-6 | $273k | **$546k** | $874k | — | — | DEFER | $0k |
 | UC-11-04 | Contracting | VS-1 VS-5 VS-6 | $269k | **$537k** | $859k | $822k | — | CONDITIONAL | $134k |
 | UC-03-03 | Charge Capture | VS-3 VS-8 | $250k | **$500k** | $800k | — | $111k | DEFER | $75k |
 | UC-04-04 | CDI | VS-3 | $250k | **$500k** | $800k | — | — | DEFER | $0k |
@@ -116,7 +116,7 @@ Overlapping attribution — a use case with three gaps appears under all three; 
 | UC-08-02 | Denials & Appeals | VS-2 VS-6 | $217k | **$434k** | $694k | — | — | DEFER | $0k |
 | UC-07-06 | Payments | VS-2 | $200k | **$400k** | $640k | — | — | DEFER | $0k |
 | UC-11-02 | Contracting | VS-2 | $200k | **$400k** | $640k | — | — | CONDITIONAL | $100k |
-| UC-02-03 | Utilization Review | VS-1 VS-6 | $191k | **$383k** | $613k | — | — | DEFER | $57k |
+| UC-02-03 | Utilization Review | VS-1 VS-6 | $191k | **$383k** | $613k | — | — | DEFER | $0k |
 | UC-01-03 | Patient Access | VS-1 VS-6 | $191k | **$382k** | $612k | — | — | DEFER | $0k |
 | UC-06-05 | Claims | VS-1 VS-6 | $184k | **$367k** | $588k | — | — | DEFER | $55k |
 | UC-01-06 | Patient Access | VS-1 | $172k | **$344k** | $550k | — | — | CONDITIONAL | $86k |
@@ -136,7 +136,7 @@ Overlapping attribution — a use case with three gaps appears under all three; 
 | UC-10-01 | Patient Financial Svcs | VS-4 VS-6 | $128k | **$256k** | $409k | — | — | DEFER | $38k |
 | UC-05-03 | Coding | VS-2 VS-8 | $120k | **$240k** | $384k | — | $22k | CONDITIONAL | $60k |
 | UC-09-06 | AR Management | VS-4 VS-6 | $115k | **$231k** | $369k | — | — | CONDITIONAL | $58k |
-| UC-01-11 | Patient Access | VS-1 VS-8 | $115k | **$229k** | $367k | — | $22k | CONDITIONAL | $57k |
+| UC-01-11 | Patient Access | VS-1 VS-8 | $115k | **$229k** | $367k | — | $22k | DEFER | $0k |
 | UC-02-04 | Utilization Review | VS-1 | $115k | **$229k** | $367k | — | — | CONDITIONAL | $57k |
 | UC-05-02 | Coding | VS-1 VS-8 | $115k | **$229k** | $367k | — | $89k | DEFER | $0k |
 | UC-14-01 | Master Data & Tech | VS-1 | $115k | **$229k** | $367k | — | — | CONDITIONAL | $57k |

@@ -63,7 +63,7 @@ NPR $1.00B; 99 active use cases priced over 3 years. Build ranges ±(0.8/1.5), r
 | UC-01-01 | api | $258k | $195k | $985k | $191k | $-32k | — | -70% | beat slm |
 | UC-09-02 | build_rpa | $252k | $206k | $959k | $754k | $533k | 7 mo | +22% | beat vendor |
 | UC-03-01 | build_ml | $310k | $205k | $959k | $2.50M | $2.29M | 2 mo | +408% | beat vendor; revisit at 0.5x volume |
-| UC-01-11 | api | $154k | $228k | $910k | $229k | $-13k | — | -51% | beat slm; revisit at 9.0x volume |
+| UC-01-11 | api | $154k | $228k | $910k | $229k | $-13k | — | -65% | beat slm; revisit at 9.0x volume |
 | UC-09-01 | vendor | $77k | $247k | $899k | $718k | $464k | 2 mo | +12% | beat build_ml; revisit at 1.8x volume |
 | UC-10-02 | vendor | $46k | $257k | $882k | $460k | $196k | 4 mo | -27% | beat build_ml; revisit at 1.6x volume |
 | UC-04-04 | api | $258k | $192k | $864k | $500k | $302k | 11 mo | -19% | beat slm |
@@ -75,10 +75,10 @@ NPR $1.00B; 99 active use cases priced over 3 years. Build ranges ±(0.8/1.5), r
 | UC-01-16 | build_ml | $185k | $175k | $744k | $650k | $468k | 5 mo | +22% |  |
 | UC-05-05 | build_ml | $185k | $134k | $621k | $115k | $-25k | — | -64% |  |
 | UC-01-02 | vendor | $46k | $169k | $609k | $96k | $-79k | — | -69% | beat build_ml; revisit at 2.1x volume |
-| UC-02-03 | build_rpa | $139k | $123k | $595k | $383k | $245k | 9 mo | -0% | beat vendor; revisit at 0.3x volume |
+| UC-02-03 | build_rpa | $139k | $123k | $595k | $383k | $245k | 9 mo | -10% | beat vendor; revisit at 0.3x volume |
 | UC-02-05 | api | $96k | $142k | $553k | $46k | $-102k | — | -88% | beat slm |
 | UC-01-09 | build_rpa | $139k | $107k | $547k | $192k | $70k | 31 mo | -46% | beat vendor; revisit at 0.4x volume |
-| UC-04-03 | api | $154k | $118k | $537k | $546k | $423k | 5 mo | +58% | beat vendor |
+| UC-04-03 | api | $154k | $118k | $537k | $546k | $423k | 5 mo | +42% | beat vendor |
 | UC-07-04 | build_ml | $185k | $103k | $526k | $92k | $-17k | — | -66% |  |
 | UC-07-03 | vendor | $77k | $93k | $525k | $206k | $84k | 19 mo | -39% | beat api; revisit at 1.9x volume |
 | UC-01-13 | build_ml | $185k | $100k | $520k | $315k | $208k | 11 mo | -15% |  |

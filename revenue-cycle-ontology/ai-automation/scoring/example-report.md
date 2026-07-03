@@ -7,11 +7,11 @@ Assessed by RCM automation working group on 2026-07-03. 99 use cases scored.
 | Disposition | Count |
 |---|---|
 | GO | 0 |
-| CONDITIONAL | 43 |
-| DEFER | 56 |
+| CONDITIONAL | 42 |
+| DEFER | 57 |
 | KILL | 0 |
 
-Insight-only (A0/A1) downgrade available for **44** of the blocked/conditional use cases.
+Insight-only (A0/A1) downgrade available for **41** of the blocked/conditional use cases.
 
 ## Dimension scores
 
@@ -28,16 +28,16 @@ Blocking items ranked by number of use cases they hold back (sole-blocker count 
 - **dimension governance>=3** — blocks 34 use case(s) (1 solely)
 - **dimension legal>=2** — blocks 32 use case(s) (0 solely)
 - **dimension data>=4** — blocks 30 use case(s) (0 solely)
+- **facet notes_access** — blocks 11 use case(s) (0 solely)
 - **dimension connectivity>=3** — blocks 9 use case(s) (0 solely)
 - **facet fabric** — blocks 9 use case(s) (0 solely)
-- **facet notes_access** — blocks 8 use case(s) (0 solely)
+- **facet golden_sets** — blocks 7 use case(s) (0 solely)
 - **facet portal_automation_permitted** — blocks 7 use case(s) (0 solely)
 - **facet citation_harness** — blocks 7 use case(s) (0 solely)
 - **dimension integration>=4** — blocks 7 use case(s) (0 solely)
 - **dimension legal>=3** — blocks 7 use case(s) (0 solely)
 - **facet denial_labels** — blocks 6 use case(s) (0 solely)
-- **facet contract_engine_loaded** — blocks 4 use case(s) (0 solely)
-- **facet touch_logging** — blocks 4 use case(s) (0 solely)
+- **facet masterdata_governance** — blocks 4 use case(s) (0 solely)
 
 ## Per-use-case results
 
@@ -46,13 +46,12 @@ Blocking items ranked by number of use cases they hold back (sole-blocker count 
 | UC-01-02 | Identity resolution / dup MRN | CONDITIONAL | governance 1->2 | yes | Merge is always human (GOV-09) |
 | UC-01-04 | Eligibility orchestration | CONDITIONAL | workflow 2->3; governance 1->2; legal 1->2; portal_automation_permitted (partial) | yes | RTE enrollment campaign; scope-cut payers with no electronic path |
 | UC-01-06 | COB/MSP primacy inference | CONDITIONAL | governance 1->2 | yes | Capture-first if MSPQ is paper-only |
-| UC-01-11 | Necessity screening & dx assist | CONDITIONAL | governance 1->2; legal 1->2; cds_ordering_hook (partial); provider_adoption (partial) | yes | Post-hoc screening loses most value — needs ordering-workflow hook |
 | UC-01-15 | POS next-best-action | CONDITIONAL | governance 1->2; legal 1->2; collection_policy_unified (partial) | yes | Standardize collection policy across sites first |
 | UC-02-02 | Criteria auto-abstraction | CONDITIONAL | governance 1->2; legal 1->2; notes_access (partial); criteria_license (partial) |  | Contractual gate: licensor must permit programmatic use |
 | UC-02-04 | Auth-days runway monitor | CONDITIONAL | workflow 2->3; governance 1->2; auth_structured (partial) |  | Same structured-auth gate as UC-01-10 |
 | UC-03-01 | Missing charge detection | CONDITIONAL | data 3->4; governance 1->2; charge_linkage (partial); dept_charge_owners (partial) |  | Kill per dept if no owner accepts the queue |
 | UC-03-04 | Charge trigger surveillance | CONDITIONAL | governance 1->2 | yes | Low bar — Wave-1 candidate almost everywhere |
-| UC-03-05 | CDM update automation | CONDITIONAL | workflow 2->3; governance 1->2 | yes | Defer if CDM changes happen by direct edit |
+| UC-03-05 | CDM update automation | CONDITIONAL | workflow 2->3; governance 1->2; reference_license (partial) | yes | Defer if CDM changes happen by direct edit |
 | UC-03-07 | Device/implant reconciliation | CONDITIONAL | governance 1->2; supply_chain_feed (partial) |  | Point-of-use capture project first if OR supplies are paper stickers |
 | UC-03-08 | MRF/transparency pipeline | CONDITIONAL | governance 1->2; legal 1->2; contract_engine_loaded (partial) |  | Bad terms data automates noncompliance |
 | UC-04-01 | CDI case prioritization | CONDITIONAL | data 3->4; governance 1->2; notes_access (partial) |  | Label backfill from encoder + query tool history |
@@ -65,7 +64,7 @@ Blocking items ranked by number of use cases they hold back (sole-blocker count 
 | UC-06-03 | Edit rule mining | CONDITIONAL | data 3->4; workflow 2->3; governance 1->2; denial_labels (partial) |  | Defer if edit rules are vendor-locked |
 | UC-06-04 | Submission integrity reconciler | CONDITIONAL | workflow 2->3; governance 1->2 | yes | Turn on ack retention, then straightforward — Wave-1 |
 | UC-06-06 | Timely filing sentinel | CONDITIONAL | workflow 2->3; governance 1->2; filing_matrix (partial) | yes | Contract-matrix load is the prerequisite |
-| UC-06-07 | Attachment prediction/assembly | CONDITIONAL | data 3->4; governance 1->2; attachment_channels (partial) |  | Scope-cut fax-only payers |
+| UC-06-07 | Attachment prediction/assembly | CONDITIONAL | data 3->4; governance 1->2; attachment_channels (partial); him_retrieval (partial) |  | Scope-cut fax-only payers |
 | UC-07-02 | CARC mapping intelligence | CONDITIONAL | data 3->4; governance 1->2; denial_taxonomy (partial) |  | Without a taxonomy the model learns today's mis-mappings |
 | UC-07-04 | Treasury matching | CONDITIONAL | governance 1->2 | yes | Straightforward where bank feeds exist |
 | UC-07-05 | Variance detection coverage | CONDITIONAL | workflow 2->3; governance 1->2; contract_engine_loaded (partial) |  | No engine = that IS the project |
@@ -87,31 +86,32 @@ Blocking items ranked by number of use cases they hold back (sole-blocker count 
 | UC-14-05 | Automation candidate mining | CONDITIONAL | governance 1->2; touch_logging (partial) |  | Value scales with instrumentation coverage |
 | UC-14-07 | Vendor performance analytics | CONDITIONAL | connectivity 2->3; governance 1->2; legal 1->2; agency_data_rights (partial) | yes | Defer per vendor to contract renewal if rights absent |
 | UC-01-01 | Order intake document AI | DEFER | governance 1->3; golden_sets (absent) | yes | Defer if orders remain physical paper; kill if volume immaterial |
-| UC-01-03 | Card OCR & plan mapping | DEFER | governance 1->3; data 3->4; denial_labels (partial); masterdata_governance (partial) |  | Fix payer master governance before training a mapper into it |
+| UC-01-03 | Card OCR & plan mapping | DEFER | governance 1->3; data 3->4; denial_labels (partial); masterdata_governance (partial); card_images (partial) |  | Fix payer master governance before training a mapper into it |
 | UC-01-05 | Coverage discovery sweep | DEFER | governance 1->3 | yes | Monitor false-attach rate from day one |
-| UC-01-07 | Auth requirement engine | DEFER | governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; bulletin_access (partial); portal_automation_permitted (partial) | yes | Stale grid worse than none — needs policy-monitoring feed |
-| UC-01-08 | Auth submission agent | DEFER | fabric (absent); citation_harness (absent); integration 3->4; connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2; auth_transactions (partial); notes_access (partial); portal_automation_permitted (partial) |  | Wave-0 fabric + GOV-03 harness prerequisites |
+| UC-01-07 | Auth requirement engine | DEFER | governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; bulletin_access (partial); portal_automation_permitted (partial); masterdata_governance (partial) | yes | Stale grid worse than none — needs policy-monitoring feed |
+| UC-01-08 | Auth submission agent | DEFER | fabric (absent); citation_harness (absent); policy_library (absent); integration 3->4; connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2; auth_transactions (partial); notes_access (partial); portal_automation_permitted (partial) |  | Wave-0 fabric + GOV-03 harness prerequisites |
 | UC-01-09 | Auth status tracking bots | DEFER | fabric (absent); connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2; portal_automation_permitted (partial) | yes | Kill per payer segment if ToS prohibits with no 278/API alternative |
 | UC-01-10 | Auth-to-service reconciliation | DEFER | governance 1->3; workflow 2->3; auth_structured (partial) |  | Structure auth capture first if details live in notes |
-| UC-01-12 | Estimate accuracy engine | DEFER | governance 1->3; data 3->4; legal 1->2; contract_engine_loaded (partial) |  | Estimates without loaded contract terms are fiction |
+| UC-01-11 | Necessity screening & dx assist | DEFER | policy_library (absent); governance 1->2; legal 1->2; cds_ordering_hook (partial); provider_adoption (partial) |  | Post-hoc screening loses most value — needs ordering-workflow hook |
+| UC-01-12 | Estimate accuracy engine | DEFER | governance 1->3; data 3->4; legal 1->2; contract_engine_loaded (partial); gfe_stored (partial) |  | Estimates without loaded contract terms are fiction |
 | UC-01-13 | Clearance risk scoring | DEFER | governance 1->3; clearance_outcomes (absent); data 3->4; workflow 2->3; hitl_capacity (partial) |  | Deferral recommendations stay A1 forever (GOV-09) |
 | UC-01-14 | Conversational pre-registration | DEFER | legal 1->3; workflow 2->3; governance 1->2; outreach_consent (partial); escalation_staffed (partial) | yes | Kill without staffed human escalation coverage |
 | UC-01-16 | Real-time registration QA | DEFER | governance 1->3; data 3->4; denial_labels (partial) |  | Rules-only version can start at D3 |
 | UC-01-17 | No-show revenue protection | DEFER | legal 1->3; data 3->4; governance 1->2; outreach_consent (partial) |  | Kill for low-volume lines; pool with UC-01-14 infrastructure |
 | UC-02-01 | Admission status prediction | DEFER | governance 1->3; data 3->4 |  | Defer if clinical data is text-only |
-| UC-02-03 | Payer notification/submission bots | DEFER | governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; portal_automation_permitted (partial) | yes | Scope-cut to payers with viable channels |
+| UC-02-03 | Payer notification/submission bots | DEFER | governance 1->3; connectivity 2->3; workflow 2->3; legal 1->2; portal_automation_permitted (partial); notes_access (partial) |  | Scope-cut to payers with viable channels |
 | UC-02-05 | Avoidable-day classification | DEFER | avoidable_day_taxonomy (absent); governance 1->2; notes_access (partial) |  | Define the taxonomy first |
 | UC-03-02 | Dup/anomaly charge screening | DEFER | governance 1->3; workflow 2->3 | yes | Downgrade to post-bill lists without pre-bill hold |
 | UC-03-03 | Drug units validator | DEFER | governance 1->3; workflow 2->3; masterdata_governance (partial) | yes | Govern the NDC crosswalk table first |
-| UC-03-06 | Autonomous charging | DEFER | workflow 2->4; governance 1->3; data 3->4; documentation_stability (partial) |  | Enable domain-by-domain; capture-first where documentation incomplete |
-| UC-04-03 | Compliant query drafting | DEFER | citation_harness (absent); workflow 2->3; governance 1->2 | yes | Standardize the human query process first |
+| UC-03-06 | Autonomous charging | DEFER | workflow 2->4; governance 1->3; golden_sets (absent); data 3->4; documentation_stability (partial); notes_access (partial) |  | Enable domain-by-domain; capture-first where documentation incomplete |
+| UC-04-03 | Compliant query drafting | DEFER | citation_harness (absent); workflow 2->3; governance 1->2; notes_access (partial) |  | Standardize the human query process first |
 | UC-04-04 | HCC suspecting & recapture | DEFER | governance 1->3; data 3->4; legal 1->2; notes_access (partial); provider_adoption (partial) |  | Kill if no VBC/MA population |
-| UC-05-01 | Autonomous/assisted coding | DEFER | governance 1->3; golden_sets (absent); model_monitoring (absent); data 3->4; workflow 2->3; legal 1->2; notes_access (partial) |  | Scope by case type; never kill wholesale |
+| UC-05-01 | Autonomous/assisted coding | DEFER | governance 1->3; golden_sets (absent); model_monitoring (absent); data 3->4; workflow 2->3; legal 1->2; notes_access (partial); reference_license (partial) |  | Scope by case type; never kill wholesale |
 | UC-05-02 | DRG risk scoring | DEFER | governance 1->3; data 3->4; audit_outcomes (partial); hitl_capacity (partial) |  | Instrument audit outcomes first if unrecorded |
 | UC-05-07 | Edit/denial coding assist | DEFER | citation_harness (absent); governance 1->2; legal 1->2; reference_license (partial) | yes | License rights for programmatic reference use |
 | UC-06-01 | Denial risk scoring | DEFER | governance 1->3; data 3->4; workflow 2->3; denial_labels (partial) |  | Pilot A0 score display while hold policy is negotiated |
-| UC-06-02 | Edit resolution agent | DEFER | governance 1->3; fabric (absent); integration 3->4; workflow 2->3 | yes | A3 only per governed class |
-| UC-06-05 | Rejection auto-repair | DEFER | governance 1->3; fabric (absent); integration 3->4; workflow 2->3 | yes | A1 first, same pattern as 06-02 |
+| UC-06-02 | Edit resolution agent | DEFER | governance 1->3; fabric (absent); golden_sets (absent); integration 3->4; workflow 2->3 | yes | A3 only per governed class |
+| UC-06-05 | Rejection auto-repair | DEFER | governance 1->3; fabric (absent); golden_sets (absent); integration 3->4; workflow 2->3 | yes | A1 first, same pattern as 06-02 |
 | UC-06-08 | COB/secondary automation | DEFER | governance 1->3; workflow 2->3 | yes | UC-07-03 feeds this for paper-remit payers |
 | UC-07-01 | Intelligent auto-posting | DEFER | governance 1->3; workflow 2->3 | yes | ERA/EFT enrollment campaign first if paper-heavy |
 | UC-07-03 | Paper EOB/correspondence IDP | DEFER | governance 1->3; golden_sets (absent) | yes | Switch lockbox to imaging service (contract change) |
@@ -126,7 +126,7 @@ Blocking items ranked by number of use cases they hold back (sole-blocker count 
 | UC-09-05 | Special-account monitoring | DEFER | external_registries (absent); connectivity 2->3; workflow 2->3; governance 1->2; legal 1->2 | yes | Auto-stop on bankruptcy is the first release |
 | UC-10-01 | Liability verification gate | DEFER | governance 1->3; workflow 2->3; legal 1->2; statement_suppression (partial) | yes | Vendor/contract change first if no suppression hook |
 | UC-10-02 | Statement optimization | DEFER | governance 1->3; legal 1->3; bias_program (absent); data 3->4; statement_vendor_flex (partial); statement_history (partial) |  | Treatment differences must not track protected classes |
-| UC-10-03 | Conversational billing agent | DEFER | governance 1->3; legal 1->3; account_360 (absent); workflow 2->3; plan_matrix_unified (partial); escalation_staffed (partial) | yes | A bot that can't explain the bill is a complaint generator |
+| UC-10-03 | Conversational billing agent | DEFER | governance 1->3; legal 1->3; account_360 (absent); golden_sets (absent); workflow 2->3; plan_matrix_unified (partial); escalation_staffed (partial) | yes | A bot that can't explain the bill is a complaint generator |
 | UC-10-04 | Plan default prediction & rescue | DEFER | governance 1->3; legal 1->3; bias_program (absent); data 3->4; outreach_consent (partial) |  | Consent capture in plan enrollment flow |
 | UC-10-05 | Presumptive FA scoring | DEFER | governance 1->4; legal 1->3; bias_program (absent); socio_data_license (absent); data 3->4; workflow 2->3 |  | Cap at A0 lists until bias program; auto-denial killed permanently |
 | UC-10-06 | NSA protection classifier | DEFER | governance 1->3; legal 1->3; consents_indexed (absent); workflow 2->3 |  | Index NSA consents first; err-protective default |

@@ -3,13 +3,13 @@
   "assessment_date": "2026-07-03",
   "dispositions": {
     "GO": 0,
-    "CONDITIONAL": 43,
-    "DEFER": 56,
+    "CONDITIONAL": 42,
+    "DEFER": 57,
     "KILL": 0
   },
-  "a0_a1_available": 44,
+  "a0_a1_available": 41,
   "value_base_yr": 42228465,
-  "value_y1": 6226466,
+  "value_y1": 6029828,
   "value_onetime": 15890411,
   "risk_ev_yr": 1275000,
   "platform_build": 1690000,

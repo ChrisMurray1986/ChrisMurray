@@ -52,6 +52,8 @@ facets:
   peer_benchmarks: 0
   system_copy_extracts: 1
   edi_telemetry: 1
+  card_images: 1              # portal capture live; front-desk scanning inconsistent
+  um_worksheets: 2
   # ---- integration ----
   writeback: 2
   fabric: 0                 # no event bus / bot identity / observability yet
