@@ -1,0 +1,166 @@
+# Value drivers — machine-readable implementation of 09-value-model.md.
+# Consumed by value.py with an org profile (financial inputs) and optionally
+# the feasibility assessment (dispositions gate the ramp).
+#
+# pools: shared, finite value pools. `formula` documents sizing (computed in
+#   value.py from the org profile). `stream` maps to the VS-* taxonomy.
+#   `type: annual` pools are drawn by share; the `ar_days` pool is `type: days`
+#   (draws are AR-days reduced; one-time release and recurring carrying cost
+#   are computed separately).
+#
+# use_cases: per-UC steady-state draws. share = fraction of the pool captured
+#   at full maturity (base case). Engine applies global low/high multipliers
+#   unless a draw carries explicit low:/high:. Calibrate shares to your own
+#   data over time (quarterly true-up, 09-value-model.md §4).
+
+pools:
+  denial_prevention:  {stream: VS-1, type: annual, formula: "npr * denial_writeoff_pct * denial_preventable_share"}
+  denial_recovery:    {stream: VS-2, type: annual, formula: "npr * denial_writeoff_pct * (1 - denial_preventable_share) * denial_recovery_headroom"}
+  underpayment:       {stream: VS-2, type: annual, formula: "npr * underpayment_pct * underpayment_detectable"}
+  charge_capture:     {stream: VS-3, type: annual, formula: "npr * charge_leakage_pct"}
+  doc_yield:          {stream: VS-3, type: annual, formula: "npr * doc_yield_pct"}
+  coverage_conversion: {stream: VS-3, type: annual, formula: "npr * coverage_convertible_pct"}
+  contract_yield:     {stream: VS-3, type: annual, formula: "npr * contract_yield_pct"}
+  pos_yield:          {stream: VS-4, type: annual, formula: "npr * pos_upside_pct"}
+  bad_debt_reduction: {stream: VS-4, type: annual, formula: "npr * bad_debt_pct * bad_debt_addressable"}
+  ar_days:            {stream: VS-5, type: days,   formula: "per day: one-time npr/365, recurring npr/365 * wacc; cap max_reducible_days"}
+  labor_access:       {stream: VS-6, type: annual, formula: "labor_total * share.access"}
+  labor_um_cdi:       {stream: VS-6, type: annual, formula: "labor_total * share.um_cdi"}
+  labor_coding:       {stream: VS-6, type: annual, formula: "labor_total * share.coding"}
+  labor_billing:      {stream: VS-6, type: annual, formula: "labor_total * share.billing"}
+  labor_posting:      {stream: VS-6, type: annual, formula: "labor_total * share.posting"}
+  labor_denials:      {stream: VS-6, type: annual, formula: "labor_total * share.denials"}
+  labor_ar:           {stream: VS-6, type: annual, formula: "labor_total * share.ar"}
+  labor_pfs:          {stream: VS-6, type: annual, formula: "labor_total * share.pfs"}
+  labor_analytics:    {stream: VS-6, type: annual, formula: "labor_total * share.analytics"}
+  labor_contracting:  {stream: VS-6, type: annual, formula: "labor_total * share.contracting"}
+  cost_external:      {stream: VS-7, type: annual, formula: "npr * external_spend_pct"}
+  audit_risk:         {stream: VS-8, type: annual, formula: "npr * audit_exposure_pct * audit_mitigable"}
+
+use_cases:
+  # ---------------- RC-01 Patient Access ----------------
+  UC-01-01: {draws: [{pool: labor_access, share: 0.02}, {pool: denial_prevention, share: 0.010}]}
+  UC-01-02: {draws: [{pool: denial_prevention, share: 0.005}, {pool: labor_access, share: 0.010}]}
+  UC-01-03: {draws: [{pool: denial_prevention, share: 0.030}, {pool: labor_access, share: 0.010}]}
+  UC-01-04: {draws: [{pool: denial_prevention, share: 0.040}, {pool: labor_access, share: 0.060}, {pool: ar_days, days: 0.3}]}
+  UC-01-05: {draws: [{pool: coverage_conversion, share: 0.35}, {pool: bad_debt_reduction, share: 0.10}]}
+  UC-01-06: {draws: [{pool: denial_prevention, share: 0.030}]}
+  UC-01-07: {draws: [{pool: denial_prevention, share: 0.060}]}
+  UC-01-08: {draws: [{pool: labor_access, share: 0.080}, {pool: denial_prevention, share: 0.030}]}
+  UC-01-09: {draws: [{pool: labor_access, share: 0.050}]}
+  UC-01-10: {draws: [{pool: denial_prevention, share: 0.040}]}
+  UC-01-11: {draws: [{pool: denial_prevention, share: 0.020}, {pool: audit_risk, share: 0.02}]}
+  UC-01-12: {draws: [{pool: pos_yield, share: 0.15}, {pool: bad_debt_reduction, share: 0.05}]}
+  UC-01-13: {draws: [{pool: pos_yield, share: 0.10}, {pool: labor_access, share: 0.030}]}
+  UC-01-14: {draws: [{pool: labor_access, share: 0.100}, {pool: pos_yield, share: 0.10}]}
+  UC-01-15: {draws: [{pool: pos_yield, share: 0.15}]}
+  UC-01-16: {draws: [{pool: denial_prevention, share: 0.050}, {pool: labor_access, share: 0.020}]}
+  UC-01-17: {draws: [{pool: pos_yield, share: 0.03}]}
+
+  # ---------------- RC-02 Utilization Review ----------------
+  UC-02-01: {draws: [{pool: denial_prevention, share: 0.030}]}
+  UC-02-02: {draws: [{pool: labor_um_cdi, share: 0.150}, {pool: denial_recovery, share: 0.03}]}
+  UC-02-03: {draws: [{pool: labor_um_cdi, share: 0.100}, {pool: denial_prevention, share: 0.020}]}
+  UC-02-04: {draws: [{pool: denial_prevention, share: 0.020}]}
+  UC-02-05: {draws: [{pool: labor_um_cdi, share: 0.030}]}   # LOS/avoidable-day value accrues outside RCM; modeled conservatively
+
+  # ---------------- RC-03 Charge Capture ----------------
+  UC-03-01: {draws: [{pool: charge_capture, share: 0.25}]}
+  UC-03-02: {draws: [{pool: audit_risk, share: 0.05}, {pool: charge_capture, share: 0.03}]}
+  UC-03-03: {draws: [{pool: audit_risk, share: 0.10}, {pool: charge_capture, share: 0.05}]}
+  UC-03-04: {draws: [{pool: charge_capture, share: 0.10}]}
+  UC-03-05: {draws: [{pool: denial_prevention, share: 0.015}, {pool: labor_analytics, share: 0.05}]}
+  UC-03-06: {draws: [{pool: charge_capture, share: 0.15}, {pool: labor_billing, share: 0.03}]}
+  UC-03-07: {draws: [{pool: charge_capture, share: 0.08}]}
+  UC-03-08: {draws: [{pool: audit_risk, share: 0.02}]}
+
+  # ---------------- RC-04 CDI ----------------
+  UC-04-01: {draws: [{pool: doc_yield, share: 0.20}]}
+  UC-04-02: {draws: [{pool: doc_yield, share: 0.10}, {pool: labor_um_cdi, share: 0.05}]}
+  UC-04-03: {draws: [{pool: doc_yield, share: 0.10}, {pool: labor_um_cdi, share: 0.03}]}
+  UC-04-04: {draws: [{pool: doc_yield, share: 0.10}]}   # RAF value only where VBC/MA book exists — zero the draw if not
+  UC-04-05: {draws: [{pool: labor_um_cdi, share: 0.03}]}
+
+  # ---------------- RC-05 Coding ----------------
+  UC-05-01: {draws: [{pool: labor_coding, share: 0.30}, {pool: ar_days, days: 0.5}, {pool: denial_prevention, share: 0.010}]}
+  UC-05-02: {draws: [{pool: denial_prevention, share: 0.020}, {pool: audit_risk, share: 0.08}]}
+  UC-05-03: {draws: [{pool: underpayment, share: 0.03}, {pool: audit_risk, share: 0.02}]}
+  UC-05-04: {draws: [{pool: ar_days, days: 0.5}, {pool: labor_coding, share: 0.02}]}
+  UC-05-05: {draws: [{pool: labor_coding, share: 0.05}]}
+  UC-05-06: {draws: [{pool: labor_coding, share: 0.03}, {pool: audit_risk, share: 0.03}]}
+  UC-05-07: {draws: [{pool: labor_coding, share: 0.04}, {pool: denial_recovery, share: 0.02}]}
+
+  # ---------------- RC-06 Claims ----------------
+  UC-06-01: {draws: [{pool: denial_prevention, share: 0.080}]}
+  UC-06-02: {draws: [{pool: labor_billing, share: 0.15}, {pool: ar_days, days: 0.5}]}
+  UC-06-03: {draws: [{pool: denial_prevention, share: 0.040}]}
+  UC-06-04: {draws: [{pool: denial_prevention, share: 0.020}, {pool: ar_days, days: 0.3}]}
+  UC-06-05: {draws: [{pool: labor_billing, share: 0.08}, {pool: denial_prevention, share: 0.020}]}
+  UC-06-06: {draws: [{pool: denial_prevention, share: 0.030}]}
+  UC-06-07: {draws: [{pool: denial_prevention, share: 0.020}, {pool: ar_days, days: 0.4}]}
+  UC-06-08: {draws: [{pool: ar_days, days: 0.5}, {pool: labor_billing, share: 0.05}]}
+
+  # ---------------- RC-07 Payments ----------------
+  UC-07-01: {draws: [{pool: labor_posting, share: 0.35}, {pool: ar_days, days: 0.2}]}
+  UC-07-02: {draws: [{pool: denial_recovery, share: 0.03}]}
+  UC-07-03: {draws: [{pool: labor_posting, share: 0.15}, {pool: ar_days, days: 0.2}]}
+  UC-07-04: {draws: [{pool: labor_posting, share: 0.08}]}
+  UC-07-05: {draws: [{pool: underpayment, share: 0.25}]}
+  UC-07-06: {draws: [{pool: underpayment, share: 0.05}]}
+
+  # ---------------- RC-08 Denials & Appeals ----------------
+  UC-08-01: {draws: [{pool: labor_denials, share: 0.10}, {pool: denial_recovery, share: 0.05}]}
+  UC-08-02: {draws: [{pool: denial_recovery, share: 0.10}, {pool: labor_denials, share: 0.08}]}
+  UC-08-03: {draws: [{pool: denial_recovery, share: 0.25}, {pool: labor_denials, share: 0.20}]}
+  UC-08-04: {draws: [{pool: ar_days, days: 0.3}, {pool: labor_ar, share: 0.02}]}
+  UC-08-05: {draws: [{pool: denial_prevention, share: 0.100}]}
+  UC-08-06: {draws: [{pool: denial_recovery, share: 0.05}]}
+
+  # ---------------- RC-09 AR Management ----------------
+  UC-09-01: {draws: [{pool: labor_ar, share: 0.15}, {pool: ar_days, days: 1.0}, {pool: bad_debt_reduction, share: 0.05}]}
+  UC-09-02: {draws: [{pool: labor_ar, share: 0.25}, {pool: ar_days, days: 0.5}]}
+  UC-09-03: {draws: [{pool: underpayment, share: 0.20}]}
+  UC-09-04: {draws: [{pool: labor_posting, share: 0.10}, {pool: audit_risk, share: 0.05}]}
+  UC-09-05: {draws: [{pool: bad_debt_reduction, share: 0.03}, {pool: audit_risk, share: 0.02}]}
+  UC-09-06: {draws: [{pool: bad_debt_reduction, share: 0.05}, {pool: labor_ar, share: 0.03}]}
+
+  # ---------------- RC-10 Patient Financial Services ----------------
+  UC-10-01: {draws: [{pool: bad_debt_reduction, share: 0.05}, {pool: labor_pfs, share: 0.05}]}
+  UC-10-02: {draws: [{pool: pos_yield, share: 0.08}, {pool: cost_external, share: 0.05}]}
+  UC-10-03: {draws: [{pool: labor_pfs, share: 0.25}, {pool: pos_yield, share: 0.05}]}
+  UC-10-04: {draws: [{pool: bad_debt_reduction, share: 0.08}, {pool: pos_yield, share: 0.05}]}
+  UC-10-05: {draws: [{pool: cost_external, share: 0.03}, {pool: audit_risk, share: 0.02}]}
+  UC-10-06: {draws: [{pool: audit_risk, share: 0.05}]}
+  UC-10-07: {draws: [{pool: cost_external, share: 0.08}, {pool: audit_risk, share: 0.02}]}
+  UC-10-08: {draws: [{pool: audit_risk, share: 0.01}, {pool: pos_yield, share: 0.02}]}
+
+  # ---------------- RC-11 Contracting ----------------
+  UC-11-01: {draws: [{pool: underpayment, share: 0.15}, {pool: denial_prevention, share: 0.010}]}
+  UC-11-02: {draws: [{pool: underpayment, share: 0.05}]}
+  UC-11-03: {draws: [{pool: denial_prevention, share: 0.050}]}
+  UC-11-04: {draws: [{pool: denial_prevention, share: 0.030}, {pool: ar_days, days: 0.3}, {pool: labor_contracting, share: 0.15}]}
+  UC-11-05: {draws: [{pool: contract_yield, share: 0.30}]}
+  UC-11-06: {draws: [{pool: contract_yield, share: 0.15}, {pool: underpayment, share: 0.03}]}
+
+  # ---------------- RC-12 Compliance ----------------
+  UC-12-01: {draws: [{pool: audit_risk, share: 0.15}]}
+  UC-12-02: {draws: [{pool: audit_risk, share: 0.10}, {pool: labor_analytics, share: 0.05}]}
+  UC-12-03: {draws: [{pool: audit_risk, share: 0.10}]}
+  UC-12-04: {draws: [{pool: audit_risk, share: 0.15}]}
+  UC-12-05: {draws: [{pool: audit_risk, share: 0.05}, {pool: denial_prevention, share: 0.010}]}
+  UC-12-06: {draws: [{pool: audit_risk, share: 0.05}]}
+
+  # ---------------- RC-13 Analytics ----------------
+  UC-13-01: {draws: [{pool: labor_analytics, share: 0.10}]}
+  UC-13-02: {draws: [{pool: labor_analytics, share: 0.08}, {pool: audit_risk, share: 0.01}]}
+  UC-13-03: {draws: [{pool: labor_analytics, share: 0.03}]}
+  UC-13-04: {draws: [{pool: audit_risk, share: 0.03}, {pool: labor_analytics, share: 0.03}]}   # enabler: most value is the autonomy it makes safe — see locked-value view
+
+  # ---------------- RC-14 Master Data & Tech ----------------
+  UC-14-01: {draws: [{pool: denial_prevention, share: 0.020}]}
+  UC-14-02: {draws: [{pool: denial_prevention, share: 0.010}, {pool: audit_risk, share: 0.01}]}
+  UC-14-03: {draws: [{pool: denial_prevention, share: 0.020}, {pool: ar_days, days: 0.2}]}
+  UC-14-04: {draws: [{pool: labor_analytics, share: 0.03}, {pool: audit_risk, share: 0.01}]}   # enabler: prices via locked-value view
+  UC-14-05: {draws: [{pool: labor_analytics, share: 0.05}]}
+  UC-14-06: {draws: [{pool: charge_capture, share: 0.02}, {pool: ar_days, days: 0.1}]}
+  UC-14-07: {draws: [{pool: cost_external, share: 0.05}]}

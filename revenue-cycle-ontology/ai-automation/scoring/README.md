@@ -15,6 +15,10 @@ remediations that unlock the most portfolio value.
 | `example-report.md` | The markdown report the example produces — read this first to see what you get. |
 | `example-report.html` | The interactive HTML view of the same example (open in any browser). |
 | `score.py` | Scoring engine (Python 3, needs PyYAML). |
+| `value-drivers.yaml` | Value model drivers: shared value pools + every UC's steady-state pool draws (`../09-value-model.md`). |
+| `org-profile.template.yaml` | Financial inputs for the value model (NPR + rates; defaults provided). |
+| `value.py` | Value engine — estimates per-UC/portfolio value, joins the feasibility assessment to disposition-adjust and price locked gates. |
+| `example-org-profile.yaml`, `example-value-report.md/.html` | Value-model example for the same fictional org. |
 
 ## How to run
 
