@@ -89,6 +89,7 @@ its risk tier's ceiling**, regardless of model performance. Details and controls
 | `11-investment-loop-playbook.md` | Operating playbook for the full stack: roles, quarterly cadence, eight plays (stand-up, re-assessment, council meeting, remediation, launch, autonomy promotion, true-up, kills/renewals), consolidated decision rules, loop failure modes |
 | `12-clinical-appeals-engineering.md` | Worked engineering deep-dive (UC-08-03 clinical variant): pipeline decomposition, retrieval/verification architecture, three-tier efficacy evaluation vs a UM physician advisor, minimally viable resource set, and the dependency gaps the exercise surfaced (profile amended) |
 | `13-dependency-audit.md` | Portfolio-wide dependency audit: the deep-dive's five dependency classes applied to all 99 use cases — 80 confirmed, 19 amended, 2 new facets, and the sequencing implications (chart corpus, evaluation harness, and policy library elevated to shared Wave-0-adjacent assets) |
+| `14-implementation-patterns.md` | Stack translation layer: per-facet sufficiency floors ("what a passing demo looks like"), reference patterns for Epic / Oracle Health / multi-EHR shops, the latency decoder and lakehouse trigger rules, and overbuild flags — how to score honestly and buy minimally |
 | `scoring/` | Runnable toolkit: feasibility (`score.py`), value (`value.py`), cost (`cost.py`), quarterly packets (`packet.py`), a self-contained planner app (`rcm-investment-app.html`), and a use-case catalog explorer (`use-case-explorer.html`) |
 
 ## Design principles encoded in this ontology

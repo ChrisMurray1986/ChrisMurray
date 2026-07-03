@@ -66,6 +66,8 @@ Assessment discipline:
 - A facet is `2` only if you could demo it this week. "The vendor says it supports it" is `1`.
 - Connectivity facets are judged against the payers covering ≥80% of the relevant volume.
 - Record evidence/notes inline as YAML comments — the worksheet doubles as the audit trail.
+- Not sure what "ready" looks like on your stack? `../14-implementation-patterns.md` gives per-facet
+  sufficiency floors (Epic / Oracle Health / multi-EHR) and flags where vendors routinely oversell.
 
 ## How dispositions are computed
 
