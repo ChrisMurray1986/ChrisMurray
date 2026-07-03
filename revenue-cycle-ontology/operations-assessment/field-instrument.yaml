@@ -451,7 +451,8 @@ layers:
         signals: Q1 edit spikes every year
     3.4 Revenue Integrity Auditing:
       PFM-3.4-01:
-        prompt: Pre-bill review queues staffed as overflow; DNFB pressure empties them unread (3.4.1.A2)
+        prompt: Pre-bill review queues staffed as overflow; DNFB pressure empties them unread (3.4.1.A2) → FM-CHGDUP
+          and unit errors escape
         score: 0
         notes: ''
         signals: Review bypass rate unmeasured; "we release at day 5 regardless"
@@ -468,7 +469,7 @@ layers:
         signals: File dates months old; estimator and MRF disagree
     4.1 Concurrent Documentation Review:
       PFM-4.1-01:
-        prompt: Review prioritization by payer/LOS habit (4.1.A1); high-opportunity charts unseen
+        prompt: Review prioritization by payer/LOS habit (4.1.A1); high-opportunity charts unseen → FM-DOCGAP
         score: 0
         notes: ''
         signals: Review rate high, query yield low
@@ -650,7 +651,7 @@ layers:
         signals: Mapping table has no owner or history
     7.2 Manual & Paper Remittance Posting:
       PFM-7.2-01:
-        prompt: Paper EOB detail keyed as lump sums; denial codes dropped (7.2.A2)
+        prompt: Paper EOB detail keyed as lump sums; denial codes dropped (7.2.A2) → FM-MISPOST, FM-DENIALHIDDEN
         score: 0
         notes: ''
         signals: Paper-payer denials invisible; line detail absent
@@ -954,7 +955,7 @@ layers:
         notes: ''
         signals: Claims held for lapsed enrollment; revalidations missed
       PFM-11.4-02:
-        prompt: Exclusion screening (OIG/SAM) periodic, not continuous (11.4.A6)
+        prompt: Exclusion screening (OIG/SAM) periodic, not continuous (11.4.A5)
         score: 0
         notes: ''
         signals: Annual batch checks; hires between checks unscreened
@@ -1420,3 +1421,4 @@ layers:
         prompt: rubber-stamp reviewers around it (FM-AI-03)
         score: 0
         notes: ''
+source_version: f2de9f0e7174

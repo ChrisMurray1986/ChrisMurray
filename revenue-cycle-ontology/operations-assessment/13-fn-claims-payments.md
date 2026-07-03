@@ -55,7 +55,7 @@ Roles: ROLE-BILLER, ROLE-EDITANALYST, ROLE-POSTER, ROLE-RECON, ROLE-EDI.
 
 | ID | Failure mode → bindings | Field signals | Paired practice |
 |---|---|---|---|
-| PFM-7.2-01 | Paper EOB detail keyed as lump sums; denial codes dropped (7.2.A2) | Paper-payer denials invisible; line detail absent | PBP-7.2-01 Line-level keying standard (or IDP conversion, UC-07-03); paper payers pushed to ERA (7.2.A4) |
+| PFM-7.2-01 | Paper EOB detail keyed as lump sums; denial codes dropped (7.2.A2) → FM-MISPOST, FM-DENIALHIDDEN | Paper-payer denials invisible; line detail absent | PBP-7.2-01 Line-level keying standard (or IDP conversion, UC-07-03); paper payers pushed to ERA (7.2.A4) |
 
 ### 7.3 Reconciliation & Treasury — ROLE-RECON
 

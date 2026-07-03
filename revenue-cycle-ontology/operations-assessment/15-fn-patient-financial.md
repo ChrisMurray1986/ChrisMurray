@@ -7,14 +7,14 @@ Roles: ROLE-PFSREP, ROLE-FACOUNS, ROLE-AGCYLIAISON, ROLE-FINCOUNS.
 | ID | Failure mode → bindings | Field signals | Paired practice |
 |---|---|---|---|
 | PFM-10.1-01 | Statements fire on cycle regardless of payer-work state (10.1.D1) → FM-PATIENTWRONGBILL | Patients billed for balances under active appeal/COB work; complaint themes match | PBP-10.1-01 Statement-qualification gate: no dunning while a payer defect is open; hardened-by UC-10-01 |
-| PFM-10.1-02 | Returned mail piles unworked; address hygiene absent (10.1.A3) | Statement cost with zero-response segments; skip-trace never run | PBP-10.1-02 Returned-mail → hygiene → channel-switch pipeline with measured recovery |
+| PFM-10.1-02 | Returned mail piles unworked; address hygiene absent (10.1.A3) | Statement cost with zero-response segments; skip-trace never run | PBP-10.1-02 Returned-mail → hygiene → channel-switch pipeline with measured recovery; hardened-by UC-10-02 |
 | PFM-10.1-03 | 501(r) FA notice content drifts across statement versions (10.1.A4) | Template edits bypass compliance review | PBP-10.1-03 Regulatory content blocks locked (GOV-13's manual form); version control on templates |
 
 ### 10.2 Customer Service & Disputes — ROLE-PFSREP
 
 | ID | Failure mode → bindings | Field signals | Paired practice |
 |---|---|---|---|
-| PFM-10.2-01 | Reps can't see the whole account (HB/PB split) — answers guessed, calls repeat (10.2.A1–A2) | "Let me transfer you"; contradictory answers on the same balance | PBP-10.2-01 Unified account view at the desktop (BP-ET-05); answer accuracy sampled in QA |
+| PFM-10.2-01 | Reps can't see the whole account (HB/PB split) — answers guessed, calls repeat (10.2.A1–A2) | "Let me transfer you"; contradictory answers on the same balance | PBP-10.2-01 Unified account view at the desktop (BP-ET-05); answer accuracy sampled in QA; hardened-by UC-10-03 |
 | PFM-10.2-02 | Disputes handled as complaints, not investigations (10.2.D1); itemized-bill requests slow | Dispute outcomes unrecorded; same dispute re-raised | PBP-10.2-02 Dispute protocol with investigation standard, resolution codes, and root-cause feed to 8.5 |
 | PFM-10.2-03 | Improvised discounts/plans per rep sympathy (10.2.A4) — policy variance at the phone | Plan terms differ by rep; discount authority informal | PBP-10.2-03 Policy matrix enforced in tooling; empathy through options offered, not invented |
 

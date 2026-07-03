@@ -1,0 +1,1761 @@
+generated_by: reconcile.py — machine-readable binding graph (ENG-01)
+items:
+  OFM-ET-01:
+    degrades_dims:
+    - workflow
+    facets:
+    - queue_api
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-02:
+    facets:
+    - system_copy_extracts
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-03:
+    degrades_dims:
+    - integration
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-04:
+    facets:
+    - handback_queues
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-05:
+    facets:
+    - account_360
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-06:
+    facets:
+    - statement_history
+    - statement_vendor_flex
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-07:
+    facets:
+    - edi_telemetry
+    - fabric
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-08:
+    facets:
+    - masterdata_governance
+    group: Enabling Technology
+    layer: enterprise
+  OFM-FG-01:
+    degrades_dims:
+    - economics
+    group: Performance Governance
+    layer: enterprise
+  OFM-FG-02:
+    facets:
+    - kpi_dictionary
+    group: Performance Governance
+    layer: enterprise
+  OFM-FG-03:
+    facets:
+    - lineage
+    - realization_history
+    group: Performance Governance
+    layer: enterprise
+  OFM-FG-04:
+    facets:
+    - peer_benchmarks
+    group: Performance Governance
+    layer: enterprise
+  OFM-FG-05:
+    degrades_dims:
+    - economics
+    group: Performance Governance
+    layer: enterprise
+  OFM-OM-01:
+    facets:
+    - routing_authority
+    group: Operating Model
+    layer: enterprise
+  OFM-OM-02:
+    degrades_dims:
+    - workflow
+    facets:
+    - collection_policy_unified
+    - plan_matrix_unified
+    group: Operating Model
+    layer: enterprise
+  OFM-OM-03:
+    facets:
+    - denial_labels
+    group: Operating Model
+    layer: enterprise
+  OFM-OM-04:
+    facets:
+    - provider_adoption
+    - um_worksheets
+    group: Operating Model
+    layer: enterprise
+  OFM-OM-05:
+    facets:
+    - gov_body
+    group: Operating Model
+    layer: enterprise
+  OFM-OM-06:
+    facets:
+    - hitl_capacity
+    group: Operating Model
+    layer: enterprise
+  OFM-OM-07:
+    facets:
+    - ranked_list_adoption
+    group: Operating Model
+    layer: enterprise
+  OFM-OM-08:
+    degrades_dims:
+    - integration
+    facets:
+    - fabric
+    - queue_api
+    - writeback
+    group: Operating Model
+    layer: enterprise
+  OFM-PI-01:
+    degrades_dims:
+    - workflow
+    facets:
+    - routing_authority
+    group: Process Improvement
+    layer: enterprise
+  OFM-PI-02:
+    degrades_dims:
+    - workflow
+    facets:
+    - documentation_stability
+    - posting_standardized
+    group: Process Improvement
+    layer: enterprise
+  OFM-PI-03:
+    facets:
+    - kpi_dictionary
+    group: Process Improvement
+    layer: enterprise
+  OFM-PI-04:
+    facets:
+    - denial_labels
+    - denial_taxonomy
+    group: Process Improvement
+    layer: enterprise
+  OFM-PI-05:
+    degrades_dims:
+    - economics
+    group: Process Improvement
+    layer: enterprise
+  OFM-PI-06:
+    facets:
+    - touch_logging
+    group: Process Improvement
+    layer: enterprise
+  OFM-PI-07:
+    facets:
+    - qa_history
+    group: Process Improvement
+    layer: enterprise
+  OFM-VN-01:
+    degrades_dims:
+    - economics
+    group: Vendor Outsourcing
+    layer: enterprise
+  OFM-VN-02:
+    degrades_dims:
+    - legal
+    group: Vendor Outsourcing
+    layer: enterprise
+  OFM-VN-03:
+    facets:
+    - agency_data_rights
+    group: Vendor Outsourcing
+    layer: enterprise
+  OFM-VN-04:
+    degrades_dims:
+    - economics
+    group: Vendor Outsourcing
+    layer: enterprise
+  OFM-VN-05:
+    degrades_dims:
+    - org
+    group: Vendor Outsourcing
+    layer: enterprise
+  OFM-VN-06:
+    facets:
+    - hitl_capacity
+    group: Vendor Outsourcing
+    layer: enterprise
+  OFM-WF-01:
+    facets:
+    - escalation_staffed
+    - hitl_capacity
+    group: Workforce
+    layer: enterprise
+  OFM-WF-02:
+    degrades_dims:
+    - org
+    group: Workforce
+    layer: enterprise
+  OFM-WF-03:
+    degrades_dims:
+    - org
+    group: Workforce
+    layer: enterprise
+  OFM-WF-04:
+    facets:
+    - hitl_capacity
+    - qa_history
+    group: Workforce
+    layer: enterprise
+  OFM-WF-05:
+    degrades_dims:
+    - org
+    group: Workforce
+    layer: enterprise
+  OFM-WF-06:
+    facets:
+    - writeoff_matrix
+    group: Workforce
+    layer: enterprise
+  OFM-WF-07:
+    degrades_dims:
+    - org
+    group: Workforce
+    layer: enterprise
+  OFM-WF-08:
+    facets:
+    - hitl_capacity
+    - provider_adoption
+    group: Workforce
+    layer: enterprise
+  PFM-1.1-01:
+    group: 1.1 Scheduling & Appointment Management
+    hardened_by:
+    - UC-01-01
+    layer: process
+    produces:
+    - FM-MEDNEC
+    - FM-NOAUTH
+    refs:
+    - '1.1'
+    - 1.1.1.A3
+  PFM-1.1-02:
+    group: 1.1 Scheduling & Appointment Management
+    layer: process
+    refs:
+    - '1.1'
+    - 1.1.2.A3
+  PFM-1.1-03:
+    group: 1.1 Scheduling & Appointment Management
+    hardened_by:
+    - UC-01-10
+    - UC-01-17
+    layer: process
+    refs:
+    - '1.1'
+    - 1.1.4.A1
+  PFM-1.1-04:
+    group: 1.1 Scheduling & Appointment Management
+    layer: process
+    refs:
+    - '1.1'
+    - 1.1.5.A1
+  PFM-1.2-01:
+    group: 1.2 Pre-Registration
+    hardened_by:
+    - UC-01-02
+    layer: process
+    produces:
+    - FM-DUPMRN
+    refs:
+    - '1.2'
+    - 1.2.1.A3
+  PFM-1.2-02:
+    group: 1.2 Pre-Registration
+    hardened_by:
+    - UC-01-03
+    layer: process
+    produces:
+    - FM-PLANMAP
+    refs:
+    - '1.2'
+    - 1.2.2.A3
+  PFM-1.2-03:
+    group: 1.2 Pre-Registration
+    hardened_by:
+    - UC-01-06
+    layer: process
+    produces:
+    - FM-COB
+    refs:
+    - '1.2'
+    - 1.2.4.A1
+  PFM-1.2-04:
+    group: 1.2 Pre-Registration
+    layer: process
+    produces:
+    - FM-COB
+    refs:
+    - '1.2'
+    - 1.2.2.D1
+  PFM-1.3-01:
+    group: 1.3 Eligibility & Benefits Verification
+    hardened_by:
+    - UC-01-04
+    layer: process
+    refs:
+    - '1.3'
+    - 1.3.3.A1
+  PFM-1.3-02:
+    group: 1.3 Eligibility & Benefits Verification
+    layer: process
+    produces:
+    - FM-ELIGLAPSE
+    refs:
+    - '1.3'
+    - 1.3.1.A1
+  PFM-1.3-03:
+    group: 1.3 Eligibility & Benefits Verification
+    layer: process
+    produces:
+    - FM-NOAUTH
+    refs:
+    - '1.3'
+    - 1.3.1.D2
+  PFM-1.3-04:
+    group: 1.3 Eligibility & Benefits Verification
+    hardened_by:
+    - UC-01-05
+    layer: process
+    produces:
+    - FM-FA-MISS
+    refs:
+    - '1.3'
+    - 1.3.5
+  PFM-1.4-01:
+    group: 1.4 Prior Authorization, Pre-Certification & Referral Management
+    hardened_by:
+    - UC-01-07
+    layer: process
+    produces:
+    - FM-NOAUTH
+    refs:
+    - '1.4'
+    - 1.4.1.A3
+  PFM-1.4-02:
+    group: 1.4 Prior Authorization, Pre-Certification & Referral Management
+    hardened_by:
+    - UC-01-08
+    layer: process
+    refs:
+    - '1.4'
+    - 1.4.2.A1
+  PFM-1.4-03:
+    group: 1.4 Prior Authorization, Pre-Certification & Referral Management
+    hardened_by:
+    - UC-01-09
+    layer: process
+    refs:
+    - '1.4'
+    - 1.4.3.A1
+  PFM-1.4-04:
+    group: 1.4 Prior Authorization, Pre-Certification & Referral Management
+    hardened_by:
+    - UC-01-10
+    layer: process
+    produces:
+    - FM-NOAUTH
+    refs:
+    - '1.4'
+    - 1.4.6.A1
+  PFM-1.5-01:
+    group: 1.5 Medical Necessity & Coverage Screening
+    hardened_by:
+    - UC-01-11
+    layer: process
+    produces:
+    - FM-MEDNEC
+    refs:
+    - '1.5'
+    - 1.5.1.A1
+  PFM-1.5-02:
+    group: 1.5 Medical Necessity & Coverage Screening
+    layer: process
+    refs:
+    - '1.5'
+    - 1.5.2.A1
+  PFM-1.5-03:
+    group: 1.5 Medical Necessity & Coverage Screening
+    layer: process
+    refs:
+    - '1.5'
+    - 1.5.3.A3
+    - 1.9.6.A3
+  PFM-1.6-01:
+    group: 1.6 Price Estimation & Good Faith Estimates
+    hardened_by:
+    - UC-01-12
+    layer: process
+    refs:
+    - '1.6'
+    - 1.6.1.A2
+    - 1.6.1.A4
+  PFM-1.6-02:
+    group: 1.6 Price Estimation & Good Faith Estimates
+    layer: process
+    refs:
+    - '1.6'
+    - 1.6.2.A1
+  PFM-1.6-03:
+    group: 1.6 Price Estimation & Good Faith Estimates
+    layer: process
+    refs:
+    - '1.6'
+    - 1.6.1.A4
+    - 1.6.3.A2
+    - '10.7'
+  PFM-1.7-01:
+    group: 1.7 Financial Counseling & Financial Clearance
+    hardened_by:
+    - UC-01-13
+    layer: process
+    refs:
+    - '1.7'
+    - 1.7.1.D1
+    - 1.7.5
+  PFM-1.7-02:
+    group: 1.7 Financial Counseling & Financial Clearance
+    layer: process
+    produces:
+    - FM-FA-MISS
+    refs:
+    - '1.7'
+    - 1.7.2.A3
+  PFM-1.7-03:
+    group: 1.7 Financial Counseling & Financial Clearance
+    layer: process
+    refs:
+    - '1.7'
+    - 1.7.3.A2
+  PFM-1.8-01:
+    group: 1.8 Point-of-Service (POS) Collections
+    hardened_by:
+    - UC-01-15
+    layer: process
+    refs:
+    - '1.8'
+    - 1.8.1.A1
+  PFM-1.8-02:
+    group: 1.8 Point-of-Service (POS) Collections
+    layer: process
+    refs:
+    - '1.8'
+    - 1.8.3.A1
+  PFM-1.9-01:
+    group: 1.9 Registration / Arrival / Admission (ADT)
+    layer: process
+    produces:
+    - FM-DUPMRN
+    refs:
+    - '1.9'
+    - 1.9.1.A1
+  PFM-1.9-02:
+    group: 1.9 Registration / Arrival / Admission (ADT)
+    layer: process
+    refs:
+    - '1.9'
+    - 1.9.2.A4
+  PFM-1.9-03:
+    group: 1.9 Registration / Arrival / Admission (ADT)
+    hardened_by:
+    - UC-01-16
+    layer: process
+    produces:
+    - FM-NOTICEMISS
+    refs:
+    - '1.9'
+    - 1.9.3.A1
+  PFM-1.9-04:
+    group: 1.9 Registration / Arrival / Admission (ADT)
+    layer: process
+    produces:
+    - FM-COB
+    refs:
+    - '1.9'
+    - 1.9.6.A1
+  PFM-1.9-05:
+    group: 1.9 Registration / Arrival / Admission (ADT)
+    layer: process
+    refs:
+    - '1.9'
+    - 1.9.5.A1
+  PFM-10.1-01:
+    group: 10.1 Patient Statement & Communication Management
+    hardened_by:
+    - UC-10-01
+    layer: process
+    produces:
+    - FM-PATIENTWRONGBILL
+    refs:
+    - '10.1'
+    - 10.1.D1
+  PFM-10.1-02:
+    group: 10.1 Patient Statement & Communication Management
+    hardened_by:
+    - UC-10-02
+    layer: process
+    refs:
+    - '10.1'
+    - 10.1.A3
+  PFM-10.1-03:
+    group: 10.1 Patient Statement & Communication Management
+    layer: process
+    refs:
+    - '10.1'
+    - 10.1.A4
+  PFM-10.2-01:
+    group: 10.2 Patient Customer Service & Dispute Resolution
+    hardened_by:
+    - UC-10-03
+    layer: process
+    refs:
+    - '10.2'
+    - 10.2.A1
+  PFM-10.2-02:
+    group: 10.2 Patient Customer Service & Dispute Resolution
+    layer: process
+    refs:
+    - '10.2'
+    - 10.2.D1
+    - '8.5'
+  PFM-10.2-03:
+    group: 10.2 Patient Customer Service & Dispute Resolution
+    layer: process
+    refs:
+    - '10.2'
+    - 10.2.A4
+  PFM-10.3-01:
+    group: 10.3 Payment Plans & Financing
+    hardened_by:
+    - UC-10-04
+    layer: process
+    refs:
+    - '10.3'
+    - 10.3.A1
+  PFM-10.4-01:
+    group: 10.4 Financial Assistance / Charity Care (501(r))
+    hardened_by:
+    - UC-10-05
+    layer: process
+    produces:
+    - FM-FA-MISS
+    refs:
+    - '10.4'
+    - 10.4.A1
+  PFM-10.4-02:
+    group: 10.4 Financial Assistance / Charity Care (501(r))
+    layer: process
+    refs:
+    - '10.4'
+    - 10.4.A4
+  PFM-10.4-03:
+    group: 10.4 Financial Assistance / Charity Care (501(r))
+    layer: process
+    refs:
+    - '10.4'
+    - 10.4.A5
+  PFM-10.5-01:
+    group: 10.5 Self-Pay Segmentation & Early-Out Programs
+    layer: process
+    refs:
+    - '10.5'
+    - 10.5.A1
+  PFM-10.5-02:
+    group: 10.5 Self-Pay Segmentation & Early-Out Programs
+    hardened_by:
+    - UC-10-07
+    layer: process
+    refs:
+    - '10.5'
+    - 10.5.A3
+  PFM-10.6-01:
+    group: 10.6 Bad Debt & Collection Agency Management
+    layer: process
+    refs:
+    - '10.6'
+    - 10.6.A2
+  PFM-10.6-02:
+    group: 10.6 Bad Debt & Collection Agency Management
+    hardened_by:
+    - UC-14-07
+    layer: process
+    refs:
+    - '10.6'
+    - 10.6.A3
+  PFM-10.7-01:
+    group: 10.7 No Surprises Act Patient Protections
+    hardened_by:
+    - UC-10-06
+    layer: process
+    produces:
+    - FM-PATIENTWRONGBILL
+    refs:
+    - '10.7'
+    - 10.7.A1
+  PFM-10.7-02:
+    group: 10.7 No Surprises Act Patient Protections
+    hardened_by:
+    - UC-10-08
+    layer: process
+    refs:
+    - '10.7'
+    - 10.7.A4
+  PFM-11.1-01:
+    group: 11.1 Contract Strategy, Modeling & Negotiation
+    hardened_by:
+    - UC-11-05
+    layer: process
+    refs:
+    - '11.1'
+    - 11.1.A2
+  PFM-11.1-02:
+    group: 11.1 Contract Strategy, Modeling & Negotiation
+    hardened_by:
+    - UC-11-02
+    layer: process
+    produces:
+    - FM-AMENDMISS
+    refs:
+    - '11.1'
+    - 11.1.D2
+  PFM-11.2-01:
+    group: 11.2 Contract Implementation & Maintenance
+    hardened_by:
+    - UC-11-01
+    layer: process
+    produces:
+    - FM-TERMSUNLOADED
+    refs:
+    - '11.2'
+    - 11.2.A1
+  PFM-11.2-02:
+    group: 11.2 Contract Implementation & Maintenance
+    layer: process
+    produces:
+    - FM-APPEALMISS
+    - FM-TFL
+    refs:
+    - '11.2'
+    - 11.2.A4
+    - '6.5'
+    - '8.1'
+  PFM-11.3-01:
+    group: 11.3 Payer Policy & Bulletin Monitoring
+    hardened_by:
+    - UC-11-03
+    layer: process
+    refs:
+    - '11.3'
+    - 11.3.A1
+  PFM-11.4-01:
+    group: 11.4 Provider Credentialing
+    hardened_by:
+    - UC-11-04
+    layer: process
+    produces:
+    - FM-ENROLLGAP
+    refs:
+    - '11.4'
+    - 11.4.A4
+    - 11.5.A2
+  PFM-11.4-02:
+    group: 11.4 Provider Credentialing
+    layer: process
+    refs:
+    - '11.4'
+    - 11.4.A5
+  PFM-11.5-01:
+    group: 11.5 Payer Enrollment & Revalidation
+    hardened_by:
+    - UC-11-04
+    layer: process
+    produces:
+    - FM-ENROLLGAP
+    refs:
+    - '11.5'
+    - 11.5.A1
+  PFM-11.6-01:
+    group: 11.6 Payer Relations & Joint Operating Committees
+    layer: process
+    refs:
+    - '11.6'
+    - 11.6.A1
+  PFM-11.7-01:
+    group: 11.7 Value-Based & Alternative Payment Model Administration
+    hardened_by:
+    - UC-11-06
+    layer: process
+    refs:
+    - '11.7'
+    - 11.7.A2
+  PFM-12.1-01:
+    group: 12.1 External Government Audit Response
+    hardened_by:
+    - UC-12-01
+    layer: process
+    produces:
+    - FM-AUDITDEADLINE
+    refs:
+    - '12.1'
+    - 12.1.A1
+  PFM-12.1-02:
+    group: 12.1 External Government Audit Response
+    hardened_by:
+    - UC-12-02
+    layer: process
+    refs:
+    - '12.1'
+    - 12.1.A3
+  PFM-12.1-03:
+    group: 12.1 External Government Audit Response
+    hardened_by:
+    - UC-12-06
+    layer: process
+    refs:
+    - '12.1'
+    - 12.1.A5
+  PFM-12.2-01:
+    group: 12.2 Commercial Payer Audit Response
+    layer: process
+    refs:
+    - '11.2'
+    - '12.2'
+    - 12.2.A1
+  PFM-12.3-01:
+    group: 12.3 Internal Audit & Monitoring Program
+    hardened_by:
+    - UC-12-03
+    layer: process
+    refs:
+    - '12.3'
+    - 12.3.A1
+  PFM-12.4-01:
+    group: 12.4 Overpayment Identification & Refund (60-day rule, self-disclosure)
+    hardened_by:
+    - UC-12-04
+    layer: process
+    refs:
+    - '12.4'
+    - 12.4.A1
+  PFM-12.5-01:
+    group: 12.5 Regulatory Change Management
+    hardened_by:
+    - UC-12-05
+    layer: process
+    refs:
+    - '12.5'
+    - 12.5.A1
+  PFM-12.6-01:
+    group: 12.6 Billing Compliance Investigations & Education
+    layer: process
+    refs:
+    - '12.6'
+    - 12.6.A1
+  PFM-12.7-01:
+    group: 12.7 Privacy & Security in Billing Operations
+    layer: process
+    refs:
+    - '12.7'
+    - 12.7.A1
+  PFM-13.1-01:
+    group: 13.1 KPI Definition & Data Governance
+    layer: process
+    refs:
+    - '13.1'
+    - 13.1.A1
+  PFM-13.2-01:
+    group: 13.2 Operational Reporting & Work-Driver Analytics
+    hardened_by:
+    - UC-13-01
+    layer: process
+    refs:
+    - '13.2'
+    - 13.2.A2
+  PFM-13.3-01:
+    group: 13.3 Month-End Close & Revenue Recognition Support
+    hardened_by:
+    - UC-13-02
+    layer: process
+    refs:
+    - '13.3'
+    - 13.3.A1
+  PFM-13.4-01:
+    group: 13.4 Predictive & AI-Enabled Analytics
+    hardened_by:
+    - UC-13-04
+    layer: process
+    refs:
+    - '13.4'
+    - 13.4.A2
+  PFM-13.5-01:
+    group: 13.5 Benchmarking & Executive Performance Review
+    layer: process
+    refs:
+    - '13.5'
+    - 13.5.A1
+  PFM-14.1-01:
+    group: 14.1 Master Data Management
+    hardened_by:
+    - UC-14-01
+    layer: process
+    produces:
+    - FM-PLANMAP
+    refs:
+    - '14.1'
+    - 14.1.A1
+  PFM-14.2-01:
+    group: 14.2 Revenue Cycle System Configuration & Maintenance
+    hardened_by:
+    - UC-14-02
+    layer: process
+    refs:
+    - '14.2'
+    - 14.2.A1
+  PFM-14.3-01:
+    group: 14.3 EDI & Trading Partner Management
+    hardened_by:
+    - UC-14-03
+    layer: process
+    produces:
+    - FM-EDISILENT
+    refs:
+    - '14.3'
+    - 14.3.A1
+  PFM-14.4-01:
+    group: 14.4 Bot/Automation Fleet Operations
+    hardened_by:
+    - UC-14-04
+    layer: process
+    produces:
+    - FM-BOTSILENT
+    refs:
+    - '14.4'
+    - 14.4.A2
+  PFM-14.5-01:
+    group: 14.5 Vendor Management & Outsourcing Oversight
+    hardened_by:
+    - UC-14-07
+    layer: process
+    refs:
+    - '14.5'
+    - 14.5.A2
+  PFM-14.6-01:
+    group: 14.6 Business Continuity & Downtime Billing Procedures
+    hardened_by:
+    - UC-14-06
+    layer: process
+    refs:
+    - '14.6'
+    - 14.6.A1
+  PFM-2.1-01:
+    group: 2.1 Admission Status Determination
+    hardened_by:
+    - UC-02-01
+    layer: process
+    produces:
+    - FM-STATUSWRONG
+    refs:
+    - '2.1'
+    - 2.1.1.A1
+  PFM-2.1-02:
+    facets:
+    - um_worksheets
+    group: 2.1 Admission Status Determination
+    hardened_by:
+    - UC-02-02
+    layer: process
+    refs:
+    - '2.1'
+    - 2.1.1.A2
+  PFM-2.1-03:
+    group: 2.1 Admission Status Determination
+    layer: process
+    refs:
+    - '2.1'
+    - 2.1.4.A1
+  PFM-2.2-01:
+    group: 2.2 Concurrent Review & Payer Notification
+    hardened_by:
+    - UC-02-03
+    layer: process
+    refs:
+    - '2.2'
+    - 2.2.1.A1
+  PFM-2.2-02:
+    group: 2.2 Concurrent Review & Payer Notification
+    hardened_by:
+    - UC-02-04
+    layer: process
+    refs:
+    - '2.2'
+    - 2.2.2.A1
+    - 2.2.3.A1
+  PFM-2.2-03:
+    group: 2.2 Concurrent Review & Payer Notification
+    layer: process
+    refs:
+    - '2.2'
+    - 2.2.4.A1
+  PFM-2.3-01:
+    group: 2.3 Discharge & Level-of-Care Transitions
+    hardened_by:
+    - UC-02-05
+    layer: process
+    refs:
+    - '2.3'
+    - 2.3.A1
+  PFM-2.3-02:
+    group: 2.3 Discharge & Level-of-Care Transitions
+    layer: process
+    produces:
+    - FM-NOTICEMISS
+    refs:
+    - '2.3'
+    - 2.3.A3
+  PFM-2.4-01:
+    group: 2.4 Retrospective Utilization Review
+    layer: process
+    refs:
+    - 2.1.3.D1
+    - '2.4'
+    - 2.4.A1
+  PFM-3.1-01:
+    group: 3.1 Charge Generation & Entry
+    hardened_by:
+    - UC-03-04
+    layer: process
+    produces:
+    - FM-CHGMISS
+    refs:
+    - '3.1'
+    - 3.1.1.A3
+  PFM-3.1-02:
+    group: 3.1 Charge Generation & Entry
+    hardened_by:
+    - UC-03-06
+    layer: process
+    refs:
+    - '3.1'
+    - 3.1.3.A2
+  PFM-3.1-03:
+    group: 3.1 Charge Generation & Entry
+    hardened_by:
+    - UC-03-03
+    layer: process
+    produces:
+    - FM-UNITERR
+    refs:
+    - '3.1'
+    - 3.1.3.A3
+  PFM-3.1-04:
+    group: 3.1 Charge Generation & Entry
+    layer: process
+    refs:
+    - '3.1'
+    - 3.1.4.A2
+  PFM-3.2-01:
+    group: 3.2 Charge Reconciliation
+    hardened_by:
+    - UC-03-01
+    layer: process
+    refs:
+    - '3.2'
+    - 3.2.1.A1
+  PFM-3.2-02:
+    group: 3.2 Charge Reconciliation
+    layer: process
+    refs:
+    - '3.2'
+    - 3.2.3.D1
+  PFM-3.3-01:
+    group: 3.3 Charge Description Master (CDM) Management
+    hardened_by:
+    - UC-03-05
+    layer: process
+    produces:
+    - FM-CDMSTALE
+    refs:
+    - '3.3'
+    - 3.3.1.A2
+    - 3.3.4.A2
+  PFM-3.3-02:
+    group: 3.3 Charge Description Master (CDM) Management
+    layer: process
+    refs:
+    - '3.3'
+    - 3.3.2.A1
+  PFM-3.4-01:
+    group: 3.4 Revenue Integrity Auditing
+    hardened_by:
+    - UC-03-02
+    layer: process
+    produces:
+    - FM-CHGDUP
+    refs:
+    - '3.4'
+    - 3.4.1.A2
+  PFM-3.4-02:
+    group: 3.4 Revenue Integrity Auditing
+    layer: process
+    refs:
+    - '12.4'
+    - '3.4'
+    - 3.4.2.A2
+  PFM-3.5-01:
+    group: 3.5 Price Transparency Operations
+    hardened_by:
+    - UC-03-08
+    layer: process
+    refs:
+    - '3.5'
+    - 3.5.A1
+  PFM-4.1-01:
+    group: 4.1 Concurrent Documentation Review
+    hardened_by:
+    - UC-04-01
+    layer: process
+    produces:
+    - FM-DOCGAP
+    refs:
+    - '4.1'
+    - 4.1.A1
+  PFM-4.2-01:
+    group: 4.2 Physician Query Process
+    hardened_by:
+    - UC-04-03
+    layer: process
+    refs:
+    - '4.2'
+    - 4.2.A1
+    - 4.2.A3
+  PFM-4.2-02:
+    group: 4.2 Physician Query Process
+    layer: process
+    refs:
+    - '4.2'
+    - 4.2.A2
+  PFM-4.3-01:
+    group: 4.3 CDI–Coding DRG Reconciliation
+    hardened_by:
+    - UC-04-05
+    layer: process
+    refs:
+    - '4.3'
+    - 4.3.A2
+  PFM-4.4-01:
+    group: 4.4 Risk Adjustment / HCC Documentation Programs
+    hardened_by:
+    - UC-04-04
+    layer: process
+    refs:
+    - '4.4'
+    - 4.4.A2
+  PFM-4.5-01:
+    group: 4.5 CDI Metrics, Education & Escalation
+    layer: process
+    refs:
+    - '4.5'
+    - 4.5.A1
+  PFM-5.1-01:
+    group: 5.1 Record Preparation & Work Distribution
+    hardened_by:
+    - UC-05-04
+    layer: process
+    refs:
+    - '5.1'
+    - 5.1.1.A2
+  PFM-5.1-02:
+    group: 5.1 Record Preparation & Work Distribution
+    hardened_by:
+    - UC-05-05
+    layer: process
+    refs:
+    - '5.1'
+    - 5.1.2.A1
+  PFM-5.2-01:
+    group: 5.2 Inpatient Facility Coding
+    layer: process
+    produces:
+    - FM-CODEERR
+    refs:
+    - '5.2'
+    - 5.2.A1
+  PFM-5.2-02:
+    group: 5.2 Inpatient Facility Coding
+    hardened_by:
+    - UC-05-03
+    layer: process
+    produces:
+    - FM-DISPO
+    refs:
+    - '5.2'
+    - 5.2.A4
+  PFM-5.2-03:
+    group: 5.2 Inpatient Facility Coding
+    layer: process
+    refs:
+    - '5.2'
+    - 5.2.D1
+  PFM-5.3-01:
+    group: 5.3 Outpatient Facility Coding
+    hardened_by:
+    - UC-12-03
+    layer: process
+    produces:
+    - FM-CODEERR
+    refs:
+    - '5.3'
+    - 5.3.A2
+    - 5.4.D1
+  PFM-5.4-01:
+    group: 5.4 Professional Fee Coding
+    layer: process
+    refs:
+    - '5.4'
+    - 5.4.A1
+  PFM-5.5-01:
+    group: 5.5 Specialty Coding
+    layer: process
+    refs:
+    - '5.5'
+    - 5.5.A1
+  PFM-5.6-01:
+    group: 5.6 Computer-Assisted & Autonomous Coding Oversight
+    layer: process
+    refs:
+    - '5.6'
+    - 5.6.A1
+    - 5.6.A2
+  PFM-5.7-01:
+    group: 5.7 Coding Quality Review & Education
+    hardened_by:
+    - UC-05-06
+    layer: process
+    refs:
+    - '5.7'
+    - 5.7.A2
+  PFM-5.8-01:
+    group: 5.8 Coding Support for Edits, Denials & Audits
+    hardened_by:
+    - UC-05-07
+    layer: process
+    refs:
+    - '5.8'
+    - 5.8.A1
+  PFM-6.1-01:
+    group: 6.1 Claim Generation
+    layer: process
+    refs:
+    - '6.1'
+    - 6.1.1.D1
+  PFM-6.1-02:
+    group: 6.1 Claim Generation
+    layer: process
+    refs:
+    - '6.1'
+    - 6.1.3.A1
+  PFM-6.2-01:
+    group: 6.2 Claim Editing & Scrubbing
+    hardened_by:
+    - UC-06-02
+    layer: process
+    produces:
+    - FM-CODEERR
+    refs:
+    - '6.2'
+    - 6.2.2.D1
+    - 6.2.3.A2
+  PFM-6.2-02:
+    group: 6.2 Claim Editing & Scrubbing
+    hardened_by:
+    - UC-06-03
+    layer: process
+    refs:
+    - '6.2'
+    - 6.2.4.A1
+  PFM-6.2-03:
+    group: 6.2 Claim Editing & Scrubbing
+    layer: process
+    refs:
+    - '6.2'
+    - 6.2.3.A1
+  PFM-6.3-01:
+    group: 6.3 Claim Submission & Acknowledgment
+    hardened_by:
+    - UC-06-04
+    layer: process
+    produces:
+    - FM-CLAIMDROP
+    refs:
+    - '6.3'
+    - 6.3.1.A2
+    - 6.3.2.A1
+  PFM-6.3-02:
+    group: 6.3 Claim Submission & Acknowledgment
+    hardened_by:
+    - UC-06-05
+    layer: process
+    produces:
+    - FM-REJECTUNWORKED
+    refs:
+    - '6.3'
+    - 6.3.3.A1
+  PFM-6.3-03:
+    group: 6.3 Claim Submission & Acknowledgment
+    hardened_by:
+    - UC-06-07
+    layer: process
+    refs:
+    - '6.3'
+    - 6.3.5.A3
+  PFM-6.4-01:
+    group: 6.4 Secondary, Tertiary & Special Claims
+    hardened_by:
+    - UC-06-08
+    layer: process
+    refs:
+    - '6.4'
+    - 6.4.1.D1
+    - 6.4.2.A2
+  PFM-6.4-02:
+    group: 6.4 Secondary, Tertiary & Special Claims
+    layer: process
+    refs:
+    - '1.9'
+    - '6.4'
+    - 6.4.3.A1
+  PFM-6.5-01:
+    group: 6.5 Corrected, Late & Void Claims
+    layer: process
+    refs:
+    - '6.5'
+    - 6.5.1.A1
+  PFM-6.5-02:
+    group: 6.5 Corrected, Late & Void Claims
+    hardened_by:
+    - UC-06-06
+    layer: process
+    produces:
+    - FM-TFL
+    refs:
+    - '6.5'
+    - 6.5.3.A1
+  PFM-7.1-01:
+    group: 7.1 Electronic Remittance (835) Processing
+    hardened_by:
+    - UC-07-01
+    layer: process
+    refs:
+    - '7.1'
+    - 7.1.2.A3
+  PFM-7.1-02:
+    group: 7.1 Electronic Remittance (835) Processing
+    hardened_by:
+    - UC-07-02
+    layer: process
+    produces:
+    - FM-DENIALHIDDEN
+    refs:
+    - '7.1'
+    - 7.1.2.A4
+    - 7.1.3.A2
+  PFM-7.1-03:
+    group: 7.1 Electronic Remittance (835) Processing
+    layer: process
+    refs:
+    - '7.1'
+    - 7.1.3.D1
+  PFM-7.2-01:
+    group: 7.2 Manual & Paper Remittance Posting
+    hardened_by:
+    - UC-07-03
+    layer: process
+    produces:
+    - FM-DENIALHIDDEN
+    - FM-MISPOST
+    refs:
+    - '7.2'
+    - 7.2.A2
+    - 7.2.A4
+  PFM-7.3-01:
+    group: 7.3 Payment Reconciliation & Treasury
+    hardened_by:
+    - UC-07-04
+    layer: process
+    refs:
+    - '7.3'
+    - 7.3.1.A1
+  PFM-7.3-02:
+    group: 7.3 Payment Reconciliation & Treasury
+    layer: process
+    refs:
+    - '7.3'
+    - 7.3.3.A1
+  PFM-7.4-01:
+    group: 7.4 Adjustment Posting & Variance Detection
+    hardened_by:
+    - UC-07-05
+    layer: process
+    produces:
+    - FM-VARIANCEMISS
+    refs:
+    - '7.4'
+    - 7.4.1.A2
+  PFM-7.4-02:
+    group: 7.4 Adjustment Posting & Variance Detection
+    hardened_by:
+    - UC-07-06
+    layer: process
+    refs:
+    - '7.4'
+    - 7.4.3.A2
+  PFM-7.5-01:
+    group: 7.5 Patient Payment Processing
+    layer: process
+    refs:
+    - '7.5'
+    - 7.5.A2
+  PFM-7.6-01:
+    group: 7.6 Cash Application Controls & Balancing
+    layer: process
+    refs:
+    - '7.6'
+    - 7.6.A1
+    - 7.6.A3
+  PFM-8.1-01:
+    group: 8.1 Denial Identification & Classification
+    hardened_by:
+    - UC-08-01
+    layer: process
+    refs:
+    - '8.1'
+    - 8.1.A1
+  PFM-8.1-02:
+    facets:
+    - denial_labels
+    group: 8.1 Denial Identification & Classification
+    layer: process
+    refs:
+    - '8.1'
+    - 8.1.A2
+  PFM-8.1-03:
+    group: 8.1 Denial Identification & Classification
+    layer: process
+    produces:
+    - FM-APPEALMISS
+    refs:
+    - '8.1'
+    - 8.1.A4
+  PFM-8.2-01:
+    group: 8.2 Denial Triage & Routing
+    hardened_by:
+    - UC-08-02
+    layer: process
+    refs:
+    - '8.2'
+    - 8.2.A1
+  PFM-8.2-02:
+    group: 8.2 Denial Triage & Routing
+    layer: process
+    refs:
+    - '11.6'
+    - '8.2'
+    - 8.2.A3
+  PFM-8.3-01:
+    group: 8.3 Denial Resolution (non-appeal paths)
+    hardened_by:
+    - UC-08-04
+    layer: process
+    produces:
+    - FM-REBILLLOOP
+    refs:
+    - '8.3'
+    - 8.3.A1
+  PFM-8.3-02:
+    group: 8.3 Denial Resolution (non-appeal paths)
+    layer: process
+    refs:
+    - '8.3'
+    - 8.3.A4
+    - '8.6'
+  PFM-8.4-01:
+    group: 8.4 Appeals Management
+    hardened_by:
+    - UC-08-03
+    layer: process
+    refs:
+    - '8.4'
+    - 8.4.2.A1
+    - 8.4.3.D1
+  PFM-8.4-02:
+    group: 8.4 Appeals Management
+    layer: process
+    refs:
+    - '8.4'
+    - 8.4.3.A1
+  PFM-8.4-03:
+    group: 8.4 Appeals Management
+    layer: process
+    refs:
+    - '8.4'
+    - 8.4.5.A1
+  PFM-8.4-04:
+    group: 8.4 Appeals Management
+    hardened_by:
+    - UC-08-06
+    layer: process
+    refs:
+    - '8.4'
+    - 8.4.6.A1
+  PFM-8.5-01:
+    group: 8.5 Denial Prevention Program
+    hardened_by:
+    - UC-08-05
+    layer: process
+    refs:
+    - '8.5'
+    - 8.5.A2
+  PFM-8.6-01:
+    group: 8.6 Write-Off Governance & Adjustment Approval
+    layer: process
+    refs:
+    - '8.6'
+    - 8.6.A1
+    - 8.6.A3
+  PFM-9.1-01:
+    group: 9.1 Work Prioritization & Inventory Management
+    hardened_by:
+    - UC-09-01
+    layer: process
+    refs:
+    - '9.1'
+    - 9.1.A2
+  PFM-9.1-02:
+    group: 9.1 Work Prioritization & Inventory Management
+    layer: process
+    refs:
+    - '9.1'
+    - 9.1.A3
+  PFM-9.2-01:
+    group: 9.2 Claim Status Determination
+    hardened_by:
+    - UC-09-02
+    layer: process
+    refs:
+    - '9.2'
+    - 9.2.A1
+  PFM-9.3-01:
+    group: 9.3 No-Response / Unadjudicated Claim Follow-Up
+    layer: process
+    refs:
+    - '9.3'
+    - 9.3.A2
+  PFM-9.4-01:
+    group: 9.4 Underpayment Recovery
+    hardened_by:
+    - UC-09-03
+    layer: process
+    refs:
+    - '9.4'
+    - 9.4.A2
+  PFM-9.4-02:
+    group: 9.4 Underpayment Recovery
+    layer: process
+    refs:
+    - '11.2'
+    - '9.4'
+    - 9.4.D1
+  PFM-9.5-01:
+    group: 9.5 Credit Balance & Refund Management
+    hardened_by:
+    - UC-09-04
+    layer: process
+    produces:
+    - FM-CREDITAGE
+    refs:
+    - '9.5'
+    - 9.5.A1
+  PFM-9.5-02:
+    group: 9.5 Credit Balance & Refund Management
+    layer: process
+    refs:
+    - '9.5'
+    - 9.5.A3
+  PFM-9.6-01:
+    group: 9.6 Small Balance & Administrative Resolution
+    layer: process
+    refs:
+    - '9.6'
+    - 9.6.A1
+  PFM-9.7-01:
+    group: 9.7 Aged AR, Reserves & Bad Debt Transfer
+    hardened_by:
+    - UC-09-06
+    layer: process
+    produces:
+    - FM-FA-MISS
+    refs:
+    - '9.7'
+    - 9.7.A3
+  PFM-9.8-01:
+    group: 9.8 Special Account Resolution
+    hardened_by:
+    - UC-09-05
+    layer: process
+    refs:
+    - '9.8'
+    - 9.8.A2
+  PFM-9.8-02:
+    group: 9.8 Special Account Resolution
+    layer: process
+    refs:
+    - '9.8'
+    - 9.8.A1
+  RFM-ANL-01:
+    group: ROLE-ANALYTICS
+    layer: role
+  RFM-ANL-02:
+    group: ROLE-ANALYTICS
+    layer: role
+    refs:
+    - '13.1'
+  RFM-ANL-03:
+    group: ROLE-ANALYTICS
+    layer: role
+  RFM-APPRN-01:
+    group: ROLE-DENIAL / ROLE-APPEALW / ROLE-APPEALRN
+    layer: role
+  RFM-AR-01:
+    group: ROLE-ARFU / ROLE-UNDERPAY / ROLE-CREDIT
+    layer: role
+  RFM-AR-02:
+    group: ROLE-ARFU / ROLE-UNDERPAY / ROLE-CREDIT
+    layer: role
+  RFM-AR-03:
+    group: ROLE-ARFU / ROLE-UNDERPAY / ROLE-CREDIT
+    layer: role
+  RFM-AUTH-01:
+    group: ROLE-AUTH
+    layer: role
+  RFM-AUTH-02:
+    group: ROLE-AUTH
+    layer: role
+  RFM-AUTH-03:
+    group: ROLE-AUTH
+    layer: role
+  RFM-AUTO-01:
+    group: ROLE-SYSANALYST / ROLE-EDI / ROLE-AUTOENG
+    layer: role
+  RFM-BILL-01:
+    group: ROLE-BILLER / ROLE-EDITANALYST
+    layer: role
+  RFM-BILL-02:
+    group: ROLE-BILLER / ROLE-EDITANALYST
+    layer: role
+  RFM-BILL-03:
+    group: ROLE-BILLER / ROLE-EDITANALYST
+    layer: role
+  RFM-BOT-01:
+    group: ROLE-BOT
+    hardened_by:
+    - UC-14-04
+    layer: role
+  RFM-BOT-02:
+    group: ROLE-BOT
+    hardened_by:
+    - UC-14-04
+    layer: role
+    produces:
+    - FM-BOTSILENT
+  RFM-BOT-03:
+    group: ROLE-BOT
+    hardened_by:
+    - UC-14-04
+    layer: role
+  RFM-CDI-01:
+    group: ROLE-CDIS
+    layer: role
+  RFM-CDI-02:
+    group: ROLE-CDIS
+    layer: role
+  RFM-CDI-03:
+    group: ROLE-CDIS
+    layer: role
+  RFM-CDM-01:
+    group: ROLE-CDMANALYST / ROLE-REVINT
+    layer: role
+  RFM-CODEAUD-01:
+    group: ROLE-CODEAUD
+    layer: role
+  RFM-CODEAUD-02:
+    group: ROLE-CODEAUD
+    layer: role
+  RFM-CODER-01:
+    group: ROLE-CODER-
+    layer: role
+  RFM-CODER-02:
+    group: ROLE-CODER-
+    layer: role
+  RFM-CODER-03:
+    group: ROLE-CODER-
+    layer: role
+  RFM-CODER-04:
+    group: ROLE-CODER-
+    layer: role
+  RFM-COMP-01:
+    group: ROLE-COMPLIANCE / ROLE-AUDITCOORD
+    layer: role
+  RFM-COMP-02:
+    group: ROLE-COMPLIANCE / ROLE-AUDITCOORD
+    layer: role
+  RFM-CON-01:
+    group: ROLE-CONTRACT / ROLE-PAYERREL
+    layer: role
+  RFM-CON-02:
+    group: ROLE-CONTRACT / ROLE-PAYERREL
+    layer: role
+  RFM-CR-01:
+    group: ROLE-ARFU / ROLE-UNDERPAY / ROLE-CREDIT
+    layer: role
+  RFM-CRED-01:
+    group: ROLE-CRED / ROLE-ENROLL
+    layer: role
+  RFM-DEN-01:
+    group: ROLE-DENIAL / ROLE-APPEALW / ROLE-APPEALRN
+    layer: role
+  RFM-DEN-02:
+    group: ROLE-DENIAL / ROLE-APPEALW / ROLE-APPEALRN
+    layer: role
+  RFM-DEN-03:
+    group: ROLE-DENIAL / ROLE-APPEALW / ROLE-APPEALRN
+    layer: role
+  RFM-DEPT-01:
+    group: ROLE-DEPTCHG
+    layer: role
+  RFM-DEPT-02:
+    group: ROLE-DEPTCHG
+    layer: role
+  RFM-DEPT-03:
+    group: ROLE-DEPTCHG
+    layer: role
+  RFM-EXEC-01:
+    group: ROLE-CFO / executive sponsor
+    layer: role
+  RFM-EXEC-02:
+    group: ROLE-CFO / executive sponsor
+    layer: role
+  RFM-EXEC-03:
+    group: ROLE-CFO / executive sponsor
+    layer: role
+  RFM-FA-01:
+    group: ROLE-PFSREP / ROLE-FACOUNS
+    layer: role
+  RFM-FC-01:
+    group: ROLE-ESTIM / ROLE-FINCOUNS
+    layer: role
+  RFM-FC-02:
+    group: ROLE-ESTIM / ROLE-FINCOUNS
+    layer: role
+  RFM-FC-03:
+    group: ROLE-ESTIM / ROLE-FINCOUNS
+    layer: role
+  RFM-PFS-01:
+    group: ROLE-PFSREP / ROLE-FACOUNS
+    layer: role
+  RFM-PFS-02:
+    group: ROLE-PFSREP / ROLE-FACOUNS
+    layer: role
+  RFM-PHYSADV-01:
+    group: ROLE-PHYSADV
+    layer: role
+  RFM-PHYSADV-02:
+    group: ROLE-PHYSADV
+    layer: role
+  RFM-PHYSADV-03:
+    group: ROLE-PHYSADV
+    layer: role
+  RFM-POST-01:
+    group: ROLE-POSTER / ROLE-RECON
+    layer: role
+  RFM-POST-02:
+    group: ROLE-POSTER / ROLE-RECON
+    layer: role
+  RFM-POST-03:
+    group: ROLE-POSTER / ROLE-RECON
+    layer: role
+  RFM-PROV-01:
+    group: ROLE-PROVIDER
+    layer: role
+  RFM-PROV-02:
+    group: ROLE-PROVIDER
+    layer: role
+  RFM-PROV-03:
+    group: ROLE-PROVIDER
+    layer: role
+  RFM-REG-01:
+    group: ROLE-PREREG / ROLE-REGISTRAR
+    layer: role
+  RFM-REG-02:
+    group: ROLE-PREREG / ROLE-REGISTRAR
+    layer: role
+    refs:
+    - 1.8.1
+  RFM-REG-03:
+    group: ROLE-PREREG / ROLE-REGISTRAR
+    layer: role
+  RFM-RI-01:
+    group: ROLE-CDMANALYST / ROLE-REVINT
+    layer: role
+  RFM-SCHED-01:
+    group: ROLE-SCHED
+    layer: role
+  RFM-SCHED-02:
+    group: ROLE-SCHED
+    layer: role
+  RFM-SUP-01:
+    group: ROLE-PA-SUP and all supervisors
+    layer: role
+  RFM-SUP-02:
+    group: ROLE-PA-SUP and all supervisors
+    layer: role
+  RFM-SUP-03:
+    group: ROLE-PA-SUP and all supervisors
+    layer: role
+  RFM-SYS-01:
+    group: ROLE-SYSANALYST / ROLE-EDI / ROLE-AUTOENG
+    layer: role
+  RFM-SYS-02:
+    group: ROLE-SYSANALYST / ROLE-EDI / ROLE-AUTOENG
+    layer: role
+  RFM-URN-01:
+    group: ROLE-URN / ROLE-CM
+    layer: role
+  RFM-URN-02:
+    group: ROLE-URN / ROLE-CM
+    layer: role
+  RFM-URN-03:
+    group: ROLE-URN / ROLE-CM
+    layer: role
+  RFM-VERIF-01:
+    group: ROLE-VERIF
+    layer: role
+  RFM-VERIF-02:
+    group: ROLE-VERIF
+    layer: role
+  RFM-VERIF-03:
+    group: ROLE-VERIF
+    layer: role

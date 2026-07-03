@@ -50,7 +50,7 @@ ROLE-CODER-IP/OP/PRO, ROLE-CODEAUD, ROLE-HIM, ROLE-PROVIDER.
 
 | ID | Failure mode → bindings | Field signals | Paired practice |
 |---|---|---|---|
-| PFM-3.2-01 | Daily reconciliation attested, not performed (3.2.1.A1–A2) | Attestations 100%, late charges anyway; no source-log comparison evident | PBP-3.2-01 Reconciliation = schedule/log-to-charge match with exceptions listed, sampled by revenue integrity |
+| PFM-3.2-01 | Daily reconciliation attested, not performed (3.2.1.A1–A2) | Attestations 100%, late charges anyway; no source-log comparison evident | PBP-3.2-01 Reconciliation = schedule/log-to-charge match with exceptions listed, sampled by revenue integrity; hardened-by UC-03-01 |
 | PFM-3.2-02 | Late charges written off silently below threshold (3.2.3.D1) — threshold nobody set | Late-charge write-off code among top adjustments | PBP-3.2-02 Late-charge policy with materiality set by finance; corrected-claim path exercised |
 
 ### 3.3 CDM Management — ROLE-CDMANALYST
@@ -64,7 +64,7 @@ ROLE-CODER-IP/OP/PRO, ROLE-CODEAUD, ROLE-HIM, ROLE-PROVIDER.
 
 | ID | Failure mode → bindings | Field signals | Paired practice |
 |---|---|---|---|
-| PFM-3.4-01 | Pre-bill review queues staffed as overflow; DNFB pressure empties them unread (3.4.1.A2) | Review bypass rate unmeasured; "we release at day 5 regardless" | PBP-3.4-01 Review capacity sized to hit-rate; bypass requires sign-off and is tracked |
+| PFM-3.4-01 | Pre-bill review queues staffed as overflow; DNFB pressure empties them unread (3.4.1.A2) → FM-CHGDUP and unit errors escape | Review bypass rate unmeasured; "we release at day 5 regardless" | PBP-3.4-01 Review capacity sized to hit-rate; bypass requires sign-off and is tracked; hardened-by UC-03-02 |
 | PFM-3.4-02 | Retro audits find overcharges, refund path unclear (3.4.2.A2) → FM-60DAY exposure | Findings sit in spreadsheets; compliance learns late | PBP-3.4-02 Audit findings flow to the overpayment register (12.4) by rule |
 
 ### 3.5 Price Transparency — ROLE-REVINT
@@ -77,7 +77,7 @@ ROLE-CODER-IP/OP/PRO, ROLE-CODEAUD, ROLE-HIM, ROLE-PROVIDER.
 
 | ID | Failure mode → bindings | Field signals | Paired practice |
 |---|---|---|---|
-| PFM-4.1-01 | Review prioritization by payer/LOS habit (4.1.A1); high-opportunity charts unseen | Review rate high, query yield low | PBP-4.1-01 Opportunity-scored worklists; coverage vs yield both tracked; hardened-by UC-04-01 |
+| PFM-4.1-01 | Review prioritization by payer/LOS habit (4.1.A1); high-opportunity charts unseen → FM-DOCGAP | Review rate high, query yield low | PBP-4.1-01 Opportunity-scored worklists; coverage vs yield both tracked; hardened-by UC-04-01 |
 | PFM-4.2-01 | Leading or drive-by queries (4.2.A1); answers not documented in record (4.2.A3) | Query templates suggest diagnoses; coded dx present only in query threads | PBP-4.2-01 AHIMA/ACDIS-compliant templates, response-in-record rule enforced; hardened-by UC-04-03 |
 | PFM-4.2-02 | Query non-response tolerated (4.2.A2, D1) — escalation path exists on paper | Response rate <70%; same providers forever | PBP-4.2-02 Escalation through physician advisor to service chief with visible metrics (needs BP-OM-04) |
 | PFM-4.3-01 | DRG mismatches resolved by seniority, not evidence (4.3.A2, D1) | Reconciliation log shows one side always wins | PBP-4.3-01 Evidence-based reconciliation with tie-break protocol and education loop; hardened-by UC-04-05 |
