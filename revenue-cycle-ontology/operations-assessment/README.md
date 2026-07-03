@@ -52,6 +52,9 @@ failure-mode/best-practice structure down the **master ontology's spine** — fu
 | `10-process-assessment-model.md` | Meta-model: PFM/PBP/RFM/RBP classes, binding verbs, the OFM→PFM→FM causal stack, altitude rules |
 | `11-fn-patient-access.md` … `16-fn-enterprise.md` | Process-level failure modes and paired practices for **all 88 processes** of the master taxonomy (1.1–14.6), each bound to the sub-processes/decisions/actions it corrupts, the `FM-*` defects it produces, and the `UC-*` automation that hardens it |
 | `17-role-assessment.md` | Role-level failure patterns and practices for every `ROLE-*` family (including ROLE-BOT — automated agents as workforce), with judgment surfaces mapped to decision IDs |
+| `build_field_instrument.py` | Generator: parses all three layers from their sources and emits the full field instrument — rerun after any edit |
+| `field-instrument.yaml` | Machine-readable instrument: all 278 items (42 OFM + 162 PFM + 74 RFM) with prompts, signals, and score/notes fields |
+| `field-instrument.html` | **Self-contained interactive scoring instrument** — layer tabs, search, 0/1/2 scoring with evidence notes, paired practice revealed on flagged items, per-layer progress, save/open state, scored-YAML export. Works offline on a tablet in the field |
 
 The three layers compose into complete findings: **OFM** (systemic cause, files 01–06) enables
 **PFM** (local process failure, files 11–16) executed through **RFM** (role behavior, file 17),
