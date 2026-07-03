@@ -90,6 +90,11 @@ Cross-cutting entity registries (roles, systems, artifacts, metrics, failure mod
 regulations) live in `10-cross-cutting-entities.md`. The complete hierarchical index is in
 `00-master-taxonomy.md`.
 
+A companion **AI & Automation use case ontology** (`ai-automation/`) maps every AI/automation
+use case onto this process ontology — each use case binds to the process IDs it targets, the
+`FM-*` failure modes it prevents, and the `KPI-*` metrics it improves, under a governance
+meta-model (pattern taxonomy, autonomy levels, risk tiers).
+
 ## Canonical end-to-end flow
 
 ```
