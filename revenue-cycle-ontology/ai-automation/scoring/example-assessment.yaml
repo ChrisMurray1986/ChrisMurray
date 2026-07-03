@@ -1,0 +1,123 @@
+# Example: a plausible mid-maturity regional health system.
+# Solid EDI/EHR basics, partial standardization, no AI governance stack yet.
+# Run:  python3 score.py example-assessment.yaml
+
+org:
+  name: "Example Regional Health (fictional)"
+  assessed_by: "RCM automation working group"
+  date: "2026-07-03"
+
+dimensions:
+  data: 3          # warehouse + linked feeds; labels thin
+  integration: 3   # write-back via EHR APIs; no orchestration fabric
+  connectivity: 2  # RTE + ERA solid; portals/attachments mixed
+  workflow: 2      # queues standardized; exception paths informal
+  org: 2           # owners named; HITL capacity partially sized
+  governance: 1    # governance body forming; no logging/monitoring stack
+  economics: 2     # baselines measured; ROI models exist
+  legal: 1         # BAAs solid; ToS/consent reviews ad hoc
+
+facets:
+  # ---- data ----
+  orders_digitized: 2
+  mspq_structured: 2
+  auth_structured: 1        # auth numbers structured; CPTs/units often in comments
+  denial_labels: 1          # denial codes captured; defect-owner attribution missing
+  appeal_outcomes: 0        # outcomes live in appeal letters, not fields
+  touch_logging: 1
+  clinical_structured: 2
+  notes_access: 1           # corpus exists; access approval in progress
+  charge_linkage: 1
+  supply_chain_feed: 1
+  acks_retained: 2
+  lockbox_imaging: 2
+  bank_feeds: 2
+  takeback_linkage: 1
+  contract_repository: 1    # top-20 payer contracts digitized; amendments scattered
+  contract_engine_loaded: 1 # top payers loaded; terms unverified
+  policy_library: 0
+  provider_master: 1
+  gfe_stored: 1
+  consents_indexed: 0
+  qa_history: 1
+  audit_outcomes: 1
+  plan_payment_history: 2
+  payment_timing_history: 2
+  realization_history: 2
+  deficiency_structured: 2
+  working_drg_recorded: 2
+  clearance_outcomes: 0
+  statement_history: 1
+  audit_channels_digitized: 1
+  peer_benchmarks: 0
+  system_copy_extracts: 1
+  edi_telemetry: 1
+  # ---- integration ----
+  writeback: 2
+  fabric: 0                 # no event bus / bot identity / observability yet
+  prebill_hold: 2
+  statement_suppression: 1
+  statement_vendor_flex: 1
+  ap_refund_path: 1
+  cds_ordering_hook: 1
+  account_360: 0
+  queue_api: 2
+  him_retrieval: 1
+  # ---- connectivity ----
+  rte_eligibility: 2
+  era_coverage: 2
+  claim_status_edi: 1
+  auth_transactions: 1
+  portal_automation_permitted: 1   # ToS reviewed for 4 of top 10 payers
+  attachment_channels: 1
+  medicaid_files: 2
+  external_registries: 0
+  agency_data_rights: 1
+  vbc_data_sharing: 0       # one ACO contract; extracts not flowing
+  bulletin_access: 1
+  # ---- workflow ----
+  denial_taxonomy: 1        # CARC-based buckets; no root-cause ownership
+  appeal_process: 1
+  cdm_governance: 2
+  masterdata_governance: 1
+  collection_policy_unified: 1
+  plan_matrix_unified: 1
+  writeoff_matrix: 2
+  query_standardized: 2
+  avoidable_day_taxonomy: 0
+  filing_matrix: 1
+  kpi_dictionary: 1
+  downtime_procedures: 1
+  refund_matrix: 2
+  placement_gates: 1
+  edit_rule_governance: 2
+  audit_workflow: 1
+  handback_queues: 0
+  documentation_stability: 1
+  posting_standardized: 2
+  # ---- org ----
+  routing_authority: 1
+  escalation_staffed: 1
+  hitl_capacity: 1
+  mpi_capacity: 2
+  dept_charge_owners: 1
+  ranked_list_adoption: 0
+  provider_adoption: 1
+  compliance_charter: 1
+  # ---- governance ----
+  gov_body: 1
+  decision_logging: 0
+  model_monitoring: 0
+  bias_program: 0
+  citation_harness: 0
+  golden_sets: 0
+  lineage: 0
+  # ---- legal ----
+  baa_program: 2
+  outreach_consent: 1
+  criteria_license: 1       # license silent on programmatic use; negotiation open
+  reference_license: 1
+  socio_data_license: 0
+  privilege_protocol: 1
+  recoupment_law_matrix: 0
+  fa_501r_review: 2

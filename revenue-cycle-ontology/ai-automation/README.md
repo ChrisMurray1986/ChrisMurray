@@ -84,6 +84,7 @@ its risk tier's ceiling**, regardless of model performance. Details and controls
 | `06-coverage-matrix.md` | FM-* → UC-* coverage (every failure mode countered), KPI → UC index, portfolio sequencing |
 | `07-feasibility-gating.md` | Feasibility gating framework: 8 readiness dimensions (0–4 scales), universal decision tree, pattern gate templates, autonomy/risk modifiers, remediation playbook |
 | `08-use-case-gate-profiles.md` | Per-use-case gate profiles: minimum gate vector, decisive gates, and kill/defer conditions for every UC |
+| `scoring/` | Runnable scoring worksheet: assessment template, machine-readable gate vectors, and `score.py` computing GO/CONDITIONAL/DEFER/KILL per use case with ranked remediations |
 
 ## Design principles encoded in this ontology
 
