@@ -1,0 +1,61 @@
+# Organization financial profile — inputs to the value model (value.py).
+# Copy, fill in, keep with your assessment file. Only `npr` is truly required;
+# every other value has an industry-plausible default (shown) that you should
+# replace with your actuals as they become available. Sources: your denial
+# write-off rate, underpayment recoveries, cost-to-collect, and AR days are in
+# your own monthly reporting — use those, not benchmarks.
+
+org:
+  name: "Example Regional Health (fictional)"
+  date: "2026-07-03"
+
+financials:
+  npr: 1000000000          # annual net patient revenue ($) — REQUIRED
+  wacc: 0.06               # cost of capital (for AR carrying value)
+  ar_days: 48              # current net AR days (context; not used in math)
+
+rates:                     # all as fractions of NPR unless noted
+  denial_writeoff_pct: 0.020        # final denial write-offs / NPR
+  denial_preventable_share: 0.60    # share of denial write-offs preventable upstream
+  denial_recovery_headroom: 0.35    # share of the non-prevented remainder recoverable via better appeals
+  underpayment_pct: 0.010           # underpayments / NPR
+  underpayment_detectable: 0.80     # share detectable with full variance coverage
+  charge_leakage_pct: 0.010         # net revenue lost to missed/incorrect charges
+  doc_yield_pct: 0.005              # CC/MCC-CMI documentation headroom
+  coverage_convertible_pct: 0.004   # self-pay convertible to billable coverage
+  contract_yield_pct: 0.003         # negotiation-analytics-attributable rate improvement
+  pos_upside_pct: 0.002             # POS / patient-cash yield headroom
+  bad_debt_pct: 0.020               # bad debt / NPR
+  bad_debt_addressable: 0.15        # share addressable by better engagement/segmentation
+  audit_exposure_pct: 0.003         # expected annual takebacks + penalties / NPR
+  audit_mitigable: 0.50             # share mitigable with strong audit/compliance ops
+
+costs:
+  cost_to_collect_pct: 0.032        # total RCM cost / NPR
+  labor_share_of_ctc: 0.60          # labor share of cost-to-collect
+  external_spend_pct: 0.006         # addressable external spend (statements, agencies, vendors) / NPR
+
+labor_function_shares:              # split of RCM labor cost; must sum to 1.0
+  access: 0.20
+  um_cdi: 0.08
+  coding: 0.12
+  billing: 0.09
+  posting: 0.06
+  denials: 0.10
+  ar: 0.14
+  pfs: 0.11
+  analytics: 0.05
+  contracting: 0.05
+
+model:
+  low_mult: 0.5              # global uncertainty band around base-case draws
+  high_mult: 1.6
+  pool_max_extraction: 0.85  # portfolio can claim at most this share of any pool
+  max_reducible_days: 8.0    # cap on total AR-days reduction across the portfolio
+  ramp:                      # [year-1, year-2] factors by disposition; steady = 1.0
+    GO:          [0.50, 0.85]
+    CONDITIONAL: [0.25, 0.70]
+    DEFER:       [0.00, 0.40]
+    KILL:        [0.00, 0.00]
+    UNASSESSED:  [0.35, 0.75]
+  downgrade_y1_floor: 0.15   # year-1 factor for DEFER UCs with an A0/A1 insight-only start

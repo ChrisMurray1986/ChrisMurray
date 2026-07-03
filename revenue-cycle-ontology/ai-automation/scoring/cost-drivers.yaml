@@ -1,0 +1,222 @@
+# Cost drivers — machine-readable implementation of 10-cost-model.md.
+# Consumed by cost.py with an org profile. All rates are defaults; override any
+# of them in the org profile under an optional `cost_rates:` / `volumes:` block.
+#
+# Per-UC binding fields:
+#   tier: S/M/L/XL build complexity        workload: rules|rpa|ml|idp|nlp|llm|conv
+#   vol: volume-driver key   mult: fraction/multiple of that volume the UC processes yearly
+#   integ: integration count (default 2)   tokens: per-txn override (else workload default)
+#   hitl_share/hitl_min: override the workload's review burden — encode the MATURE-state
+#     autonomy (A2 human-approve ~= 1.0 share; A3 audit-sampling ~= 0.1-0.2 share)
+#   payer: edi|portal|both (payer connectivity cost)   flags: [agentic, kb]
+#   vendor_txn: vendor per-transaction fee $ (vendor option skipped if absent)
+#   diff: true = strategic differentiator (vendor must win by >15% to be recommended)
+
+rates:
+  eng_week_rate: 6000
+  tier_weeks: {S: 6, M: 14, L: 28, XL: 52}
+  per_integration: 25000
+  validation: {S: 10000, M: 20000, L: 40000, XL: 60000}
+  hitl_hourly: 38
+  token_price_per_m: {api: 4.00, finetune: 1.00, slm: 0.10}
+  ml_per_prediction: 0.0005
+  option_build_mult: {vendor: 0.30, build_rules: 0.80, build_rpa: 0.90, build_ml: 1.20, api: 1.00, finetune: 1.15, slm: 1.10}
+  maintenance_pct: {vendor: 0.05, build_rules: 0.25, build_rpa: 0.25, build_ml: 0.15, api: 0.15, finetune: 0.18, slm: 0.20}
+  finetune_fixed: 60000
+  finetune_annual_retune: 25000
+  ml_retrain_pct: 0.15          # of build, per year, for classical ML
+  vendor_switching_pct: 0.50    # of one year's vendor fees, charged once in year-3 TCO (exit priced in)
+  payer: {n_payers: 10, edi_enrollment: 2000, edi_per_txn: 0.03, portal_bot_per_payer_yr: 6000}
+  build_cone: [0.8, 1.5]
+  run_cone: [0.8, 1.2]
+  tco_years: 3
+  differentiator_threshold: 0.15
+
+workloads:   # option sets + per-txn defaults by workload type
+  rules: {options: [build_rules, vendor], tokens: 0,     hitl_share: 0.02, hitl_min: 3}
+  rpa:   {options: [build_rpa, vendor],   tokens: 0,     hitl_share: 0.05, hitl_min: 4}
+  ml:    {options: [build_ml, vendor],    tokens: 0,     hitl_share: 0.10, hitl_min: 2}
+  idp:   {options: [vendor, api, slm],    tokens: 3000,  hitl_share: 0.20, hitl_min: 2, family: doc_extraction}
+  nlp:   {options: [vendor, api, finetune, slm], tokens: 2500, hitl_share: 0.30, hitl_min: 3, family: clinical_nlp}
+  llm:   {options: [vendor, api, finetune, slm], tokens: 9000, hitl_share: 1.00, hitl_min: 8, family: gen_drafting}
+  conv:  {options: [vendor, api],         tokens: 16000, hitl_share: 0.15, hitl_min: 6}
+
+slm_families:   # domain-adapted small models: family-level assets shared across member UCs
+  doc_extraction: {adapt_cost: 300000, hosting_yr: 80000}
+  clinical_nlp:   {adapt_cost: 350000, hosting_yr: 80000}
+  gen_drafting:   {adapt_cost: 400000, hosting_yr: 100000}
+
+platform_assets:  # L1 shared assets: build one-time, run annual; dependents by workload tag or flag
+  data_foundation:      {build: 350000, run_yr: 120000, tags: [ml, idp, nlp, llm, conv]}
+  label_pipeline:       {build: 150000, run_yr: 60000,  tags: [ml]}
+  orchestration_fabric: {build: 300000, run_yr: 100000, tags: [agentic, rpa]}
+  observability:        {build: 200000, run_yr: 80000,  tags: [ml, idp, nlp, llm, conv, rpa]}
+  doc_ai_platform:      {build: 180000, run_yr: 90000,  tags: [idp]}
+  payer_knowledge_base: {build: 120000, run_yr: 60000,  tags: [kb]}
+  review_workbenches:   {build: 100000, run_yr: 40000,  tags: [idp, nlp, llm, ml]}
+  nonhuman_identity:    {build: 80000,  run_yr: 30000,  tags: [rpa, agentic]}
+  prompt_registry:      {build: 60000,  run_yr: 25000,  tags: [llm, nlp, conv, idp]}
+  governance_program:   {build: 150000, run_yr: 150000, tags: [ml, idp, nlp, llm, conv, rpa, rules]}
+
+volumes:   # annual volume drivers; claims derives from NPR, the rest chain from it
+  claims:             {npr_per_unit: 850}
+  encounters:         {of: claims, mult: 0.75}
+  orders:             {of: claims, mult: 0.50}
+  eligibility_checks: {of: claims, mult: 2.20}
+  auth_requests:      {of: claims, mult: 0.08}
+  denials:            {of: claims, mult: 0.10}
+  appeals:            {of: denials, mult: 0.25}
+  variance_cases:     {of: claims, mult: 0.04}
+  charge_lines:       {of: claims, mult: 9.0}
+  coding_cases:       {of: encounters, mult: 0.70}
+  cdi_reviews:        {of: encounters, mult: 0.06}
+  queries:            {of: cdi_reviews, mult: 0.35}
+  claim_edits:        {of: claims, mult: 0.22}
+  rejections:         {of: claims, mult: 0.04}
+  remits:             {of: claims, mult: 1.05}
+  paper_eobs:         {of: remits, mult: 0.12}
+  posting_exceptions: {of: remits, mult: 0.08}
+  status_checks:      {of: claims, mult: 0.45}
+  statements:         {of: claims, mult: 1.30}
+  patient_contacts:   {of: claims, mult: 0.30}
+  credit_balances:    {of: claims, mult: 0.015}
+  payment_plans:      {of: claims, mult: 0.02}
+  audit_requests:     {of: claims, mult: 0.002}
+  registrations:      {of: claims, mult: 0.80}
+  estimates:          {of: claims, mult: 0.35}
+  schedules:          {of: claims, mult: 0.60}
+  device_cases:       {of: claims, mult: 0.01}
+  cdm_changes:        {flat: 3000}
+  contracts:          {flat: 60}
+  bulletins:          {flat: 2400}
+  providers:          {flat: 800}
+  mrf_publications:   {flat: 12}
+  monitor_streams:    {flat: 500}
+
+use_cases:
+  # ---------------- RC-01 Patient Access ----------------
+  UC-01-01: {tier: L, workload: idp,   vol: orders, mult: 1.0, vendor_txn: 0.25}
+  UC-01-02: {tier: M, workload: ml,    vol: registrations, mult: 1.0, vendor_txn: 0.05}
+  UC-01-03: {tier: M, workload: idp,   vol: registrations, mult: 0.6, vendor_txn: 0.10}
+  UC-01-04: {tier: M, workload: rules, vol: eligibility_checks, mult: 1.0, payer: edi, vendor_txn: 0.07}
+  UC-01-05: {tier: M, workload: ml,    vol: claims, mult: 0.20, payer: edi, vendor_txn: 0.25}
+  UC-01-06: {tier: S, workload: rules, vol: registrations, mult: 0.15}
+  UC-01-07: {tier: M, workload: rules, vol: auth_requests, mult: 1.5, payer: portal, flags: [kb], diff: true}
+  UC-01-08: {tier: L, workload: llm,   vol: auth_requests, mult: 0.6, integ: 3, payer: portal, flags: [agentic, kb], vendor_txn: 9.00}
+  UC-01-09: {tier: M, workload: rpa,   vol: auth_requests, mult: 1.0, payer: portal, vendor_txn: 1.50}
+  UC-01-10: {tier: M, workload: rules, vol: auth_requests, mult: 0.8}
+  UC-01-11: {tier: M, workload: nlp,   vol: orders, mult: 0.6, flags: [kb], vendor_txn: 0.30}
+  UC-01-12: {tier: L, workload: ml,    vol: estimates, mult: 1.0, integ: 3, vendor_txn: 0.40, diff: true}
+  UC-01-13: {tier: M, workload: ml,    vol: schedules, mult: 0.5}
+  UC-01-14: {tier: L, workload: conv,  vol: schedules, mult: 0.6, integ: 3, vendor_txn: 2.50}
+  UC-01-15: {tier: S, workload: rules, vol: registrations, mult: 0.5}
+  UC-01-16: {tier: M, workload: ml,    vol: registrations, mult: 1.0}
+  UC-01-17: {tier: S, workload: ml,    vol: schedules, mult: 0.4, vendor_txn: 0.15}
+
+  # ---------------- RC-02 Utilization Review ----------------
+  UC-02-01: {tier: M, workload: ml,   vol: encounters, mult: 0.25}
+  UC-02-02: {tier: L, workload: nlp,  vol: encounters, mult: 0.25, vendor_txn: 2.00}
+  UC-02-03: {tier: M, workload: rpa,  vol: encounters, mult: 0.25, payer: portal, flags: [agentic], vendor_txn: 1.00}
+  UC-02-04: {tier: S, workload: rules, vol: encounters, mult: 0.25}
+  UC-02-05: {tier: S, workload: nlp,  vol: encounters, mult: 0.25}
+
+  # ---------------- RC-03 Charge Capture ----------------
+  UC-03-01: {tier: L, workload: ml,    vol: encounters, mult: 1.0, vendor_txn: 0.35}
+  UC-03-02: {tier: M, workload: rules, vol: charge_lines, mult: 1.0}
+  UC-03-03: {tier: M, workload: rules, vol: charge_lines, mult: 0.15}
+  UC-03-04: {tier: S, workload: ml,    vol: monitor_streams, mult: 1.0}
+  UC-03-05: {tier: M, workload: rules, vol: cdm_changes, mult: 1.0}
+  UC-03-06: {tier: L, workload: nlp,   vol: encounters, mult: 0.4, diff: true}
+  UC-03-07: {tier: M, workload: ml,    vol: device_cases, mult: 1.0}
+  UC-03-08: {tier: M, workload: rules, vol: mrf_publications, mult: 1.0}
+
+  # ---------------- RC-04 CDI ----------------
+  UC-04-01: {tier: M, workload: nlp,  vol: cdi_reviews, mult: 1.0, vendor_txn: 1.50}
+  UC-04-02: {tier: M, workload: nlp,  vol: cdi_reviews, mult: 1.0}
+  UC-04-03: {tier: M, workload: llm,  vol: queries, mult: 1.0, vendor_txn: 3.00}
+  UC-04-04: {tier: L, workload: nlp,  vol: encounters, mult: 0.3, vendor_txn: 1.00}
+  UC-04-05: {tier: S, workload: rules, vol: coding_cases, mult: 0.3}
+
+  # ---------------- RC-05 Coding ----------------
+  UC-05-01: {tier: XL, workload: llm, vol: coding_cases, mult: 1.0, tokens: 6000, hitl_share: 0.15, hitl_min: 6, vendor_txn: 1.20, diff: true}   # mature state A3: audit sampling, not full review
+  UC-05-02: {tier: M, workload: ml,   vol: coding_cases, mult: 0.3}
+  UC-05-03: {tier: S, workload: nlp,  vol: coding_cases, mult: 0.25}
+  UC-05-04: {tier: M, workload: rules, vol: coding_cases, mult: 0.2}
+  UC-05-05: {tier: M, workload: ml,   vol: coding_cases, mult: 1.0}
+  UC-05-06: {tier: S, workload: ml,   vol: coding_cases, mult: 0.1}
+  UC-05-07: {tier: M, workload: llm,  vol: claim_edits, mult: 0.3, flags: [kb], vendor_txn: 2.00}
+
+  # ---------------- RC-06 Claims ----------------
+  UC-06-01: {tier: L, workload: ml,    vol: claims, mult: 1.0, vendor_txn: 0.10, diff: true}
+  UC-06-02: {tier: L, workload: llm,   vol: claim_edits, mult: 0.5, hitl_share: 0.40, hitl_min: 5, flags: [agentic], vendor_txn: 0.80}   # A3 for governed classes, human for the rest
+  UC-06-03: {tier: M, workload: ml,    vol: denials, mult: 1.0}
+  UC-06-04: {tier: M, workload: rules, vol: claims, mult: 1.0, payer: edi}
+  UC-06-05: {tier: M, workload: nlp,   vol: rejections, mult: 1.0, flags: [agentic], payer: edi}
+  UC-06-06: {tier: M, workload: rules, vol: claims, mult: 1.0}
+  UC-06-07: {tier: M, workload: ml,    vol: claims, mult: 0.15, payer: edi}
+  UC-06-08: {tier: M, workload: rules, vol: claims, mult: 0.25, payer: edi}
+
+  # ---------------- RC-07 Payments ----------------
+  UC-07-01: {tier: L, workload: ml,    vol: remits, mult: 1.0, vendor_txn: 0.05}
+  UC-07-02: {tier: M, workload: nlp,   vol: denials, mult: 0.3}
+  UC-07-03: {tier: L, workload: idp,   vol: paper_eobs, mult: 1.0, vendor_txn: 0.35}
+  UC-07-04: {tier: M, workload: ml,    vol: remits, mult: 0.3}
+  UC-07-05: {tier: M, workload: rules, vol: remits, mult: 1.0}
+  UC-07-06: {tier: M, workload: rules, vol: posting_exceptions, mult: 0.3}
+
+  # ---------------- RC-08 Denials & Appeals ----------------
+  UC-08-01: {tier: L, workload: nlp,  vol: denials, mult: 1.0, vendor_txn: 0.30}
+  UC-08-02: {tier: M, workload: ml,   vol: denials, mult: 1.0}
+  UC-08-03: {tier: XL, workload: llm, vol: appeals, mult: 1.0, integ: 3, flags: [kb], vendor_txn: 15.00, diff: true}
+  UC-08-04: {tier: S, workload: ml,   vol: claims, mult: 0.2}
+  UC-08-05: {tier: M, workload: llm,  vol: denials, mult: 0.1, tokens: 20000}
+  UC-08-06: {tier: M, workload: rules, vol: appeals, mult: 1.0, payer: edi}
+
+  # ---------------- RC-09 AR Management ----------------
+  UC-09-01: {tier: L, workload: ml,   vol: claims, mult: 1.0, vendor_txn: 0.08, diff: true}
+  UC-09-02: {tier: L, workload: rpa,  vol: status_checks, mult: 1.0, payer: both, vendor_txn: 0.20}
+  UC-09-03: {tier: M, workload: ml,   vol: variance_cases, mult: 1.0}
+  UC-09-04: {tier: M, workload: ml,   vol: credit_balances, mult: 1.0, vendor_txn: 1.00}
+  UC-09-05: {tier: M, workload: rules, vol: claims, mult: 0.05, vendor_txn: 0.50}
+  UC-09-06: {tier: M, workload: ml,   vol: claims, mult: 0.1}
+
+  # ---------------- RC-10 Patient Financial Services ----------------
+  UC-10-01: {tier: M, workload: rules, vol: statements, mult: 1.0}
+  UC-10-02: {tier: M, workload: ml,    vol: statements, mult: 1.0, vendor_txn: 0.04}
+  UC-10-03: {tier: XL, workload: conv, vol: patient_contacts, mult: 1.0, integ: 4, vendor_txn: 3.00, diff: true}
+  UC-10-04: {tier: M, workload: ml,    vol: payment_plans, mult: 1.0}
+  UC-10-05: {tier: M, workload: ml,    vol: patient_contacts, mult: 0.3, vendor_txn: 0.80}
+  UC-10-06: {tier: M, workload: rules, vol: claims, mult: 0.08}
+  UC-10-07: {tier: M, workload: nlp,   vol: patient_contacts, mult: 0.2, vendor_txn: 0.60}
+  UC-10-08: {tier: S, workload: rules, vol: estimates, mult: 0.3}
+
+  # ---------------- RC-11 Contracting ----------------
+  UC-11-01: {tier: L, workload: llm,  vol: contracts, mult: 1.0, tokens: 150000, vendor_txn: 500.00}
+  UC-11-02: {tier: S, workload: nlp,  vol: bulletins, mult: 0.3}
+  UC-11-03: {tier: M, workload: llm,  vol: bulletins, mult: 1.0, tokens: 12000, flags: [kb], vendor_txn: 3.00, diff: true}
+  UC-11-04: {tier: L, workload: rpa,  vol: providers, mult: 1.0, payer: portal, vendor_txn: 30.00}
+  UC-11-05: {tier: M, workload: ml,   vol: contracts, mult: 1.0}
+  UC-11-06: {tier: M, workload: ml,   vol: contracts, mult: 0.5}
+
+  # ---------------- RC-12 Compliance ----------------
+  UC-12-01: {tier: M, workload: idp,  vol: audit_requests, mult: 1.0, vendor_txn: 8.00}
+  UC-12-02: {tier: L, workload: llm,  vol: audit_requests, mult: 1.0, tokens: 30000, flags: [agentic]}
+  UC-12-03: {tier: M, workload: ml,   vol: providers, mult: 1.0}
+  UC-12-04: {tier: M, workload: rules, vol: claims, mult: 0.02}
+  UC-12-05: {tier: M, workload: llm,  vol: bulletins, mult: 0.5, tokens: 12000, flags: [kb]}
+  UC-12-06: {tier: S, workload: ml,   vol: audit_requests, mult: 0.5}
+
+  # ---------------- RC-13 Analytics ----------------
+  UC-13-01: {tier: S, workload: llm,  vol: monitor_streams, mult: 1.0, tokens: 15000}
+  UC-13-02: {tier: M, workload: ml,   vol: remits, mult: 0.2}
+  UC-13-03: {tier: S, workload: ml,   vol: monitor_streams, mult: 1.0}
+  UC-13-04: {tier: M, workload: ml,   vol: monitor_streams, mult: 1.0}
+
+  # ---------------- RC-14 Master Data & Tech ----------------
+  UC-14-01: {tier: S, workload: ml,    vol: denials, mult: 0.3}
+  UC-14-02: {tier: S, workload: rules, vol: monitor_streams, mult: 1.0}
+  UC-14-03: {tier: S, workload: ml,    vol: monitor_streams, mult: 1.0}
+  UC-14-04: {tier: M, workload: ml,    vol: monitor_streams, mult: 1.0, flags: [agentic]}
+  UC-14-05: {tier: S, workload: ml,    vol: claims, mult: 0.5}
+  UC-14-06: {tier: M, workload: rules, vol: monitor_streams, mult: 0.2, flags: [agentic]}
+  UC-14-07: {tier: S, workload: ml,    vol: patient_contacts, mult: 0.1}

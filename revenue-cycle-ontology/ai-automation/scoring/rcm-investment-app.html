@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RCM AI Investment Planner</title>
+<style>
+  :root {
+    --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,0.10);
+    --seq:#2a78d6; --s2:#1baf7a;
+    --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+    --good-ink:#006300; --warning-ink:#7a5200; --serious-ink:#9c3f1d; --critical-ink:#d03b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --grid:#2c2c2a;
+      --baseline:#383835; --ring:rgba(255,255,255,0.10); --seq:#3987e5; --s2:#199e70;
+      --good-ink:#0ca30c; --warning-ink:#fab219; --serious-ink:#ec835a; --critical-ink:#d03b3b; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+         font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:1160px; margin:0 auto; padding:24px 20px 80px; }
+  h1 { font-size:21px; margin:0; } h2 { font-size:16px; margin:30px 0 10px; }
+  h3 { font-size:13.5px; margin:18px 0 8px; color:var(--ink-2); }
+  .sub { color:var(--ink-2); margin:2px 0 18px; }
+  .card { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:16px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:820px){ .row2{grid-template-columns:1fr;} }
+  nav { position:sticky; top:0; z-index:9; background:var(--page); padding:10px 0;
+        display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--grid); }
+  nav button { border:1px solid var(--ring); background:var(--surface); color:var(--ink-2);
+        border-radius:999px; padding:7px 16px; font:inherit; font-weight:600; cursor:pointer; }
+  nav button[aria-selected="true"] { color:var(--ink); border-color:var(--baseline);
+        box-shadow:inset 0 0 0 1px var(--baseline); }
+  nav .spacer { margin-left:auto; display:flex; gap:8px; }
+  section { display:none; } section.active { display:block; }
+  label { display:block; font-size:12.5px; color:var(--ink-2); margin:10px 0 3px; }
+  input[type=text], input[type=number], select {
+    width:100%; background:var(--surface); color:var(--ink); border:1px solid var(--ring);
+    border-radius:8px; padding:7px 10px; font:inherit; }
+  .grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:0 16px; }
+  .hint { color:var(--muted); font-size:11.5px; margin-top:2px; }
+  details { margin-top:12px; } summary { cursor:pointer; color:var(--ink-2); font-weight:600; font-size:13px; }
+  .btn { border:1px solid var(--ring); background:var(--surface); color:var(--ink);
+         border-radius:8px; padding:7px 14px; font:inherit; font-weight:600; cursor:pointer; }
+  .btn.primary { background:var(--seq); border-color:var(--seq); color:#fff; }
+  .btn.small { padding:3px 10px; font-size:12px; font-weight:500; }
+  .toolbar { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0; align-items:center; }
+  /* facet assessment */
+  .dimhead { display:flex; align-items:center; gap:10px; margin:22px 0 6px; }
+  .dimhead h3 { margin:0; text-transform:capitalize; }
+  .facet { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
+           padding:7px 8px; border-bottom:1px solid var(--grid); border-radius:6px; }
+  .facet:hover { background:var(--grid); }
+  .facet .p { font-size:12.5px; color:var(--ink-2); }
+  .facet .p b { color:var(--ink); font-weight:600; font-size:12.5px; }
+  .seg { display:flex; gap:4px; }
+  .seg button { border:1px solid var(--ring); background:var(--surface); color:var(--muted);
+        border-radius:6px; padding:3px 9px; font:inherit; font-size:12px; cursor:pointer; white-space:nowrap; }
+  .seg button[aria-pressed="true"] { color:var(--ink); font-weight:650; border-color:var(--baseline);
+        box-shadow:inset 0 0 0 1px var(--baseline); }
+  .seg button.blk[aria-pressed="true"] { color:var(--critical-ink); border-color:var(--critical); box-shadow:inset 0 0 0 1px var(--critical); }
+  .dimscore { display:flex; gap:4px; align-items:center; }
+  /* results */
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+  .tile { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:12px 14px; border-top:3px solid var(--baseline); }
+  .tile .v { font-size:22px; font-weight:650; } .tile .l { color:var(--ink-2); font-size:12.5px; }
+  .bars .brow { display:grid; grid-template-columns:280px 1fr; gap:10px; align-items:center; padding:3px 0; border-radius:6px; }
+  .bars .brow:hover { background:var(--grid); }
+  .bars .lbl { font-size:12.5px; color:var(--ink-2); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bars .track { position:relative; height:14px; }
+  .bars .bar { position:absolute; inset:0 auto 0 0; background:var(--seq); border-radius:0 4px 4px 0; min-width:2px; }
+  .bars .val { position:absolute; top:-1px; font-size:12px; color:var(--ink-2); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th { text-align:left; color:var(--muted); font-weight:600; font-size:12px; border-bottom:1px solid var(--baseline); padding:6px 10px; white-space:nowrap; }
+  td { border-bottom:1px solid var(--grid); padding:6px 10px; vertical-align:top; font-variant-numeric:tabular-nums; }
+  tr:hover td { background:var(--grid); }
+  .tblwrap { overflow-x:auto; }
+  .badge { display:inline-flex; gap:5px; align-items:center; font-weight:650; font-size:12px; white-space:nowrap; }
+  .badge .dot { width:9px; height:9px; border-radius:3px; }
+  .b-GO .dot{background:var(--good);} .b-GO{color:var(--good-ink);}
+  .b-CONDITIONAL .dot{background:var(--warning);} .b-CONDITIONAL{color:var(--warning-ink);}
+  .b-DEFER .dot{background:var(--serious);} .b-DEFER{color:var(--serious-ink);}
+  .b-KILL .dot{background:var(--critical);} .b-KILL{color:var(--critical-ink);}
+  .pos{color:var(--good-ink);font-weight:650;} .neg{color:var(--critical-ink);font-weight:650;}
+  /* roadmap */
+  .q { border-left:3px solid var(--seq); padding:2px 0 2px 14px; margin:14px 0; }
+  .q h3 { margin:0 0 4px; color:var(--ink); }
+  .q .meta { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .act { display:flex; gap:8px; align-items:baseline; padding:3px 0; font-size:13px; }
+  .act .tag { font-size:11px; font-weight:700; border-radius:5px; padding:1px 7px; white-space:nowrap; }
+  .tag.rem { background:var(--grid); color:var(--ink-2); }
+  .tag.launch { background:var(--seq); color:#fff; }
+  .act .cost { margin-left:auto; color:var(--ink-2); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .chart { width:100%; }
+  .legend { display:flex; gap:16px; font-size:12.5px; color:var(--ink-2); margin:4px 0 8px; }
+  .legend .sw { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; }
+  footer { color:var(--muted); font-size:12px; margin-top:44px; }
+  .warn { color:var(--serious-ink); font-size:12.5px; }
+</style></head>
+<body>
+<div class="wrap">
+  <h1>RCM AI Investment Planner</h1>
+  <p class="sub">Enter your organization's financials and readiness facts; get the scored use-case
+  portfolio and a budget-optimized, quarter-by-quarter implementation roadmap. Runs entirely in
+  this page — nothing leaves your browser. Companion to the ontology's scoring toolkit
+  (feasibility × value × cost, files 07–11).</p>
+
+  <nav id="nav">
+    <button data-tab="org" aria-selected="true">1 · Organization</button>
+    <button data-tab="assess">2 · Readiness assessment</button>
+    <button data-tab="results">3 · Portfolio</button>
+    <button data-tab="roadmap">4 · Roadmap</button>
+    <span class="spacer">
+      <button class="btn small" id="loadExample">Load example</button>
+      <button class="btn small" id="saveState">Save…</button>
+      <button class="btn small" id="loadState">Open…</button>
+      <button class="btn small" id="exportYaml">Export YAML for CLI</button>
+      <input type="file" id="fileIn" accept=".json" hidden>
+    </span>
+  </nav>
+
+  <section id="tab-org" class="active">
+    <h2>Organization profile</h2>
+    <div class="card">
+      <div class="grid3" id="orgFields"></div>
+      <details><summary>Advanced rates &amp; labor mix (defaults are industry-plausible — replace with your actuals)</summary>
+        <div class="grid3" id="advFields"></div>
+        <h3>RCM labor cost mix (must sum to 1.00)</h3>
+        <div class="grid3" id="laborFields"></div>
+      </details>
+    </div>
+    <h2>Planning parameters</h2>
+    <div class="card grid3" id="planFields"></div>
+  </section>
+
+  <section id="tab-assess">
+    <h2>Readiness assessment</h2>
+    <p class="sub">Score what is operational <em>today</em> — when torn between two levels, take the
+    lower. A facet is "Ready" only if you could demo it this week; a vendor promise is "Partial".
+    <em>Blocked</em> = legally/contractually prohibited (kills dependent use cases).</p>
+    <div class="toolbar">
+      <input type="text" id="facetSearch" placeholder="Filter facets…" style="max-width:280px">
+      <span class="hint" id="assessProgress"></span>
+    </div>
+    <div id="assessBody"></div>
+  </section>
+
+  <section id="tab-results">
+    <h2>Portfolio results</h2>
+    <div id="resultsBody"><p class="sub">Complete the organization profile and assessment, then results appear here.</p></div>
+  </section>
+
+  <section id="tab-roadmap">
+    <h2>Optimized roadmap</h2>
+    <p class="sub">A greedy budget-constrained scheduler: each quarter it funds the gate remediations
+    that unlock the most net value per dollar, then launches every use case whose gates are clear,
+    ranked by net value per build dollar. Deterministic and transparent — every scheduled item shows
+    its reason. Assumed remediation costs/durations are listed under the roadmap.</p>
+    <div id="roadmapBody"></div>
+  </section>
+
+  <footer>Generated from the revenue-cycle ontology's driver files (gate-vectors, value-drivers,
+  cost-drivers) — see <code>revenue-cycle-ontology/ai-automation/</code>. Engines are JavaScript
+  ports of score.py / value.py / cost.py; the YAML drivers remain the source of truth (rebuild via
+  <code>build_app.py</code>). Estimates use shared-pool capping, disposition-gated ramps, and
+  TCO-based sourcing decisions; ranges and governance rules per files 07–11.</footer>
+</div>
+
+<script>
+const DRIVERS = {"facetCatalog": {"orders_digitized": {"dim": "data", "prompt": "Orders/referrals are digitized at intake (e-fax or scan-at-receipt), not handled as physical paper"}, "mspq_structured": {"dim": "data", "prompt": "MSP questionnaire answers are captured as structured data, not scanned paper"}, "auth_structured": {"dim": "data", "prompt": "Authorization details (number, CPTs, units, date span) are stored structured, not in free-text notes"}, "denial_labels": {"dim": "data", "prompt": "Denial outcomes >=12 months linked to accounts with defect/owner attribution (CAP-02)"}, "appeal_outcomes": {"dim": "data", "prompt": "Appeal outcomes (win/loss/dollars, by level) have been recorded historically"}, "touch_logging": {"dim": "data", "prompt": "Follow-up touches/actions are logged per account (who did what, when, with what result)"}, "clinical_structured": {"dim": "data", "prompt": "Labs, vitals, and orders are available as structured data feeds"}, "notes_access": {"dim": "data", "prompt": "Clinical note text corpus is programmatically accessible and its use is approved"}, "charge_linkage": {"dim": "data", "prompt": "Orders, eMAR, schedules, and charges can be joined at encounter level across systems"}, "supply_chain_feed": {"dim": "data", "prompt": "Supply-chain/item-master feed with invoice data, linked to the CDM, is available"}, "acks_retained": {"dim": "data", "prompt": "999 and 277CA acknowledgments are retained and parsed (not discarded)"}, "lockbox_imaging": {"dim": "data", "prompt": "Lockbox/mail correspondence is imaged at receipt (bank imaging service or scan-at-receipt)"}, "bank_feeds": {"dim": "data", "prompt": "Daily bank feeds (BAI2/API) with TRN retention are integrated"}, "takeback_linkage": {"dim": "data", "prompt": "Recoupment/takeback transactions are linked to their original claims"}, "contract_repository": {"dim": "data", "prompt": "All executed payer contracts and amendments are located, digitized, and centrally stored"}, "contract_engine_loaded": {"dim": "data", "prompt": "Expected-reimbursement engine is loaded and verified for payers covering >=80% of volume"}, "policy_library": {"dim": "data", "prompt": "Versioned, citation-linked payer policy/medical-policy library exists (CAP-04)"}, "provider_master": {"dim": "data", "prompt": "Provider master is a governed single source (not spreadsheets)"}, "gfe_stored": {"dim": "data", "prompt": "Good Faith Estimates and patient estimates are stored structured and linkable to final bills"}, "consents_indexed": {"dim": "data", "prompt": "NSA notice-and-consent artifacts are captured, indexed, and linkable to claims"}, "qa_history": {"dim": "data", "prompt": "Coding QA results history exists in analyzable (non-spreadsheet) form"}, "audit_outcomes": {"dim": "data", "prompt": "External/internal audit findings and outcomes are recorded and linked to claims"}, "plan_payment_history": {"dim": "data", "prompt": "Patient payment-plan histories (installments, declines, timing) are stored structured"}, "payment_timing_history": {"dim": "data", "prompt": ">=24 months of payer payment-timing history is available"}, "realization_history": {"dim": "data", "prompt": ">=24 months of cash-realization history by payer/cohort supports reserve modeling"}, "deficiency_structured": {"dim": "data", "prompt": "HIM documentation-deficiency tracking is structured (not email)"}, "working_drg_recorded": {"dim": "data", "prompt": "CDI working DRG is recorded and extractable alongside final coded DRG"}, "clearance_outcomes": {"dim": "data", "prompt": "Financial-clearance outcomes (cleared/deferred/denied-payment results) are recorded as labels"}, "statement_history": {"dim": "data", "prompt": "Statement response histories (channel, timing, payment response) are stored per patient"}, "audit_channels_digitized": {"dim": "data", "prompt": "Every audit-correspondence channel (mail, portal, fax) is digitized/polled into one intake"}, "peer_benchmarks": {"dim": "data", "prompt": "Peer benchmark data (E/M distributions etc.) is licensed and available"}, "system_copy_extracts": {"dim": "data", "prompt": "Every system copy of CDM/payer/provider masters (billing, estimator, MRF, engine) is extractable"}, "card_images": {"dim": "data", "prompt": "Insurance card images are captured digitally at registration/pre-registration (front and back)"}, "um_worksheets": {"dim": "data", "prompt": "UR criteria worksheets and determinations (incl. final status outcomes) are stored structured"}, "edi_telemetry": {"dim": "data", "prompt": "EDI transaction telemetry (volumes, acks, timestamps by payer/route) is retained"}, "writeback": {"dim": "integration", "prompt": "Write-back path exists: transactions, flags, and queue routing can be set programmatically (I3)"}, "fabric": {"dim": "integration", "prompt": "Orchestration fabric live: event bus, queue APIs, observability, non-human identity (CAP-05/06/08 = I4)"}, "prebill_hold": {"dim": "integration", "prompt": "Charges/claims can be programmatically held pre-bill"}, "statement_suppression": {"dim": "integration", "prompt": "Statement vendor supports per-account suppression via interface"}, "statement_vendor_flex": {"dim": "integration", "prompt": "Statement vendor supports per-account channel/timing/content variation"}, "ap_refund_path": {"dim": "integration", "prompt": "Refunds can be executed programmatically into AP/check-issuance systems"}, "cds_ordering_hook": {"dim": "integration", "prompt": "A decision-support hook exists in the ordering/scheduling workflow"}, "account_360": {"dim": "integration", "prompt": "A unified account API can assemble balance provenance across HB/PB for a coherent patient answer"}, "queue_api": {"dim": "integration", "prompt": "Work-queue assignment is API-driven (not manual cherry-picking)"}, "him_retrieval": {"dim": "integration", "prompt": "Medical records can be retrieved programmatically from EHR/HIM for defined request types"}, "rte_eligibility": {"dim": "connectivity", "prompt": "Real-time 270/271 eligibility live for payers covering >=80% of volume"}, "era_coverage": {"dim": "connectivity", "prompt": "ERA (835) covers >=80% of remittance volume"}, "claim_status_edi": {"dim": "connectivity", "prompt": "276/277 claim status live for major payers"}, "auth_transactions": {"dim": "connectivity", "prompt": "278/auth-API/portal submission channels available for major payers"}, "portal_automation_permitted": {"dim": "connectivity", "prompt": "Payer portal automation is viable: ToS reviewed/permitted, credentials & MFA managed", "blockable": true}, "attachment_channels": {"dim": "connectivity", "prompt": "Electronic attachment channels (275/portal) exist for major payers"}, "medicaid_files": {"dim": "connectivity", "prompt": "State Medicaid eligibility files/API (incl. retroactive spans) are accessible"}, "external_registries": {"dim": "connectivity", "prompt": "Bankruptcy/death/probate data feeds are licensed and integrated", "blockable": true}, "agency_data_rights": {"dim": "connectivity", "prompt": "Collection-agency/vendor contracts grant activity-data, remit-detail, and call-recording access", "blockable": true}, "vbc_data_sharing": {"dim": "connectivity", "prompt": "VBC payer data-sharing (claims extracts, attribution rosters) is contractually granted and flowing"}, "bulletin_access": {"dim": "connectivity", "prompt": "Payer bulletins/policy pages/transmittals are systematically accessible for ingestion"}, "denial_taxonomy": {"dim": "workflow", "prompt": "A governed denial taxonomy (categories, root-cause owners) exists and is used"}, "appeal_process": {"dim": "workflow", "prompt": "Appeal processes are standardized by level/payer with owned templates"}, "cdm_governance": {"dim": "workflow", "prompt": "CDM changes flow through a governed request/review/approval workflow"}, "masterdata_governance": {"dim": "workflow", "prompt": "Master data (payer/plan, crosswalks) changes are governed with effective-dating (14.1)"}, "collection_policy_unified": {"dim": "workflow", "prompt": "One POS collection policy / discount matrix applies across sites"}, "plan_matrix_unified": {"dim": "workflow", "prompt": "One payment-plan and discount policy matrix applies across sites"}, "writeoff_matrix": {"dim": "workflow", "prompt": "A write-off/adjustment approval authority matrix is defined and enforced"}, "query_standardized": {"dim": "workflow", "prompt": "Physician query practice is standardized to the AHIMA/ACDIS brief"}, "avoidable_day_taxonomy": {"dim": "workflow", "prompt": "An avoidable-day reason taxonomy exists and is consistently used"}, "filing_matrix": {"dim": "workflow", "prompt": "Timely-filing limits (initial/corrected/secondary/appeal) are codified per payer/contract"}, "kpi_dictionary": {"dim": "workflow", "prompt": "KPI definitions are governed in a data dictionary (13.1)"}, "downtime_procedures": {"dim": "workflow", "prompt": "Downtime billing procedures are documented and have been drilled"}, "refund_matrix": {"dim": "workflow", "prompt": "A refund approval matrix with thresholds is defined"}, "placement_gates": {"dim": "workflow", "prompt": "Bad-debt placement gate conditions (statements, FA screen, disputes) are codified"}, "edit_rule_governance": {"dim": "workflow", "prompt": "Custom claim-edit capability exists with a governed rule-change process (6.2.4)"}, "audit_workflow": {"dim": "workflow", "prompt": "Audit response workflow with deadline tracking exists (12.1)"}, "handback_queues": {"dim": "workflow", "prompt": "Named human hand-back queues exist for automation exceptions (GOV-05 wiring)"}, "documentation_stability": {"dim": "workflow", "prompt": "Clinical documentation practice in target charging domains is complete and stable (start/stop times, criteria fields)"}, "posting_standardized": {"dim": "workflow", "prompt": "Payment-posting rules use one standardized adjustment/transaction-code scheme"}, "routing_authority": {"dim": "org", "prompt": "Cross-functional routing authority exists: named owners are obligated to accept prevention/policy-change actions"}, "escalation_staffed": {"dim": "org", "prompt": "Live human escalation is staffed across the operating hours of patient-facing automation"}, "hitl_capacity": {"dim": "org", "prompt": "Human-in-the-loop review/exception capacity is sized and staffed for planned automations"}, "mpi_capacity": {"dim": "org", "prompt": "HIM MPI team has capacity to review merge candidates"}, "dept_charge_owners": {"dim": "org", "prompt": "Departments have named charge owners who will work reconciliation/gap lists"}, "ranked_list_adoption": {"dim": "org", "prompt": "AR management has committed to ranked worklists over aging-bucket cherry-picking"}, "provider_adoption": {"dim": "org", "prompt": "A provider workflow-adoption path (champions, governance, training) exists for provider-facing tools"}, "compliance_charter": {"dim": "org", "prompt": "Compliance charter covers billing-pattern surveillance and defines how findings are used"}, "gov_body": {"dim": "governance", "prompt": "An AI governance body exists that tiers use cases and approves autonomy changes (GOV-01)"}, "decision_logging": {"dim": "governance", "prompt": "Decision logging + model/prompt version control are operational (GOV-02/11, CAP-10)"}, "model_monitoring": {"dim": "governance", "prompt": "Model monitoring with drift detection and auto-demotion is live (CAP-06, UC-13-04)"}, "bias_program": {"dim": "governance", "prompt": "Bias/adverse-impact testing program for patient-affecting models is operational (GOV-06)"}, "citation_harness": {"dim": "governance", "prompt": "A citation-verification harness validates generative citations against sources (GOV-03)"}, "golden_sets": {"dim": "governance", "prompt": "Golden evaluation datasets exist (or are planned per use case) for release gating (CAP-09)"}, "lineage": {"dim": "governance", "prompt": "Data/model lineage tooling can evidence how a figure was produced (external-audit grade)"}, "baa_program": {"dim": "legal", "prompt": "BAA + privacy/security review process for AI vendors and PHI flows is in place"}, "outreach_consent": {"dim": "legal", "prompt": "TCPA/consent capture for automated outreach (text/voice) is implemented", "blockable": true}, "criteria_license": {"dim": "legal", "prompt": "MCG/InterQual license permits programmatic criteria mapping", "blockable": true}, "reference_license": {"dim": "legal", "prompt": "Coding references (Coding Clinic, NCCI manuals) are licensed for programmatic retrieval use", "blockable": true}, "socio_data_license": {"dim": "legal", "prompt": "External socioeconomic/credit data for FA scoring is licensed and legally permissible", "blockable": true}, "privilege_protocol": {"dim": "legal", "prompt": "A privilege protocol governs counsel-directed analytical work product"}, "recoupment_law_matrix": {"dim": "legal", "prompt": "A maintained matrix of state/contract recoupment rules exists"}, "fa_501r_review": {"dim": "legal", "prompt": "Financial assistance / collection policies have current 501(r) counsel review"}}, "useCases": {"UC-01-01": {"name": "Order intake document AI", "vector": {"D": 2, "I": 3, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["orders_digitized", "golden_sets"], "note": "Defer if orders remain physical paper; kill if volume immaterial"}, "UC-01-02": {"name": "Identity resolution / dup MRN", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["mpi_capacity"], "note": "Merge is always human (GOV-09)"}, "UC-01-03": {"name": "Card OCR & plan mapping", "vector": {"D": 4, "I": 3, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["denial_labels", "masterdata_governance", "card_images"], "note": "Fix payer master governance before training a mapper into it"}, "UC-01-04": {"name": "Eligibility orchestration", "vector": {"D": 3, "I": 3, "C": 2, "W": 3, "O": 1, "V": 2, "E": 2, "L": 2}, "facets": ["rte_eligibility", "portal_automation_permitted"], "note": "RTE enrollment campaign; scope-cut payers with no electronic path"}, "UC-01-05": {"name": "Coverage discovery sweep", "vector": {"D": 3, "I": 3, "C": 2, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["medicaid_files", "rte_eligibility"], "note": "Monitor false-attach rate from day one"}, "UC-01-06": {"name": "COB/MSP primacy inference", "vector": {"D": 3, "I": 2, "C": 2, "W": 2, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["mspq_structured"], "note": "Capture-first if MSPQ is paper-only"}, "UC-01-07": {"name": "Auth requirement engine", "vector": {"D": 3, "I": 3, "C": 3, "W": 3, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["bulletin_access", "portal_automation_permitted", "masterdata_governance"], "note": "Stale grid worse than none \u2014 needs policy-monitoring feed"}, "UC-01-08": {"name": "Auth submission agent", "vector": {"D": 3, "I": 4, "C": 3, "W": 3, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["fabric", "auth_transactions", "notes_access", "citation_harness", "portal_automation_permitted", "policy_library"], "note": "Wave-0 fabric + GOV-03 harness prerequisites"}, "UC-01-09": {"name": "Auth status tracking bots", "vector": {"D": 2, "I": 3, "C": 3, "W": 3, "O": 1, "V": 2, "E": 2, "L": 2}, "facets": ["portal_automation_permitted", "fabric"], "note": "Kill per payer segment if ToS prohibits with no 278/API alternative"}, "UC-01-10": {"name": "Auth-to-service reconciliation", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["auth_structured"], "note": "Structure auth capture first if details live in notes"}, "UC-01-11": {"name": "Necessity screening & dx assist", "vector": {"D": 3, "I": 3, "C": null, "W": 2, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["cds_ordering_hook", "provider_adoption", "policy_library"], "note": "Post-hoc screening loses most value \u2014 needs ordering-workflow hook"}, "UC-01-12": {"name": "Estimate accuracy engine", "vector": {"D": 4, "I": 3, "C": 2, "W": 2, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["contract_engine_loaded", "rte_eligibility", "gfe_stored"], "note": "Estimates without loaded contract terms are fiction"}, "UC-01-13": {"name": "Clearance risk scoring", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["clearance_outcomes", "hitl_capacity"], "note": "Deferral recommendations stay A1 forever (GOV-09)"}, "UC-01-14": {"name": "Conversational pre-registration", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 3}, "facets": ["outreach_consent", "escalation_staffed"], "note": "Kill without staffed human escalation coverage"}, "UC-01-15": {"name": "POS next-best-action", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 2}, "facets": ["collection_policy_unified"], "note": "Standardize collection policy across sites first"}, "UC-01-16": {"name": "Real-time registration QA", "vector": {"D": 4, "I": 3, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["denial_labels", "writeback"], "note": "Rules-only version can start at D3"}, "UC-01-17": {"name": "No-show revenue protection", "vector": {"D": 4, "I": 3, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 3}, "facets": ["outreach_consent"], "note": "Kill for low-volume lines; pool with UC-01-14 infrastructure"}, "UC-02-01": {"name": "Admission status prediction", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["clinical_structured", "um_worksheets"], "note": "Defer if clinical data is text-only"}, "UC-02-02": {"name": "Criteria auto-abstraction", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["notes_access", "criteria_license", "um_worksheets"], "note": "Contractual gate: licensor must permit programmatic use"}, "UC-02-03": {"name": "Payer notification/submission bots", "vector": {"D": 3, "I": 3, "C": 3, "W": 3, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["portal_automation_permitted", "notes_access"], "note": "Scope-cut to payers with viable channels"}, "UC-02-04": {"name": "Auth-days runway monitor", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["auth_structured"], "note": "Same structured-auth gate as UC-01-10"}, "UC-02-05": {"name": "Avoidable-day classification", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["avoidable_day_taxonomy", "notes_access"], "note": "Define the taxonomy first"}, "UC-03-01": {"name": "Missing charge detection", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["charge_linkage", "dept_charge_owners"], "note": "Kill per dept if no owner accepts the queue"}, "UC-03-02": {"name": "Dup/anomaly charge screening", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["prebill_hold"], "note": "Downgrade to post-bill lists without pre-bill hold"}, "UC-03-03": {"name": "Drug units validator", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["masterdata_governance"], "note": "Govern the NDC crosswalk table first"}, "UC-03-04": {"name": "Charge trigger surveillance", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": [], "note": "Low bar \u2014 Wave-1 candidate almost everywhere"}, "UC-03-05": {"name": "CDM update automation", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["cdm_governance", "reference_license"], "note": "Defer if CDM changes happen by direct edit"}, "UC-03-06": {"name": "Autonomous charging", "vector": {"D": 4, "I": 3, "C": null, "W": 4, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["documentation_stability", "notes_access", "golden_sets"], "note": "Enable domain-by-domain; capture-first where documentation incomplete"}, "UC-03-07": {"name": "Device/implant reconciliation", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 2, "L": 1}, "facets": ["supply_chain_feed"], "note": "Point-of-use capture project first if OR supplies are paper stickers"}, "UC-03-08": {"name": "MRF/transparency pipeline", "vector": {"D": 3, "I": 3, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 2}, "facets": ["contract_engine_loaded"], "note": "Bad terms data automates noncompliance"}, "UC-04-01": {"name": "CDI case prioritization", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["notes_access", "working_drg_recorded"], "note": "Label backfill from encoder + query tool history"}, "UC-04-02": {"name": "Evidence surfacing", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["notes_access"], "note": "A0, low risk, feasible early"}, "UC-04-03": {"name": "Compliant query drafting", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["query_standardized", "citation_harness", "notes_access"], "note": "Standardize the human query process first"}, "UC-04-04": {"name": "HCC suspecting & recapture", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["notes_access", "provider_adoption"], "note": "Kill if no VBC/MA population"}, "UC-04-05": {"name": "DRG reconciliation triage", "vector": {"D": 3, "I": 3, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["working_drg_recorded"], "note": "Trivial where CDI+coding share a platform"}, "UC-05-01": {"name": "Autonomous/assisted coding", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["golden_sets", "model_monitoring", "notes_access", "reference_license"], "note": "Scope by case type; never kill wholesale"}, "UC-05-02": {"name": "DRG risk scoring", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["audit_outcomes", "hitl_capacity"], "note": "Instrument audit outcomes first if unrecorded"}, "UC-05-03": {"name": "Disposition validator", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 2, "L": 1}, "facets": [], "note": "Rules-only version feasible everywhere; external signals need HIE"}, "UC-05-04": {"name": "Deficiency chase automation", "vector": {"D": 3, "I": 3, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["deficiency_structured"], "note": "W2 the deficiency process first if ad hoc"}, "UC-05-05": {"name": "Work distribution optimizer", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["queue_api"], "note": "Workflow-platform gap if queues are manual"}, "UC-05-06": {"name": "QA sampling optimizer", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["qa_history"], "note": "1-2 quarters of structured QA capture if history is spreadsheets"}, "UC-05-07": {"name": "Edit/denial coding assist", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["reference_license", "citation_harness"], "note": "License rights for programmatic reference use"}, "UC-06-01": {"name": "Denial risk scoring", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["denial_labels", "writeback"], "note": "Pilot A0 score display while hold policy is negotiated"}, "UC-06-02": {"name": "Edit resolution agent", "vector": {"D": 3, "I": 4, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["fabric", "edit_rule_governance", "golden_sets"], "note": "A3 only per governed class"}, "UC-06-03": {"name": "Edit rule mining", "vector": {"D": 4, "I": 2, "C": null, "W": 3, "O": 1, "V": 2, "E": 2, "L": 1}, "facets": ["denial_labels", "edit_rule_governance"], "note": "Defer if edit rules are vendor-locked"}, "UC-06-04": {"name": "Submission integrity reconciler", "vector": {"D": 3, "I": 3, "C": 1, "W": 3, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["acks_retained"], "note": "Turn on ack retention, then straightforward \u2014 Wave-1"}, "UC-06-05": {"name": "Rejection auto-repair", "vector": {"D": 3, "I": 4, "C": 1, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["fabric", "edit_rule_governance", "golden_sets"], "note": "A1 first, same pattern as 06-02"}, "UC-06-06": {"name": "Timely filing sentinel", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["filing_matrix"], "note": "Contract-matrix load is the prerequisite"}, "UC-06-07": {"name": "Attachment prediction/assembly", "vector": {"D": 4, "I": 3, "C": 2, "W": 2, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["attachment_channels", "him_retrieval"], "note": "Scope-cut fax-only payers"}, "UC-06-08": {"name": "COB/secondary automation", "vector": {"D": 3, "I": 3, "C": 1, "W": 3, "O": 1, "V": 3, "E": 2, "L": 1}, "facets": ["era_coverage"], "note": "UC-07-03 feeds this for paper-remit payers"}, "UC-07-01": {"name": "Intelligent auto-posting", "vector": {"D": 3, "I": 3, "C": 1, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["era_coverage", "posting_standardized"], "note": "ERA/EFT enrollment campaign first if paper-heavy"}, "UC-07-02": {"name": "CARC mapping intelligence", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["denial_taxonomy"], "note": "Without a taxonomy the model learns today's mis-mappings"}, "UC-07-03": {"name": "Paper EOB/correspondence IDP", "vector": {"D": 2, "I": 3, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["lockbox_imaging", "golden_sets"], "note": "Switch lockbox to imaging service (contract change)"}, "UC-07-04": {"name": "Treasury matching", "vector": {"D": 3, "I": 3, "C": null, "W": 2, "O": 1, "V": 2, "E": 2, "L": 1}, "facets": ["bank_feeds"], "note": "Straightforward where bank feeds exist"}, "UC-07-05": {"name": "Variance detection coverage", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["contract_engine_loaded"], "note": "No engine = that IS the project"}, "UC-07-06": {"name": "Recoupment validation", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 2, "L": 2}, "facets": ["takeback_linkage", "recoupment_law_matrix"], "note": "Linkage repair in posting rules"}, "UC-08-01": {"name": "Denial classification & attribution", "vector": {"D": 3, "I": 3, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["denial_taxonomy", "lockbox_imaging"], "note": "Paper-denial capture gap = silent coverage hole"}, "UC-08-02": {"name": "Overturn/priority scoring", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 1}, "facets": ["appeal_outcomes"], "note": "Interim: rules-based deadline x dollars prioritization"}, "UC-08-03": {"name": "Appeal letter/packet generation", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["policy_library", "citation_harness", "hitl_capacity", "appeal_process", "criteria_license", "notes_access", "appeal_outcomes", "um_worksheets"], "note": "LLM citing policies it can't retrieve is FM-AI-02 by design; clinical variant needs criteria rights, chart corpus, and outcome labels (see 12-clinical-appeals-engineering.md)"}, "UC-08-04": {"name": "Rebill-loop breaker", "vector": {"D": 3, "I": 2, "C": null, "W": 3, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["touch_logging"], "note": "Instrumentation-first where touches aren't logged"}, "UC-08-05": {"name": "Prevention insight miner", "vector": {"D": 4, "I": 2, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["routing_authority", "denial_labels"], "note": "Kill-as-designed without routing ownership"}, "UC-08-06": {"name": "Appeal outcome verification", "vector": {"D": 3, "I": 3, "C": null, "W": 2, "O": 1, "V": 2, "E": 2, "L": 1}, "facets": ["appeal_outcomes"], "note": "Low bar once 08-01/02 exist"}, "UC-09-01": {"name": "Expected-value AR prioritization", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 3, "V": 3, "E": 2, "L": 1}, "facets": ["touch_logging", "ranked_list_adoption"], "note": "Adoption, not the model, is the usual blocker"}, "UC-09-02": {"name": "Claim status bot fleet", "vector": {"D": 3, "I": 3, "C": 2, "W": 3, "O": 1, "V": 2, "E": 2, "L": 2}, "facets": ["claim_status_edi", "portal_automation_permitted", "fabric"], "note": "A4 gated on fleet observability"}, "UC-09-03": {"name": "Underpayment pattern recovery", "vector": {"D": 3, "I": 2, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["contract_engine_loaded"], "note": "Cannot recover variances you cannot compute"}, "UC-09-04": {"name": "Credit balance & refund automation", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["ap_refund_path", "refund_matrix"], "note": "Classification early; execution gated on AP integration"}, "UC-09-05": {"name": "Special-account monitoring", "vector": {"D": 3, "I": 3, "C": 3, "W": 3, "O": 1, "V": 2, "E": 2, "L": 2}, "facets": ["external_registries"], "note": "Auto-stop on bankruptcy is the first release"}, "UC-09-06": {"name": "Aged-AR disposition modeling", "vector": {"D": 4, "I": 2, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["placement_gates", "fa_501r_review"], "note": "Codify placement gates, then automate verification"}, "UC-10-01": {"name": "Liability verification gate", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["statement_suppression", "posting_standardized"], "note": "Vendor/contract change first if no suppression hook"}, "UC-10-02": {"name": "Statement optimization", "vector": {"D": 4, "I": 3, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 3}, "facets": ["statement_vendor_flex", "bias_program", "statement_history"], "note": "Treatment differences must not track protected classes"}, "UC-10-03": {"name": "Conversational billing agent", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 3}, "facets": ["account_360", "plan_matrix_unified", "escalation_staffed", "golden_sets"], "note": "A bot that can't explain the bill is a complaint generator"}, "UC-10-04": {"name": "Plan default prediction & rescue", "vector": {"D": 4, "I": 3, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 3}, "facets": ["plan_payment_history", "outreach_consent", "bias_program"], "note": "Consent capture in plan enrollment flow"}, "UC-10-05": {"name": "Presumptive FA scoring", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 2, "V": 4, "E": 2, "L": 3}, "facets": ["bias_program", "socio_data_license", "fa_501r_review"], "note": "Cap at A0 lists until bias program; auto-denial killed permanently"}, "UC-10-06": {"name": "NSA protection classifier", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 2, "L": 3}, "facets": ["consents_indexed"], "note": "Index NSA consents first; err-protective default"}, "UC-10-07": {"name": "Agency oversight analytics", "vector": {"D": 3, "I": 2, "C": 3, "W": 2, "O": 1, "V": 2, "E": 2, "L": 2}, "facets": ["agency_data_rights"], "note": "Renegotiate data/audit rights at vendor renewal"}, "UC-10-08": {"name": "GFE variance monitor", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 2}, "facets": ["gfe_stored"], "note": "Fix GFE storage discipline, then trivial rules"}, "UC-11-01": {"name": "Contract extraction & load verify", "vector": {"D": 2, "I": 2, "C": null, "W": 2, "O": 2, "V": 2, "E": 2, "L": 1}, "facets": ["contract_repository", "citation_harness"], "note": "Repository assembly is the prerequisite (valuable alone)"}, "UC-11-02": {"name": "Amendment watchdog", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["lockbox_imaging", "contract_repository"], "note": "Cheap once 07-03 and 11-01 exist"}, "UC-11-03": {"name": "Policy monitoring & routing", "vector": {"D": 3, "I": 2, "C": 3, "W": 3, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["routing_authority", "bulletin_access", "citation_harness"], "note": "Unrouted intelligence is shelfware"}, "UC-11-04": {"name": "Credentialing/enrollment lifecycle", "vector": {"D": 3, "I": 3, "C": 3, "W": 3, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["provider_master", "portal_automation_permitted"], "note": "Exclusion monitoring can start immediately regardless"}, "UC-11-05": {"name": "Payer scorecards & negotiation", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["touch_logging"], "note": "Start claims-only; labor attribution matures with instrumentation"}, "UC-11-06": {"name": "VBC settlement validation", "vector": {"D": 4, "I": 2, "C": 2, "W": 2, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["vbc_data_sharing"], "note": "Kill if no VBC book"}, "UC-12-01": {"name": "Audit intake & deadline mgmt", "vector": {"D": 2, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 1, "L": 2}, "facets": ["audit_channels_digitized", "audit_workflow"], "note": "One missed channel defeats the purpose"}, "UC-12-02": {"name": "Audit packet assembly", "vector": {"D": 3, "I": 4, "C": null, "W": 3, "O": 2, "V": 2, "E": 2, "L": 2}, "facets": ["him_retrieval", "fabric"], "note": "Manual-pull residual quantified"}, "UC-12-03": {"name": "Billing pattern surveillance", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 2, "V": 2, "E": 1, "L": 2}, "facets": ["peer_benchmarks", "compliance_charter"], "note": "Leads, not verdicts (GOV-09)"}, "UC-12-04": {"name": "Overpayment register & 60-day", "vector": {"D": 3, "I": 3, "C": null, "W": 3, "O": 2, "V": 3, "E": 1, "L": 2}, "facets": ["ap_refund_path", "audit_workflow"], "note": "Source-feed completeness is the whole point"}, "UC-12-05": {"name": "Regulatory change intelligence", "vector": {"D": 3, "I": 2, "C": null, "W": 3, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["routing_authority", "citation_harness"], "note": "Same kill condition as 11-03"}, "UC-12-06": {"name": "Extrapolation/exposure modeling", "vector": {"D": 3, "I": 1, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 2}, "facets": ["privilege_protocol", "audit_outcomes"], "note": "A discoverable exposure model is a self-inflicted wound"}, "UC-13-01": {"name": "KPI anomaly narratives", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["kpi_dictionary"], "note": "Anomaly detection on ungoverned metrics is noise"}, "UC-13-02": {"name": "Reserve/net-revenue models", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 2, "V": 3, "E": 2, "L": 2}, "facets": ["realization_history", "lineage"], "note": "Shadow-run >=2 closes before reliance"}, "UC-13-03": {"name": "Cash forecasting", "vector": {"D": 4, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["payment_timing_history"], "note": "A0, low risk \u2014 Wave-2"}, "UC-13-04": {"name": "Governance telemetry (Wave-0)", "vector": {"D": 3, "I": 4, "C": null, "W": 3, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["gov_body", "fabric"], "note": "Every A3+ UC depends on it \u2014 build before scaling past A1"}, "UC-14-01": {"name": "Payer/plan master intelligence", "vector": {"D": 4, "I": 3, "C": null, "W": 3, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["denial_labels", "masterdata_governance"], "note": "Same governance logic as 03-05"}, "UC-14-02": {"name": "Master data drift monitoring", "vector": {"D": 3, "I": 2, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["system_copy_extracts"], "note": "Partial coverage disclosed, not silent"}, "UC-14-03": {"name": "EDI pipeline observability (Wave-0)", "vector": {"D": 3, "I": 2, "C": 1, "W": 3, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["edi_telemetry"], "note": "Trivial data, high leverage"}, "UC-14-04": {"name": "Bot fleet observability (Wave-0)", "vector": {"D": 3, "I": 4, "C": null, "W": 3, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["fabric", "handback_queues"], "note": "Hard prerequisite for any A4 RPA"}, "UC-14-05": {"name": "Automation candidate mining", "vector": {"D": 3, "I": 1, "C": null, "W": 2, "O": 1, "V": 2, "E": 1, "L": 1}, "facets": ["touch_logging"], "note": "Value scales with instrumentation coverage"}, "UC-14-06": {"name": "Downtime orchestration", "vector": {"D": 3, "I": 4, "C": null, "W": 3, "O": 2, "V": 2, "E": 1, "L": 1}, "facets": ["downtime_procedures", "fabric"], "note": "Write and drill the checklist before orchestrating it"}, "UC-14-07": {"name": "Vendor performance analytics", "vector": {"D": 3, "I": 2, "C": 3, "W": 2, "O": 1, "V": 2, "E": 1, "L": 2}, "facets": ["agency_data_rights"], "note": "Defer per vendor to contract renewal if rights absent"}}, "valuePools": {"denial_prevention": {"stream": "VS-1", "type": "annual", "formula": "npr * denial_writeoff_pct * denial_preventable_share"}, "denial_recovery": {"stream": "VS-2", "type": "annual", "formula": "npr * denial_writeoff_pct * (1 - denial_preventable_share) * denial_recovery_headroom"}, "underpayment": {"stream": "VS-2", "type": "annual", "formula": "npr * underpayment_pct * underpayment_detectable"}, "charge_capture": {"stream": "VS-3", "type": "annual", "formula": "npr * charge_leakage_pct"}, "doc_yield": {"stream": "VS-3", "type": "annual", "formula": "npr * doc_yield_pct"}, "coverage_conversion": {"stream": "VS-3", "type": "annual", "formula": "npr * coverage_convertible_pct"}, "contract_yield": {"stream": "VS-3", "type": "annual", "formula": "npr * contract_yield_pct"}, "pos_yield": {"stream": "VS-4", "type": "annual", "formula": "npr * pos_upside_pct"}, "bad_debt_reduction": {"stream": "VS-4", "type": "annual", "formula": "npr * bad_debt_pct * bad_debt_addressable"}, "ar_days": {"stream": "VS-5", "type": "days", "formula": "per day: one-time npr/365, recurring npr/365 * wacc; cap max_reducible_days"}, "labor_access": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.access"}, "labor_um_cdi": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.um_cdi"}, "labor_coding": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.coding"}, "labor_billing": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.billing"}, "labor_posting": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.posting"}, "labor_denials": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.denials"}, "labor_ar": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.ar"}, "labor_pfs": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.pfs"}, "labor_analytics": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.analytics"}, "labor_contracting": {"stream": "VS-6", "type": "annual", "formula": "labor_total * share.contracting"}, "cost_external": {"stream": "VS-7", "type": "annual", "formula": "npr * external_spend_pct"}, "audit_risk": {"stream": "VS-8", "type": "annual", "formula": "npr * audit_exposure_pct * audit_mitigable"}}, "valueUCs": {"UC-01-01": {"draws": [{"pool": "labor_access", "share": 0.02}, {"pool": "denial_prevention", "share": 0.01}]}, "UC-01-02": {"draws": [{"pool": "denial_prevention", "share": 0.005}, {"pool": "labor_access", "share": 0.01}]}, "UC-01-03": {"draws": [{"pool": "denial_prevention", "share": 0.03}, {"pool": "labor_access", "share": 0.01}]}, "UC-01-04": {"draws": [{"pool": "denial_prevention", "share": 0.04}, {"pool": "labor_access", "share": 0.06}, {"pool": "ar_days", "days": 0.3}]}, "UC-01-05": {"draws": [{"pool": "coverage_conversion", "share": 0.35}, {"pool": "bad_debt_reduction", "share": 0.1}]}, "UC-01-06": {"draws": [{"pool": "denial_prevention", "share": 0.03}]}, "UC-01-07": {"draws": [{"pool": "denial_prevention", "share": 0.06}]}, "UC-01-08": {"draws": [{"pool": "labor_access", "share": 0.08}, {"pool": "denial_prevention", "share": 0.03}]}, "UC-01-09": {"draws": [{"pool": "labor_access", "share": 0.05}]}, "UC-01-10": {"draws": [{"pool": "denial_prevention", "share": 0.04}]}, "UC-01-11": {"draws": [{"pool": "denial_prevention", "share": 0.02}, {"pool": "audit_risk", "share": 0.02}]}, "UC-01-12": {"draws": [{"pool": "pos_yield", "share": 0.15}, {"pool": "bad_debt_reduction", "share": 0.05}]}, "UC-01-13": {"draws": [{"pool": "pos_yield", "share": 0.1}, {"pool": "labor_access", "share": 0.03}]}, "UC-01-14": {"draws": [{"pool": "labor_access", "share": 0.1}, {"pool": "pos_yield", "share": 0.1}]}, "UC-01-15": {"draws": [{"pool": "pos_yield", "share": 0.15}]}, "UC-01-16": {"draws": [{"pool": "denial_prevention", "share": 0.05}, {"pool": "labor_access", "share": 0.02}]}, "UC-01-17": {"draws": [{"pool": "pos_yield", "share": 0.03}]}, "UC-02-01": {"draws": [{"pool": "denial_prevention", "share": 0.03}]}, "UC-02-02": {"draws": [{"pool": "labor_um_cdi", "share": 0.15}, {"pool": "denial_recovery", "share": 0.03}]}, "UC-02-03": {"draws": [{"pool": "labor_um_cdi", "share": 0.1}, {"pool": "denial_prevention", "share": 0.02}]}, "UC-02-04": {"draws": [{"pool": "denial_prevention", "share": 0.02}]}, "UC-02-05": {"draws": [{"pool": "labor_um_cdi", "share": 0.03}]}, "UC-03-01": {"draws": [{"pool": "charge_capture", "share": 0.25}]}, "UC-03-02": {"draws": [{"pool": "audit_risk", "share": 0.05}, {"pool": "charge_capture", "share": 0.03}]}, "UC-03-03": {"draws": [{"pool": "audit_risk", "share": 0.1}, {"pool": "charge_capture", "share": 0.05}]}, "UC-03-04": {"draws": [{"pool": "charge_capture", "share": 0.1}]}, "UC-03-05": {"draws": [{"pool": "denial_prevention", "share": 0.015}, {"pool": "labor_analytics", "share": 0.05}]}, "UC-03-06": {"draws": [{"pool": "charge_capture", "share": 0.15}, {"pool": "labor_billing", "share": 0.03}]}, "UC-03-07": {"draws": [{"pool": "charge_capture", "share": 0.08}]}, "UC-03-08": {"draws": [{"pool": "audit_risk", "share": 0.02}]}, "UC-04-01": {"draws": [{"pool": "doc_yield", "share": 0.2}]}, "UC-04-02": {"draws": [{"pool": "doc_yield", "share": 0.1}, {"pool": "labor_um_cdi", "share": 0.05}]}, "UC-04-03": {"draws": [{"pool": "doc_yield", "share": 0.1}, {"pool": "labor_um_cdi", "share": 0.03}]}, "UC-04-04": {"draws": [{"pool": "doc_yield", "share": 0.1}]}, "UC-04-05": {"draws": [{"pool": "labor_um_cdi", "share": 0.03}]}, "UC-05-01": {"draws": [{"pool": "labor_coding", "share": 0.3}, {"pool": "ar_days", "days": 0.5}, {"pool": "denial_prevention", "share": 0.01}]}, "UC-05-02": {"draws": [{"pool": "denial_prevention", "share": 0.02}, {"pool": "audit_risk", "share": 0.08}]}, "UC-05-03": {"draws": [{"pool": "underpayment", "share": 0.03}, {"pool": "audit_risk", "share": 0.02}]}, "UC-05-04": {"draws": [{"pool": "ar_days", "days": 0.5}, {"pool": "labor_coding", "share": 0.02}]}, "UC-05-05": {"draws": [{"pool": "labor_coding", "share": 0.05}]}, "UC-05-06": {"draws": [{"pool": "labor_coding", "share": 0.03}, {"pool": "audit_risk", "share": 0.03}]}, "UC-05-07": {"draws": [{"pool": "labor_coding", "share": 0.04}, {"pool": "denial_recovery", "share": 0.02}]}, "UC-06-01": {"draws": [{"pool": "denial_prevention", "share": 0.08}]}, "UC-06-02": {"draws": [{"pool": "labor_billing", "share": 0.15}, {"pool": "ar_days", "days": 0.5}]}, "UC-06-03": {"draws": [{"pool": "denial_prevention", "share": 0.04}]}, "UC-06-04": {"draws": [{"pool": "denial_prevention", "share": 0.02}, {"pool": "ar_days", "days": 0.3}]}, "UC-06-05": {"draws": [{"pool": "labor_billing", "share": 0.08}, {"pool": "denial_prevention", "share": 0.02}]}, "UC-06-06": {"draws": [{"pool": "denial_prevention", "share": 0.03}]}, "UC-06-07": {"draws": [{"pool": "denial_prevention", "share": 0.02}, {"pool": "ar_days", "days": 0.4}]}, "UC-06-08": {"draws": [{"pool": "ar_days", "days": 0.5}, {"pool": "labor_billing", "share": 0.05}]}, "UC-07-01": {"draws": [{"pool": "labor_posting", "share": 0.35}, {"pool": "ar_days", "days": 0.2}]}, "UC-07-02": {"draws": [{"pool": "denial_recovery", "share": 0.03}]}, "UC-07-03": {"draws": [{"pool": "labor_posting", "share": 0.15}, {"pool": "ar_days", "days": 0.2}]}, "UC-07-04": {"draws": [{"pool": "labor_posting", "share": 0.08}]}, "UC-07-05": {"draws": [{"pool": "underpayment", "share": 0.25}]}, "UC-07-06": {"draws": [{"pool": "underpayment", "share": 0.05}]}, "UC-08-01": {"draws": [{"pool": "labor_denials", "share": 0.1}, {"pool": "denial_recovery", "share": 0.05}]}, "UC-08-02": {"draws": [{"pool": "denial_recovery", "share": 0.1}, {"pool": "labor_denials", "share": 0.08}]}, "UC-08-03": {"draws": [{"pool": "denial_recovery", "share": 0.25}, {"pool": "labor_denials", "share": 0.2}]}, "UC-08-04": {"draws": [{"pool": "ar_days", "days": 0.3}, {"pool": "labor_ar", "share": 0.02}]}, "UC-08-05": {"draws": [{"pool": "denial_prevention", "share": 0.1}]}, "UC-08-06": {"draws": [{"pool": "denial_recovery", "share": 0.05}]}, "UC-09-01": {"draws": [{"pool": "labor_ar", "share": 0.15}, {"pool": "ar_days", "days": 1.0}, {"pool": "bad_debt_reduction", "share": 0.05}]}, "UC-09-02": {"draws": [{"pool": "labor_ar", "share": 0.25}, {"pool": "ar_days", "days": 0.5}]}, "UC-09-03": {"draws": [{"pool": "underpayment", "share": 0.2}]}, "UC-09-04": {"draws": [{"pool": "labor_posting", "share": 0.1}, {"pool": "audit_risk", "share": 0.05}]}, "UC-09-05": {"draws": [{"pool": "bad_debt_reduction", "share": 0.03}, {"pool": "audit_risk", "share": 0.02}]}, "UC-09-06": {"draws": [{"pool": "bad_debt_reduction", "share": 0.05}, {"pool": "labor_ar", "share": 0.03}]}, "UC-10-01": {"draws": [{"pool": "bad_debt_reduction", "share": 0.05}, {"pool": "labor_pfs", "share": 0.05}]}, "UC-10-02": {"draws": [{"pool": "pos_yield", "share": 0.08}, {"pool": "cost_external", "share": 0.05}]}, "UC-10-03": {"draws": [{"pool": "labor_pfs", "share": 0.25}, {"pool": "pos_yield", "share": 0.05}]}, "UC-10-04": {"draws": [{"pool": "bad_debt_reduction", "share": 0.08}, {"pool": "pos_yield", "share": 0.05}]}, "UC-10-05": {"draws": [{"pool": "cost_external", "share": 0.03}, {"pool": "audit_risk", "share": 0.02}]}, "UC-10-06": {"draws": [{"pool": "audit_risk", "share": 0.05}]}, "UC-10-07": {"draws": [{"pool": "cost_external", "share": 0.08}, {"pool": "audit_risk", "share": 0.02}]}, "UC-10-08": {"draws": [{"pool": "audit_risk", "share": 0.01}, {"pool": "pos_yield", "share": 0.02}]}, "UC-11-01": {"draws": [{"pool": "underpayment", "share": 0.15}, {"pool": "denial_prevention", "share": 0.01}]}, "UC-11-02": {"draws": [{"pool": "underpayment", "share": 0.05}]}, "UC-11-03": {"draws": [{"pool": "denial_prevention", "share": 0.05}]}, "UC-11-04": {"draws": [{"pool": "denial_prevention", "share": 0.03}, {"pool": "ar_days", "days": 0.3}, {"pool": "labor_contracting", "share": 0.15}]}, "UC-11-05": {"draws": [{"pool": "contract_yield", "share": 0.3}]}, "UC-11-06": {"draws": [{"pool": "contract_yield", "share": 0.15}, {"pool": "underpayment", "share": 0.03}]}, "UC-12-01": {"draws": [{"pool": "audit_risk", "share": 0.15}]}, "UC-12-02": {"draws": [{"pool": "audit_risk", "share": 0.1}, {"pool": "labor_analytics", "share": 0.05}]}, "UC-12-03": {"draws": [{"pool": "audit_risk", "share": 0.1}]}, "UC-12-04": {"draws": [{"pool": "audit_risk", "share": 0.15}]}, "UC-12-05": {"draws": [{"pool": "audit_risk", "share": 0.05}, {"pool": "denial_prevention", "share": 0.01}]}, "UC-12-06": {"draws": [{"pool": "audit_risk", "share": 0.05}]}, "UC-13-01": {"draws": [{"pool": "labor_analytics", "share": 0.1}]}, "UC-13-02": {"draws": [{"pool": "labor_analytics", "share": 0.08}, {"pool": "audit_risk", "share": 0.01}]}, "UC-13-03": {"draws": [{"pool": "labor_analytics", "share": 0.03}]}, "UC-13-04": {"draws": [{"pool": "audit_risk", "share": 0.03}, {"pool": "labor_analytics", "share": 0.03}]}, "UC-14-01": {"draws": [{"pool": "denial_prevention", "share": 0.02}]}, "UC-14-02": {"draws": [{"pool": "denial_prevention", "share": 0.01}, {"pool": "audit_risk", "share": 0.01}]}, "UC-14-03": {"draws": [{"pool": "denial_prevention", "share": 0.02}, {"pool": "ar_days", "days": 0.2}]}, "UC-14-04": {"draws": [{"pool": "labor_analytics", "share": 0.03}, {"pool": "audit_risk", "share": 0.01}]}, "UC-14-05": {"draws": [{"pool": "labor_analytics", "share": 0.05}]}, "UC-14-06": {"draws": [{"pool": "charge_capture", "share": 0.02}, {"pool": "ar_days", "days": 0.1}]}, "UC-14-07": {"draws": [{"pool": "cost_external", "share": 0.05}]}}, "costRates": {"eng_week_rate": 6000, "tier_weeks": {"S": 6, "M": 14, "L": 28, "XL": 52}, "per_integration": 25000, "validation": {"S": 10000, "M": 20000, "L": 40000, "XL": 60000}, "hitl_hourly": 38, "token_price_per_m": {"api": 4.0, "finetune": 1.0, "slm": 0.1}, "ml_per_prediction": 0.0005, "option_build_mult": {"vendor": 0.3, "build_rules": 0.8, "build_rpa": 0.9, "build_ml": 1.2, "api": 1.0, "finetune": 1.15, "slm": 1.1}, "maintenance_pct": {"vendor": 0.05, "build_rules": 0.25, "build_rpa": 0.25, "build_ml": 0.15, "api": 0.15, "finetune": 0.18, "slm": 0.2}, "finetune_fixed": 60000, "finetune_annual_retune": 25000, "ml_retrain_pct": 0.15, "vendor_switching_pct": 0.5, "payer": {"n_payers": 10, "edi_enrollment": 2000, "edi_per_txn": 0.03, "portal_bot_per_payer_yr": 6000}, "build_cone": [0.8, 1.5], "run_cone": [0.8, 1.2], "tco_years": 3, "differentiator_threshold": 0.15}, "workloads": {"rules": {"options": ["build_rules", "vendor"], "tokens": 0, "hitl_share": 0.02, "hitl_min": 3}, "rpa": {"options": ["build_rpa", "vendor"], "tokens": 0, "hitl_share": 0.05, "hitl_min": 4}, "ml": {"options": ["build_ml", "vendor"], "tokens": 0, "hitl_share": 0.1, "hitl_min": 2}, "idp": {"options": ["vendor", "api", "slm"], "tokens": 3000, "hitl_share": 0.2, "hitl_min": 2, "family": "doc_extraction"}, "nlp": {"options": ["vendor", "api", "finetune", "slm"], "tokens": 2500, "hitl_share": 0.3, "hitl_min": 3, "family": "clinical_nlp"}, "llm": {"options": ["vendor", "api", "finetune", "slm"], "tokens": 9000, "hitl_share": 1.0, "hitl_min": 8, "family": "gen_drafting"}, "conv": {"options": ["vendor", "api"], "tokens": 16000, "hitl_share": 0.15, "hitl_min": 6}}, "slmFamilies": {"doc_extraction": {"adapt_cost": 300000, "hosting_yr": 80000}, "clinical_nlp": {"adapt_cost": 350000, "hosting_yr": 80000}, "gen_drafting": {"adapt_cost": 400000, "hosting_yr": 100000}}, "platformAssets": {"data_foundation": {"build": 350000, "run_yr": 120000, "tags": ["ml", "idp", "nlp", "llm", "conv"]}, "label_pipeline": {"build": 150000, "run_yr": 60000, "tags": ["ml"]}, "orchestration_fabric": {"build": 300000, "run_yr": 100000, "tags": ["agentic", "rpa"]}, "observability": {"build": 200000, "run_yr": 80000, "tags": ["ml", "idp", "nlp", "llm", "conv", "rpa"]}, "doc_ai_platform": {"build": 180000, "run_yr": 90000, "tags": ["idp"]}, "payer_knowledge_base": {"build": 120000, "run_yr": 60000, "tags": ["kb"]}, "review_workbenches": {"build": 100000, "run_yr": 40000, "tags": ["idp", "nlp", "llm", "ml"]}, "nonhuman_identity": {"build": 80000, "run_yr": 30000, "tags": ["rpa", "agentic"]}, "prompt_registry": {"build": 60000, "run_yr": 25000, "tags": ["llm", "nlp", "conv", "idp"]}, "governance_program": {"build": 150000, "run_yr": 150000, "tags": ["ml", "idp", "nlp", "llm", "conv", "rpa", "rules"]}}, "volumes": {"claims": {"npr_per_unit": 850}, "encounters": {"of": "claims", "mult": 0.75}, "orders": {"of": "claims", "mult": 0.5}, "eligibility_checks": {"of": "claims", "mult": 2.2}, "auth_requests": {"of": "claims", "mult": 0.08}, "denials": {"of": "claims", "mult": 0.1}, "appeals": {"of": "denials", "mult": 0.25}, "variance_cases": {"of": "claims", "mult": 0.04}, "charge_lines": {"of": "claims", "mult": 9.0}, "coding_cases": {"of": "encounters", "mult": 0.7}, "cdi_reviews": {"of": "encounters", "mult": 0.06}, "queries": {"of": "cdi_reviews", "mult": 0.35}, "claim_edits": {"of": "claims", "mult": 0.22}, "rejections": {"of": "claims", "mult": 0.04}, "remits": {"of": "claims", "mult": 1.05}, "paper_eobs": {"of": "remits", "mult": 0.12}, "posting_exceptions": {"of": "remits", "mult": 0.08}, "status_checks": {"of": "claims", "mult": 0.45}, "statements": {"of": "claims", "mult": 1.3}, "patient_contacts": {"of": "claims", "mult": 0.3}, "credit_balances": {"of": "claims", "mult": 0.015}, "payment_plans": {"of": "claims", "mult": 0.02}, "audit_requests": {"of": "claims", "mult": 0.002}, "registrations": {"of": "claims", "mult": 0.8}, "estimates": {"of": "claims", "mult": 0.35}, "schedules": {"of": "claims", "mult": 0.6}, "device_cases": {"of": "claims", "mult": 0.01}, "cdm_changes": {"flat": 3000}, "contracts": {"flat": 60}, "bulletins": {"flat": 2400}, "providers": {"flat": 800}, "mrf_publications": {"flat": 12}, "monitor_streams": {"flat": 500}}, "costUCs": {"UC-01-01": {"tier": "L", "workload": "idp", "vol": "orders", "mult": 1.0, "vendor_txn": 0.25}, "UC-01-02": {"tier": "M", "workload": "ml", "vol": "registrations", "mult": 1.0, "vendor_txn": 0.05}, "UC-01-03": {"tier": "M", "workload": "idp", "vol": "registrations", "mult": 0.6, "vendor_txn": 0.1}, "UC-01-04": {"tier": "M", "workload": "rules", "vol": "eligibility_checks", "mult": 1.0, "payer": "edi", "vendor_txn": 0.07}, "UC-01-05": {"tier": "M", "workload": "ml", "vol": "claims", "mult": 0.2, "payer": "edi", "vendor_txn": 0.25}, "UC-01-06": {"tier": "S", "workload": "rules", "vol": "registrations", "mult": 0.15}, "UC-01-07": {"tier": "M", "workload": "rules", "vol": "auth_requests", "mult": 1.5, "payer": "portal", "flags": ["kb"], "diff": true}, "UC-01-08": {"tier": "L", "workload": "llm", "vol": "auth_requests", "mult": 0.6, "integ": 3, "payer": "portal", "flags": ["agentic", "kb"], "vendor_txn": 9.0}, "UC-01-09": {"tier": "M", "workload": "rpa", "vol": "auth_requests", "mult": 1.0, "payer": "portal", "vendor_txn": 1.5}, "UC-01-10": {"tier": "M", "workload": "rules", "vol": "auth_requests", "mult": 0.8}, "UC-01-11": {"tier": "M", "workload": "nlp", "vol": "orders", "mult": 0.6, "flags": ["kb"], "vendor_txn": 0.3}, "UC-01-12": {"tier": "L", "workload": "ml", "vol": "estimates", "mult": 1.0, "integ": 3, "vendor_txn": 0.4, "diff": true}, "UC-01-13": {"tier": "M", "workload": "ml", "vol": "schedules", "mult": 0.5}, "UC-01-14": {"tier": "L", "workload": "conv", "vol": "schedules", "mult": 0.6, "integ": 3, "vendor_txn": 2.5}, "UC-01-15": {"tier": "S", "workload": "rules", "vol": "registrations", "mult": 0.5}, "UC-01-16": {"tier": "M", "workload": "ml", "vol": "registrations", "mult": 1.0}, "UC-01-17": {"tier": "S", "workload": "ml", "vol": "schedules", "mult": 0.4, "vendor_txn": 0.15}, "UC-02-01": {"tier": "M", "workload": "ml", "vol": "encounters", "mult": 0.25}, "UC-02-02": {"tier": "L", "workload": "nlp", "vol": "encounters", "mult": 0.25, "vendor_txn": 2.0}, "UC-02-03": {"tier": "M", "workload": "rpa", "vol": "encounters", "mult": 0.25, "payer": "portal", "flags": ["agentic"], "vendor_txn": 1.0}, "UC-02-04": {"tier": "S", "workload": "rules", "vol": "encounters", "mult": 0.25}, "UC-02-05": {"tier": "S", "workload": "nlp", "vol": "encounters", "mult": 0.25}, "UC-03-01": {"tier": "L", "workload": "ml", "vol": "encounters", "mult": 1.0, "vendor_txn": 0.35}, "UC-03-02": {"tier": "M", "workload": "rules", "vol": "charge_lines", "mult": 1.0}, "UC-03-03": {"tier": "M", "workload": "rules", "vol": "charge_lines", "mult": 0.15}, "UC-03-04": {"tier": "S", "workload": "ml", "vol": "monitor_streams", "mult": 1.0}, "UC-03-05": {"tier": "M", "workload": "rules", "vol": "cdm_changes", "mult": 1.0}, "UC-03-06": {"tier": "L", "workload": "nlp", "vol": "encounters", "mult": 0.4, "diff": true}, "UC-03-07": {"tier": "M", "workload": "ml", "vol": "device_cases", "mult": 1.0}, "UC-03-08": {"tier": "M", "workload": "rules", "vol": "mrf_publications", "mult": 1.0}, "UC-04-01": {"tier": "M", "workload": "nlp", "vol": "cdi_reviews", "mult": 1.0, "vendor_txn": 1.5}, "UC-04-02": {"tier": "M", "workload": "nlp", "vol": "cdi_reviews", "mult": 1.0}, "UC-04-03": {"tier": "M", "workload": "llm", "vol": "queries", "mult": 1.0, "vendor_txn": 3.0}, "UC-04-04": {"tier": "L", "workload": "nlp", "vol": "encounters", "mult": 0.3, "vendor_txn": 1.0}, "UC-04-05": {"tier": "S", "workload": "rules", "vol": "coding_cases", "mult": 0.3}, "UC-05-01": {"tier": "XL", "workload": "llm", "vol": "coding_cases", "mult": 1.0, "tokens": 6000, "hitl_share": 0.15, "hitl_min": 6, "vendor_txn": 1.2, "diff": true}, "UC-05-02": {"tier": "M", "workload": "ml", "vol": "coding_cases", "mult": 0.3}, "UC-05-03": {"tier": "S", "workload": "nlp", "vol": "coding_cases", "mult": 0.25}, "UC-05-04": {"tier": "M", "workload": "rules", "vol": "coding_cases", "mult": 0.2}, "UC-05-05": {"tier": "M", "workload": "ml", "vol": "coding_cases", "mult": 1.0}, "UC-05-06": {"tier": "S", "workload": "ml", "vol": "coding_cases", "mult": 0.1}, "UC-05-07": {"tier": "M", "workload": "llm", "vol": "claim_edits", "mult": 0.3, "flags": ["kb"], "vendor_txn": 2.0}, "UC-06-01": {"tier": "L", "workload": "ml", "vol": "claims", "mult": 1.0, "vendor_txn": 0.1, "diff": true}, "UC-06-02": {"tier": "L", "workload": "llm", "vol": "claim_edits", "mult": 0.5, "hitl_share": 0.4, "hitl_min": 5, "flags": ["agentic"], "vendor_txn": 0.8}, "UC-06-03": {"tier": "M", "workload": "ml", "vol": "denials", "mult": 1.0}, "UC-06-04": {"tier": "M", "workload": "rules", "vol": "claims", "mult": 1.0, "payer": "edi"}, "UC-06-05": {"tier": "M", "workload": "nlp", "vol": "rejections", "mult": 1.0, "flags": ["agentic"], "payer": "edi"}, "UC-06-06": {"tier": "M", "workload": "rules", "vol": "claims", "mult": 1.0}, "UC-06-07": {"tier": "M", "workload": "ml", "vol": "claims", "mult": 0.15, "payer": "edi"}, "UC-06-08": {"tier": "M", "workload": "rules", "vol": "claims", "mult": 0.25, "payer": "edi"}, "UC-07-01": {"tier": "L", "workload": "ml", "vol": "remits", "mult": 1.0, "vendor_txn": 0.05}, "UC-07-02": {"tier": "M", "workload": "nlp", "vol": "denials", "mult": 0.3}, "UC-07-03": {"tier": "L", "workload": "idp", "vol": "paper_eobs", "mult": 1.0, "vendor_txn": 0.35}, "UC-07-04": {"tier": "M", "workload": "ml", "vol": "remits", "mult": 0.3}, "UC-07-05": {"tier": "M", "workload": "rules", "vol": "remits", "mult": 1.0}, "UC-07-06": {"tier": "M", "workload": "rules", "vol": "posting_exceptions", "mult": 0.3}, "UC-08-01": {"tier": "L", "workload": "nlp", "vol": "denials", "mult": 1.0, "vendor_txn": 0.3}, "UC-08-02": {"tier": "M", "workload": "ml", "vol": "denials", "mult": 1.0}, "UC-08-03": {"tier": "XL", "workload": "llm", "vol": "appeals", "mult": 1.0, "integ": 3, "flags": ["kb"], "vendor_txn": 15.0, "diff": true}, "UC-08-04": {"tier": "S", "workload": "ml", "vol": "claims", "mult": 0.2}, "UC-08-05": {"tier": "M", "workload": "llm", "vol": "denials", "mult": 0.1, "tokens": 20000}, "UC-08-06": {"tier": "M", "workload": "rules", "vol": "appeals", "mult": 1.0, "payer": "edi"}, "UC-09-01": {"tier": "L", "workload": "ml", "vol": "claims", "mult": 1.0, "vendor_txn": 0.08, "diff": true}, "UC-09-02": {"tier": "L", "workload": "rpa", "vol": "status_checks", "mult": 1.0, "payer": "both", "vendor_txn": 0.2}, "UC-09-03": {"tier": "M", "workload": "ml", "vol": "variance_cases", "mult": 1.0}, "UC-09-04": {"tier": "M", "workload": "ml", "vol": "credit_balances", "mult": 1.0, "vendor_txn": 1.0}, "UC-09-05": {"tier": "M", "workload": "rules", "vol": "claims", "mult": 0.05, "vendor_txn": 0.5}, "UC-09-06": {"tier": "M", "workload": "ml", "vol": "claims", "mult": 0.1}, "UC-10-01": {"tier": "M", "workload": "rules", "vol": "statements", "mult": 1.0}, "UC-10-02": {"tier": "M", "workload": "ml", "vol": "statements", "mult": 1.0, "vendor_txn": 0.04}, "UC-10-03": {"tier": "XL", "workload": "conv", "vol": "patient_contacts", "mult": 1.0, "integ": 4, "vendor_txn": 3.0, "diff": true}, "UC-10-04": {"tier": "M", "workload": "ml", "vol": "payment_plans", "mult": 1.0}, "UC-10-05": {"tier": "M", "workload": "ml", "vol": "patient_contacts", "mult": 0.3, "vendor_txn": 0.8}, "UC-10-06": {"tier": "M", "workload": "rules", "vol": "claims", "mult": 0.08}, "UC-10-07": {"tier": "M", "workload": "nlp", "vol": "patient_contacts", "mult": 0.2, "vendor_txn": 0.6}, "UC-10-08": {"tier": "S", "workload": "rules", "vol": "estimates", "mult": 0.3}, "UC-11-01": {"tier": "L", "workload": "llm", "vol": "contracts", "mult": 1.0, "tokens": 150000, "vendor_txn": 500.0}, "UC-11-02": {"tier": "S", "workload": "nlp", "vol": "bulletins", "mult": 0.3}, "UC-11-03": {"tier": "M", "workload": "llm", "vol": "bulletins", "mult": 1.0, "tokens": 12000, "flags": ["kb"], "vendor_txn": 3.0, "diff": true}, "UC-11-04": {"tier": "L", "workload": "rpa", "vol": "providers", "mult": 1.0, "payer": "portal", "vendor_txn": 30.0}, "UC-11-05": {"tier": "M", "workload": "ml", "vol": "contracts", "mult": 1.0}, "UC-11-06": {"tier": "M", "workload": "ml", "vol": "contracts", "mult": 0.5}, "UC-12-01": {"tier": "M", "workload": "idp", "vol": "audit_requests", "mult": 1.0, "vendor_txn": 8.0}, "UC-12-02": {"tier": "L", "workload": "llm", "vol": "audit_requests", "mult": 1.0, "tokens": 30000, "flags": ["agentic"]}, "UC-12-03": {"tier": "M", "workload": "ml", "vol": "providers", "mult": 1.0}, "UC-12-04": {"tier": "M", "workload": "rules", "vol": "claims", "mult": 0.02}, "UC-12-05": {"tier": "M", "workload": "llm", "vol": "bulletins", "mult": 0.5, "tokens": 12000, "flags": ["kb"]}, "UC-12-06": {"tier": "S", "workload": "ml", "vol": "audit_requests", "mult": 0.5}, "UC-13-01": {"tier": "S", "workload": "llm", "vol": "monitor_streams", "mult": 1.0, "tokens": 15000}, "UC-13-02": {"tier": "M", "workload": "ml", "vol": "remits", "mult": 0.2}, "UC-13-03": {"tier": "S", "workload": "ml", "vol": "monitor_streams", "mult": 1.0}, "UC-13-04": {"tier": "M", "workload": "ml", "vol": "monitor_streams", "mult": 1.0}, "UC-14-01": {"tier": "S", "workload": "ml", "vol": "denials", "mult": 0.3}, "UC-14-02": {"tier": "S", "workload": "rules", "vol": "monitor_streams", "mult": 1.0}, "UC-14-03": {"tier": "S", "workload": "ml", "vol": "monitor_streams", "mult": 1.0}, "UC-14-04": {"tier": "M", "workload": "ml", "vol": "monitor_streams", "mult": 1.0, "flags": ["agentic"]}, "UC-14-05": {"tier": "S", "workload": "ml", "vol": "claims", "mult": 0.5}, "UC-14-06": {"tier": "M", "workload": "rules", "vol": "monitor_streams", "mult": 0.2, "flags": ["agentic"]}, "UC-14-07": {"tier": "S", "workload": "ml", "vol": "patient_contacts", "mult": 0.1}}, "domains": {"01": "Patient Access", "02": "Utilization Review", "03": "Charge Capture", "04": "CDI", "05": "Coding", "06": "Claims", "07": "Payments", "08": "Denials & Appeals", "09": "AR Management", "10": "Patient Financial Svcs", "11": "Contracting", "12": "Compliance", "13": "Analytics", "14": "Master Data & Tech"}, "profileDefaults": {"rates": {"denial_writeoff_pct": 0.02, "denial_preventable_share": 0.6, "denial_recovery_headroom": 0.35, "underpayment_pct": 0.01, "underpayment_detectable": 0.8, "charge_leakage_pct": 0.01, "doc_yield_pct": 0.005, "coverage_convertible_pct": 0.004, "contract_yield_pct": 0.003, "pos_upside_pct": 0.002, "bad_debt_pct": 0.02, "bad_debt_addressable": 0.15, "audit_exposure_pct": 0.003, "audit_mitigable": 0.5}, "costs": {"cost_to_collect_pct": 0.032, "labor_share_of_ctc": 0.6, "external_spend_pct": 0.006}, "labor_function_shares": {"access": 0.2, "um_cdi": 0.08, "coding": 0.12, "billing": 0.09, "posting": 0.06, "denials": 0.1, "ar": 0.14, "pfs": 0.11, "analytics": 0.05, "contracting": 0.05}, "model": {"low_mult": 0.5, "high_mult": 1.6, "pool_max_extraction": 0.85, "max_reducible_days": 8.0, "ramp": {"GO": [0.5, 0.85], "CONDITIONAL": [0.25, 0.7], "DEFER": [0.0, 0.4], "KILL": [0.0, 0.0], "UNASSESSED": [0.35, 0.75]}, "downgrade_y1_floor": 0.15}}, "example": {"org": {"name": "Example Regional Health (fictional)", "date": "2026-07-03"}, "financials": {"npr": 1000000000, "wacc": 0.06, "ar_days": 48}, "dimensions": {"data": 3, "integration": 3, "connectivity": 2, "workflow": 2, "org": 2, "governance": 1, "economics": 2, "legal": 1}, "facets": {"orders_digitized": 2, "mspq_structured": 2, "auth_structured": 1, "denial_labels": 1, "appeal_outcomes": 0, "touch_logging": 1, "clinical_structured": 2, "notes_access": 1, "charge_linkage": 1, "supply_chain_feed": 1, "acks_retained": 2, "lockbox_imaging": 2, "bank_feeds": 2, "takeback_linkage": 1, "contract_repository": 1, "contract_engine_loaded": 1, "policy_library": 0, "provider_master": 1, "gfe_stored": 1, "consents_indexed": 0, "qa_history": 1, "audit_outcomes": 1, "plan_payment_history": 2, "payment_timing_history": 2, "realization_history": 2, "deficiency_structured": 2, "working_drg_recorded": 2, "clearance_outcomes": 0, "statement_history": 1, "audit_channels_digitized": 1, "peer_benchmarks": 0, "system_copy_extracts": 1, "edi_telemetry": 1, "card_images": 1, "um_worksheets": 2, "writeback": 2, "fabric": 0, "prebill_hold": 2, "statement_suppression": 1, "statement_vendor_flex": 1, "ap_refund_path": 1, "cds_ordering_hook": 1, "account_360": 0, "queue_api": 2, "him_retrieval": 1, "rte_eligibility": 2, "era_coverage": 2, "claim_status_edi": 1, "auth_transactions": 1, "portal_automation_permitted": 1, "attachment_channels": 1, "medicaid_files": 2, "external_registries": 0, "agency_data_rights": 1, "vbc_data_sharing": 0, "bulletin_access": 1, "denial_taxonomy": 1, "appeal_process": 1, "cdm_governance": 2, "masterdata_governance": 1, "collection_policy_unified": 1, "plan_matrix_unified": 1, "writeoff_matrix": 2, "query_standardized": 2, "avoidable_day_taxonomy": 0, "filing_matrix": 1, "kpi_dictionary": 1, "downtime_procedures": 1, "refund_matrix": 2, "placement_gates": 1, "edit_rule_governance": 2, "audit_workflow": 1, "handback_queues": 0, "documentation_stability": 1, "posting_standardized": 2, "routing_authority": 1, "escalation_staffed": 1, "hitl_capacity": 1, "mpi_capacity": 2, "dept_charge_owners": 1, "ranked_list_adoption": 0, "provider_adoption": 1, "compliance_charter": 1, "gov_body": 1, "decision_logging": 0, "model_monitoring": 0, "bias_program": 0, "citation_harness": 0, "golden_sets": 0, "lineage": 0, "baa_program": 2, "outreach_consent": 1, "criteria_license": 1, "reference_license": 1, "socio_data_license": 0, "privilege_protocol": 1, "recoupment_law_matrix": 0, "fa_501r_review": 2}}};
+const DISPOS = ["GO","CONDITIONAL","DEFER","KILL"];
+const GLYPH = {GO:"✓",CONDITIONAL:"◑",DEFER:"■",KILL:"✕"};
+const DIM_ORDER = ["data","integration","connectivity","workflow","org","governance","economics","legal"];
+const DIM_KEYS = {D:"data",I:"integration",C:"connectivity",W:"workflow",O:"org",V:"governance",E:"economics",L:"legal"};
+const fmt = x => Math.abs(x)>=1e9 ? "$"+(x/1e9).toFixed(2)+"B" : Math.abs(x)>=1e6 ? "$"+(x/1e6).toFixed(1)+"M" : "$"+Math.round(x/1e3)+"k";
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const badge = d => `<span class="badge b-${d}"><span class="dot"></span>${GLYPH[d]} ${d}</span>`;
+
+/* ---------------- state ---------------- */
+const S = {
+  org: { name:"", npr:1000000000, wacc:0.06 },
+  rates: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.rates)),
+  costs: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.costs)),
+  labor: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.labor_function_shares)),
+  model: JSON.parse(JSON.stringify(DRIVERS.profileDefaults.model)),
+  dims: Object.fromEntries(DIM_ORDER.map(d=>[d,0])),
+  facets: Object.fromEntries(Object.keys(DRIVERS.facetCatalog).map(f=>[f,0])),
+  plan: { budgetQ: 2000000, horizonQ: 8 },
+};
+
+/* ---------------- engine: feasibility (port of score.py) ---------------- */
+function scoreUC(ucId){
+  const uc = DRIVERS.useCases[ucId];
+  const blocked=[], structural=[], conditional=[];
+  for (const [letter,req] of Object.entries(uc.vector)){
+    if (req===null) continue;
+    const dim = DIM_KEYS[letter], have = S.dims[dim]||0;
+    if (have>=req) continue;
+    const g = {desc:`${dim} ${have}->${req}`, dim, key:`dimension ${dim}>=${req}`, kind:"dim", req};
+    (req-have>=2 || (have<=1 && req>=3)) ? structural.push(g) : conditional.push(g);
+  }
+  for (const fid of uc.facets||[]){
+    const v = S.facets[fid], fdim = DRIVERS.facetCatalog[fid].dim;
+    if (v==="blocked") blocked.push({desc:`${fid} [BLOCKED]`,dim:fdim,key:`facet ${fid}`,kind:"facet",fid});
+    else if (v===0) structural.push({desc:`${fid} (absent)`,dim:fdim,key:`facet ${fid}`,kind:"facet",fid});
+    else if (v===1) conditional.push({desc:`${fid} (partial)`,dim:fdim,key:`facet ${fid}`,kind:"facet",fid});
+  }
+  const dispo = blocked.length?"KILL":structural.length?"DEFER":conditional.length?"CONDITIONAL":"GO";
+  const gaps = blocked.concat(structural,conditional);
+  const dataGap = gaps.some(g=>g.dim==="data");
+  return {dispo,gaps,downgrade:(dispo==="CONDITIONAL"||dispo==="DEFER")&&!dataGap&&!blocked.length};
+}
+const scoreAll = () => Object.fromEntries(Object.keys(DRIVERS.useCases).map(id=>[id,scoreUC(id)]));
+
+/* ---------------- engine: value (port of value.py) ---------------- */
+function profileObj(){
+  return { financials:{npr:S.org.npr,wacc:S.org.wacc}, rates:S.rates, costs:S.costs,
+           labor_function_shares:S.labor, model:S.model };
+}
+function valueCompute(dispos){
+  const p = profileObj(), r = p.rates, c = p.costs, npr = p.financials.npr, m = p.model;
+  const laborTotal = npr*c.cost_to_collect_pct*c.labor_share_of_ctc;
+  const A = {
+    denial_prevention: npr*r.denial_writeoff_pct*r.denial_preventable_share,
+    denial_recovery: npr*r.denial_writeoff_pct*(1-r.denial_preventable_share)*r.denial_recovery_headroom,
+    underpayment: npr*r.underpayment_pct*r.underpayment_detectable,
+    charge_capture: npr*r.charge_leakage_pct, doc_yield: npr*r.doc_yield_pct,
+    coverage_conversion: npr*r.coverage_convertible_pct, contract_yield: npr*r.contract_yield_pct,
+    pos_yield: npr*r.pos_upside_pct, bad_debt_reduction: npr*r.bad_debt_pct*r.bad_debt_addressable,
+    cost_external: npr*c.external_spend_pct, audit_risk: npr*r.audit_exposure_pct*r.audit_mitigable,
+  };
+  for (const [fn,sh] of Object.entries(S.labor)) A["labor_"+fn] = laborTotal*sh;
+  const dayRec = npr/365*p.financials.wacc, dayOne = npr/365;
+  const claims = {};
+  for (const [uc,spec] of Object.entries(DRIVERS.valueUCs))
+    for (const d of spec.draws) claims[d.pool]=(claims[d.pool]||0)+(d.pool==="ar_days"?d.days:d.share);
+  const scale = {};
+  for (const [pool,cl] of Object.entries(claims)){
+    const limit = pool==="ar_days" ? m.max_reducible_days*m.pool_max_extraction : m.pool_max_extraction;
+    scale[pool] = cl>0?Math.min(1,limit/cl):1;
+  }
+  const res = {};
+  for (const [uc,spec] of Object.entries(DRIVERS.valueUCs)){
+    let base=0,risk=0,one=0;
+    for (const d of spec.draws){
+      const stream = DRIVERS.valuePools[d.pool].stream;
+      if (d.pool==="ar_days"){ base+=d.days*scale[d.pool]*dayRec; one+=d.days*scale[d.pool]*dayOne; }
+      else { const v = A[d.pool]*d.share*scale[d.pool]; stream==="VS-8"?risk+=v:base+=v; }
+    }
+    const dispo = dispos[uc]?.dispo||"UNASSESSED";
+    const [y1f,y2f] = m.ramp[dispo]||m.ramp.UNASSESSED;
+    const y1 = dispo==="DEFER"&&dispos[uc]?.downgrade ? Math.max(y1f,m.downgrade_y1_floor) : y1f;
+    res[uc] = dispo==="KILL" ? {base:0,risk:0,one:0,y1:0,y2:0}
+      : {base,risk,one,y1:base*y1,y2:base*y2f};
+  }
+  return res;
+}
+
+/* ---------------- engine: cost (port of cost.py) ---------------- */
+function resolveVolumes(){
+  const vols={}, pend={...DRIVERS.volumes};
+  for (let i=0;i<10 && Object.keys(pend).length;i++)
+    for (const [k,d] of Object.entries(pend)){
+      if ("flat" in d){vols[k]=d.flat; delete pend[k];}
+      else if ("npr_per_unit" in d){vols[k]=S.org.npr/d.npr_per_unit; delete pend[k];}
+      else if (d.of in vols){vols[k]=vols[d.of]*d.mult; delete pend[k];}
+    }
+  return vols;
+}
+function costCompute(dispos, valueRes){
+  const R = DRIVERS.costRates, W = DRIVERS.workloads, F = DRIVERS.slmFamilies;
+  const vols = resolveVolumes();
+  const famMembers = {};
+  for (const [uc,s] of Object.entries(DRIVERS.costUCs)){
+    const wl=W[s.workload]; if (wl.family && wl.options.includes("slm"))
+      (famMembers[wl.family]=famMembers[wl.family]||[]).push(uc);
+  }
+  const active = Object.keys(DRIVERS.costUCs).filter(uc=>(dispos[uc]?.dispo||"UNASSESSED")!=="KILL");
+  // platform allocation
+  const allocB={},allocR={},assetDeps={};
+  for (const [name,a] of Object.entries(DRIVERS.platformAssets)){
+    const deps = active.filter(uc=>{
+      const s=DRIVERS.costUCs[uc];
+      return a.tags.includes(s.workload) || (s.flags||[]).some(f=>a.tags.includes(f));
+    });
+    assetDeps[name]=deps.length;
+    for (const uc of deps){ allocB[uc]=(allocB[uc]||0)+a.build/deps.length; allocR[uc]=(allocR[uc]||0)+a.run_yr/deps.length; }
+  }
+  const platBuild = Object.entries(DRIVERS.platformAssets).filter(([n])=>assetDeps[n]).reduce((s,[,a])=>s+a.build,0);
+  const platRun = Object.entries(DRIVERS.platformAssets).filter(([n])=>assetDeps[n]).reduce((s,[,a])=>s+a.run_yr,0);
+  const Y = R.tco_years, rows=[];
+  for (const uc of active){
+    const s = DRIVERS.costUCs[uc], wl = W[s.workload];
+    const vol = vols[s.vol]*(s.mult??1);
+    const tokens = s.tokens??wl.tokens, hs = s.hitl_share??wl.hitl_share, hm = s.hitl_min??wl.hitl_min;
+    const baseBuild = R.tier_weeks[s.tier]*R.eng_week_rate + (s.integ??2)*R.per_integration + R.validation[s.tier];
+    const hitl = vol*hs*hm/60*R.hitl_hourly;
+    let pB=0,pF=0,pV=0;
+    if (s.payer==="edi"||s.payer==="both"){ pB+=R.payer.n_payers*R.payer.edi_enrollment; pV+=vol*R.payer.edi_per_txn; }
+    if (s.payer==="portal"||s.payer==="both"){ pF+=R.payer.n_payers*R.payer.portal_bot_per_payer_yr; }
+    const opts={};
+    for (const opt of wl.options){
+      if (opt==="vendor" && !("vendor_txn" in s)) continue;
+      let build = baseBuild*R.option_build_mult[opt]+pB;
+      let fixed = pF+R.maintenance_pct[opt]*build, vr = hitl+pV;
+      if (opt==="vendor") vr+=vol*s.vendor_txn;
+      else if (opt==="api") vr+=vol*tokens/1e6*R.token_price_per_m.api;
+      else if (opt==="finetune"){ build+=R.finetune_fixed; fixed+=R.finetune_annual_retune; vr+=vol*tokens/1e6*R.token_price_per_m.finetune; }
+      else if (opt==="slm"){ const n=Math.max(1,(famMembers[wl.family]||[]).length);
+        build+=F[wl.family].adapt_cost/n; fixed+=F[wl.family].hosting_yr/n; vr+=vol*tokens/1e6*R.token_price_per_m.slm; }
+      else if (opt==="build_ml"){ fixed+=R.ml_retrain_pct*build; vr+=vol*R.ml_per_prediction; }
+      let tco = build+Y*(fixed+vr);
+      if (opt==="vendor") tco+=R.vendor_switching_pct*vol*s.vendor_txn;
+      opts[opt]={build,fixed,vr,run:fixed+vr,tco};
+    }
+    const ranked = Object.entries(opts).sort((a,b)=>a[1].tco-b[1].tco);
+    let [rec,rc] = ranked[0], override=null;
+    if (s.diff && rec==="vendor" && ranked.length>1){
+      const nb = ranked.slice(1).find(([o])=>o!=="vendor");
+      if (nb && rc.tco>=(1-R.differentiator_threshold)*nb[1].tco){ [rec,rc]=nb; override="differentiator"; }
+    }
+    const v = valueRes[uc]||{base:0};
+    const runTotal = rc.run+(allocR[uc]||0), buildTotal = rc.build+(allocB[uc]||0);
+    rows.push({ id:uc, domain:DRIVERS.domains[uc.split("-")[1]], option:rec, override,
+      build:rc.build, run:rc.run, platB:allocB[uc]||0, platR:allocR[uc]||0,
+      tcoAlloc: rc.tco+(allocB[uc]||0)+Y*(allocR[uc]||0),
+      value:v.base, net:v.base-runTotal, buildTotal,
+      payback: v.base-runTotal>0 ? buildTotal/(v.base-runTotal)*12 : null });
+  }
+  return {rows, platBuild, platRun};
+}
+
+/* ---------------- optimizer: roadmap ---------------- */
+const REMED = {
+  facetCost:{data:120e3,integration:150e3,connectivity:60e3,workflow:60e3,org:40e3,governance:120e3,legal:30e3},
+  facetDur:{data:2,integration:2,connectivity:1,workflow:1,org:1,governance:2,legal:1},
+  dimCostPerLevel:{data:300e3,integration:250e3,connectivity:150e3,workflow:120e3,org:80e3,governance:200e3,legal:60e3,economics:40e3},
+  dimDur:{data:2,integration:2,governance:2,connectivity:1,workflow:1,org:1,legal:1,economics:1},
+  rampByAge:[0.25,0.5,0.75,1.0],
+};
+function optimizeRoadmap(costRows){
+  const netBy = Object.fromEntries(costRows.map(r=>[r.id,r]));
+  const simDims={...S.dims}, simFacets={...S.facets};
+  const inProg=[], live={}, quarters=[];
+  const H=S.plan.horizonQ, B=S.plan.budgetQ;
+  let cumSpend=0, cumValue=0;
+  const scoreSim = ucId => {   // scoreUC against sim state
+    const saveD=S.dims, saveF=S.facets; S.dims=simDims; S.facets=simFacets;
+    const r=scoreUC(ucId); S.dims=saveD; S.facets=saveF; return r;
+  };
+  for (let q=1;q<=H;q++){
+    // complete remediations
+    for (const p of inProg.filter(p=>p.done===q)){
+      if (p.kind==="facet") simFacets[p.fid]=2;
+      else simDims[p.dim]=Math.max(simDims[p.dim],p.level);
+    }
+    const acts=[], scored={}, spendCap=B; let spend=0;
+    for (const uc of Object.keys(DRIVERS.useCases)) scored[uc]=scoreSim(uc);
+    // candidates
+    const cands=[];
+    const gapUnlock={};   // gap key -> {net, ucs, gap}
+    for (const [uc,sc] of Object.entries(scored)){
+      if (live[uc]||sc.dispo==="KILL"||!netBy[uc]) continue;
+      const structGaps = sc.gaps.filter(g=>g.kind==="dim"||simFacets[g.fid]===0);
+      if (!structGaps.length){
+        const partials = sc.gaps.filter(g=>g.kind==="facet"&&simFacets[g.fid]===1);
+        const cost = netBy[uc].buildTotal + partials.reduce((s,g)=>s+REMED.facetCost[g.dim]/2,0);
+        if (netBy[uc].net>0)
+          cands.push({type:"launch",uc,cost,score:netBy[uc].net/cost,partials,
+            why:`net ${fmt(netBy[uc].net)}/yr, ${netBy[uc].option}`});
+      } else {
+        for (const g of structGaps){
+          const key = g.kind==="facet"?`facet:${g.fid}`:`dim:${g.dim}:${g.req}`;
+          const e = gapUnlock[key]=gapUnlock[key]||{net:0,n:0,g};
+          e.net+=Math.max(0,netBy[uc].net); e.n++;
+        }
+      }
+    }
+    for (const [key,e] of Object.entries(gapUnlock)){
+      if (inProg.some(p=>p.key===key&&p.done>q)) continue;
+      let cost,dur,label;
+      if (e.g.kind==="facet"){
+        if (simFacets[e.g.fid]==="blocked") continue;
+        cost=REMED.facetCost[e.g.dim]*(simFacets[e.g.fid]===1?0.5:1); dur=REMED.facetDur[e.g.dim];
+        label=`Remediate ${e.g.fid}`;
+      } else {
+        const lift=e.g.req-simDims[e.g.dim]; if (lift<=0) continue;
+        cost=REMED.dimCostPerLevel[e.g.dim]*lift; dur=REMED.dimDur[e.g.dim];
+        label=`Raise ${e.g.dim} maturity to ${e.g.req}`;
+      }
+      cands.push({type:"rem",key,cost,dur,label,
+        score:0.5*e.net/Math.max(cost,1), why:`unlocks ${e.n} UCs (${fmt(e.net)}/yr held)`,g:e.g});
+    }
+    cands.sort((a,b)=>b.score-a.score);
+    for (const c of cands){
+      if (spend+c.cost>spendCap) continue;
+      spend+=c.cost;
+      if (c.type==="launch"){
+        live[c.uc]={q}; for (const g of c.partials) simFacets[g.fid]=2;
+        acts.push({kind:"launch",label:`Launch ${c.uc} — ${DRIVERS.useCases[c.uc].name}`,cost:c.cost,why:c.why});
+      } else {
+        inProg.push({key:c.key,done:q+c.dur,kind:c.g.kind,fid:c.g.fid,dim:c.g.dim,level:c.g.req});
+        acts.push({kind:"rem",label:c.label,cost:c.cost,why:`${c.why}; ready Q${q+c.dur}`});
+      }
+    }
+    let qValue=0;
+    for (const [uc,l] of Object.entries(live)){
+      const age=q-l.q, ramp=REMED.rampByAge[Math.min(age,REMED.rampByAge.length-1)];
+      qValue += netBy[uc].net/4*ramp;
+    }
+    cumSpend+=spend; cumValue+=qValue;
+    quarters.push({q,acts,spend,qValue,cumSpend,cumValue,liveN:Object.keys(live).length});
+  }
+  const backlog = Object.keys(DRIVERS.useCases)
+    .filter(uc=>!live[uc] && (scoreSim(uc).dispo!=="KILL") && netBy[uc])
+    .map(uc=>({uc,net:netBy[uc].net})).sort((a,b)=>b.net-a.net);
+  const killed = Object.keys(DRIVERS.useCases).filter(uc=>scoreSim(uc).dispo==="KILL");
+  return {quarters,live,backlog,killed};
+}
+
+/* ---------------- UI: org tab ---------------- */
+const ORG_FIELDS = [
+  ["org.name","Organization name","text",""],
+  ["org.npr","Annual net patient revenue ($)","number","Your audited NPR — the only truly required input"],
+  ["org.wacc","Cost of capital","number","For AR carrying value (e.g., 0.06)"],
+];
+const ADV_FIELDS = Object.keys(DRIVERS.profileDefaults.rates).map(k=>["rates."+k,k.replaceAll("_"," "),"number",""])
+  .concat(Object.keys(DRIVERS.profileDefaults.costs).map(k=>["costs."+k,k.replaceAll("_"," "),"number",""]));
+const PLAN_FIELDS = [
+  ["plan.budgetQ","Quarterly investment budget ($)","number","Build + remediation capacity per quarter"],
+  ["plan.horizonQ","Roadmap horizon (quarters)","number","4–12"],
+];
+function getPath(p){ const [a,b]=p.split("."); return S[a][b]; }
+function setPath(p,v){ const [a,b]=p.split("."); S[a][b]=v; }
+function fieldHTML([path,label,type,hint]){
+  const v=getPath(path);
+  return `<div><label>${esc(label)}</label>
+    <input type="${type}" data-path="${path}" value="${esc(v)}" ${type==="number"?'step="any"':""}>
+    ${hint?`<div class="hint">${esc(hint)}</div>`:""}</div>`;
+}
+function renderOrg(){
+  document.getElementById("orgFields").innerHTML = ORG_FIELDS.map(fieldHTML).join("");
+  document.getElementById("advFields").innerHTML = ADV_FIELDS.map(fieldHTML).join("");
+  document.getElementById("laborFields").innerHTML = Object.keys(S.labor)
+    .map(k=>fieldHTML(["labor."+k,k,"number",""])).join("");
+  document.getElementById("planFields").innerHTML = PLAN_FIELDS.map(fieldHTML).join("");
+}
+document.addEventListener("input",e=>{
+  const p=e.target.dataset?.path; if(!p) return;
+  const v = e.target.type==="number"?parseFloat(e.target.value)||0:e.target.value;
+  if (p.startsWith("labor.")) S.labor[p.slice(6)]=v;
+  else setPath(p,v);
+  recompute();
+});
+
+/* ---------------- UI: assessment tab ---------------- */
+function renderAssess(filter=""){
+  const body=document.getElementById("assessBody");
+  let html="";
+  for (const dim of DIM_ORDER){
+    const facets=Object.entries(DRIVERS.facetCatalog).filter(([,m])=>m.dim===dim)
+      .filter(([id,m])=>!filter||id.includes(filter)||m.prompt.toLowerCase().includes(filter));
+    html+=`<div class="dimhead"><h3>${dim}</h3>
+      <span class="dimscore"><span class="hint">overall maturity</span>
+      <select data-dim="${dim}">${[0,1,2,3,4].map(i=>`<option ${S.dims[dim]===i?"selected":""}>${i}</option>`).join("")}</select></span>
+      ${facets.length?`<span class="hint">${facets.length} facets</span>
+      <span style="margin-left:auto" class="seg">
+        <button class="btn small" data-setall="${dim}:0">all absent</button>
+        <button class="btn small" data-setall="${dim}:1">all partial</button>
+        <button class="btn small" data-setall="${dim}:2">all ready</button></span>`:""}
+    </div>`;
+    if (dim==="economics"){ html+=`<div class="hint" style="margin:0 0 8px">Economics has no facets — set the maturity level (0 = unquantified … 3 = benefit tracking in place).</div>`; }
+    for (const [id,m] of facets){
+      const v=S.facets[id];
+      html+=`<div class="facet" data-fid="${id}"><div class="p"><b>${id}</b> — ${esc(m.prompt)}</div>
+        <div class="seg" data-facet="${id}">
+          <button aria-pressed="${v===0}" data-v="0">Absent</button>
+          <button aria-pressed="${v===1}" data-v="1">Partial</button>
+          <button aria-pressed="${v===2}" data-v="2">Ready</button>
+          ${m.blockable?`<button class="blk" aria-pressed="${v==='blocked'}" data-v="blocked">Blocked</button>`:""}
+        </div></div>`;
+    }
+  }
+  body.innerHTML=html;
+  updateProgress();
+}
+document.addEventListener("click",e=>{
+  const seg=e.target.closest(".seg[data-facet] button");
+  if (seg){ const id=seg.parentElement.dataset.facet;
+    S.facets[id]=seg.dataset.v==="blocked"?"blocked":+seg.dataset.v;
+    for (const b of seg.parentElement.children) b.setAttribute("aria-pressed",b===seg);
+    updateProgress(); recompute(); return; }
+  const sa=e.target.closest("[data-setall]");
+  if (sa){ const [dim,v]=sa.dataset.setall.split(":");
+    for (const [id,m] of Object.entries(DRIVERS.facetCatalog)) if (m.dim===dim) S.facets[id]=+v;
+    renderAssess(document.getElementById("facetSearch").value.toLowerCase()); recompute(); }
+});
+document.addEventListener("change",e=>{
+  if (e.target.dataset?.dim){ S.dims[e.target.dataset.dim]=+e.target.value; recompute(); }
+});
+document.getElementById("facetSearch").addEventListener("input",
+  e=>renderAssess(e.target.value.toLowerCase()));
+function updateProgress(){
+  const n=Object.keys(DRIVERS.facetCatalog).length;
+  const done=Object.values(S.facets).filter(v=>v!==0).length;
+  document.getElementById("assessProgress").textContent=
+    `${done}/${n} facets scored above absent — unscored facets count as absent (conservative by design)`;
+}
+
+/* ---------------- UI: results ---------------- */
+function bars(items,labelKey,valKey,extra){
+  const max=Math.max(1,...items.map(i=>i[valKey]));
+  return `<div class="bars">`+items.map(i=>{
+    const pct=i[valKey]/max*100;
+    return `<div class="brow"><div class="lbl">${esc(i[labelKey])}</div>
+      <div class="track"><div class="bar" style="width:${pct}%"></div>
+      <div class="val" style="left:calc(${pct}% + 6px)">${fmt(i[valKey])}${extra?extra(i):""}</div></div></div>`;
+  }).join("")+`</div>`;
+}
+function recompute(){
+  if (!S.org.npr) return;
+  const dispos=scoreAll();
+  const valueRes=valueCompute(dispos);
+  const cost=costCompute(dispos,valueRes);
+  renderResults(dispos,valueRes,cost);
+  renderRoadmap(cost);
+}
+function renderResults(dispos,valueRes,cost){
+  const counts=Object.fromEntries(DISPOS.map(d=>[d,0]));
+  for (const r of Object.values(dispos)) counts[r.dispo]++;
+  const totBase=Object.values(valueRes).reduce((s,v)=>s+v.base,0);
+  const totY1=Object.values(valueRes).reduce((s,v)=>s+v.y1,0);
+  const run=cost.rows.reduce((s,r)=>s+r.run,0)+cost.platRun;
+  const build=cost.rows.reduce((s,r)=>s+r.build,0);
+  const net=cost.rows.reduce((s,r)=>s+r.net,0);
+  // locked value by gate
+  const locked={};
+  for (const [uc,sc] of Object.entries(dispos)){
+    if (sc.dispo==="GO") continue;
+    const v=valueRes[uc]?.base||0;
+    for (const g of sc.gaps){ const e=locked[g.key]=locked[g.key]||{n:0,value:0}; e.n++; e.value+=v; }
+  }
+  const lockedTop=Object.entries(locked).map(([item,e])=>({item,...e}))
+    .sort((a,b)=>b.value-a.value).slice(0,12);
+  const rows=Object.keys(DRIVERS.useCases).map(id=>({
+    id, name:DRIVERS.useCases[id].name, dispo:dispos[id].dispo,
+    gaps:dispos[id].gaps.map(g=>g.desc), value:valueRes[id]?.base||0,
+    cost:cost.rows.find(r=>r.id===id), dg:dispos[id].downgrade,
+  })).sort((a,b)=>b.value-a.value);
+  const ACC={GO:"var(--good)",CONDITIONAL:"var(--warning)",DEFER:"var(--serious)",KILL:"var(--critical)"};
+  document.getElementById("resultsBody").innerHTML=`
+    <div class="tiles">
+      ${DISPOS.map(d=>`<div class="tile" style="border-top-color:${ACC[d]}"><div class="v">${counts[d]}</div><div class="l">${GLYPH[d]} ${d}</div></div>`).join("")}
+      <div class="tile"><div class="v">${fmt(totBase)}</div><div class="l">steady-state value / yr (capped)</div></div>
+      <div class="tile"><div class="v">${fmt(totY1)}</div><div class="l">year-1 value (disposition-adjusted)</div></div>
+      <div class="tile"><div class="v">${fmt(build)}</div><div class="l">use-case build + ${fmt(cost.platBuild)} platform</div></div>
+      <div class="tile"><div class="v">${fmt(run)}</div><div class="l">total run / yr</div></div>
+      <div class="tile"><div class="v">${fmt(net)}</div><div class="l">steady-state net / yr</div></div>
+    </div>
+    <h2>Value locked by gate</h2><div class="card">${bars(lockedTop,"item","value",i=>` (${i.n} UCs)`)}</div>
+    <h2>Use cases</h2>
+    <div class="card tblwrap"><table><thead><tr>
+      <th>UC</th><th>Name</th><th>Disposition</th><th>Value/yr</th><th>Net/yr</th><th>Option</th><th>Payback</th><th>Gaps</th>
+    </tr></thead><tbody>
+    ${rows.map(r=>`<tr><td>${r.id}</td><td>${esc(r.name)}</td><td>${badge(r.dispo)}${r.dg?' <span class="hint">A0/A1 ok</span>':""}</td>
+      <td>${fmt(r.value)}</td>
+      <td class="${(r.cost?.net||0)>=0?"pos":"neg"}">${r.cost?fmt(r.cost.net):"—"}</td>
+      <td>${r.cost?.option||"—"}</td>
+      <td>${r.cost?.payback?Math.round(r.cost.payback)+" mo":"—"}</td>
+      <td class="hint">${esc(r.gaps.join("; "))||"—"}</td></tr>`).join("")}
+    </tbody></table></div>`;
+}
+
+/* ---------------- UI: roadmap ---------------- */
+function lineChart(quarters){
+  const w=1080,h=260,padL=60,padR=20,padT=14,padB=28;
+  const xs=q=>padL+(q-1)/(Math.max(quarters.length-1,1))*(w-padL-padR);
+  const maxY=Math.max(...quarters.map(q=>Math.max(q.cumSpend,q.cumValue)),1);
+  const ys=v=>padT+(1-v/maxY)*(h-padT-padB);
+  const path=key=>quarters.map((q,i)=>`${i?"L":"M"}${xs(q.q)},${ys(q[key])}`).join("");
+  const ticks=[0,0.25,0.5,0.75,1].map(f=>({y:ys(f*maxY),v:f*maxY}));
+  const last=quarters[quarters.length-1];
+  return `<div class="legend">
+      <span><span class="sw" style="background:var(--seq)"></span>Cumulative realized net value</span>
+      <span><span class="sw" style="background:var(--s2)"></span>Cumulative investment</span></div>
+    <svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Cumulative value vs investment by quarter">
+      ${ticks.map(t=>`<line x1="${padL}" x2="${w-padR}" y1="${t.y}" y2="${t.y}" stroke="var(--grid)" stroke-width="1"/>
+        <text x="${padL-8}" y="${t.y+4}" text-anchor="end" font-size="11" fill="var(--muted)">${fmt(t.v)}</text>`).join("")}
+      ${quarters.map(q=>`<text x="${xs(q.q)}" y="${h-8}" text-anchor="middle" font-size="11" fill="var(--muted)">Q${q.q}</text>`).join("")}
+      <path d="${path("cumValue")}" fill="none" stroke="var(--seq)" stroke-width="2"/>
+      <path d="${path("cumSpend")}" fill="none" stroke="var(--s2)" stroke-width="2"/>
+      ${quarters.map(q=>`<g><circle cx="${xs(q.q)}" cy="${ys(q.cumValue)}" r="3.5" fill="var(--seq)" stroke="var(--surface)" stroke-width="2"><title>Q${q.q} value ${fmt(q.cumValue)}</title></circle>
+        <circle cx="${xs(q.q)}" cy="${ys(q.cumSpend)}" r="3.5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"><title>Q${q.q} invested ${fmt(q.cumSpend)}</title></circle></g>`).join("")}
+      <text x="${xs(last.q)-6}" y="${ys(last.cumValue)-8}" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--ink)">${fmt(last.cumValue)}</text>
+      <text x="${xs(last.q)-6}" y="${ys(last.cumSpend)-8}" text-anchor="end" font-size="11.5" fill="var(--ink-2)">${fmt(last.cumSpend)}</text>
+    </svg>`;
+}
+function renderRoadmap(cost){
+  const rm=optimizeRoadmap(cost.rows);
+  const last=rm.quarters[rm.quarters.length-1];
+  document.getElementById("roadmapBody").innerHTML=`
+    <div class="tiles">
+      <div class="tile"><div class="v">${Object.keys(rm.live).length}</div><div class="l">use cases launched in ${S.plan.horizonQ} quarters</div></div>
+      <div class="tile"><div class="v">${fmt(last.cumSpend)}</div><div class="l">total invested</div></div>
+      <div class="tile"><div class="v">${fmt(last.cumValue)}</div><div class="l">cumulative net value realized</div></div>
+      <div class="tile"><div class="v">${fmt(last.qValue*4)}</div><div class="l">exit run-rate (net value / yr)</div></div>
+      <div class="tile"><div class="v">${rm.backlog.length}</div><div class="l">backlog beyond horizon</div></div>
+    </div>
+    <div class="card" style="margin-top:14px">${lineChart(rm.quarters)}</div>
+    ${rm.quarters.map(q=>`<div class="q"><h3>Quarter ${q.q}</h3>
+      <div class="meta">spend ${fmt(q.spend)} · live use cases ${q.liveN} · quarterly net value ${fmt(q.qValue)}</div>
+      ${q.acts.length?q.acts.map(a=>`<div class="act">
+        <span class="tag ${a.kind==="launch"?"launch":"rem"}">${a.kind==="launch"?"LAUNCH":"REMEDIATE"}</span>
+        <span>${esc(a.label)} <span class="hint">— ${esc(a.why)}</span></span>
+        <span class="cost">${fmt(a.cost)}</span></div>`).join(""):`<div class="hint">No new starts — budget carried by in-flight remediations; value ramping.</div>`}
+    </div>`).join("")}
+    ${rm.backlog.length?`<h2>Backlog (beyond horizon, by net value)</h2><div class="card hint">
+      ${rm.backlog.slice(0,20).map(b=>`${b.uc} (${fmt(b.net)}/yr)`).join(" · ")}${rm.backlog.length>20?" · …":""}</div>`:""}
+    ${rm.killed.length?`<h2>Killed (blocked facets)</h2><div class="card warn">${rm.killed.join(", ")}</div>`:""}
+    <h2>Optimizer assumptions</h2>
+    <div class="card hint">Remediation costs by dimension (facet-level): ${Object.entries(REMED.facetCost).map(([k,v])=>`${k} ${fmt(v)}`).join(", ")}.
+    Dimension-maturity lift per level: ${Object.entries(REMED.dimCostPerLevel).map(([k,v])=>`${k} ${fmt(v)}`).join(", ")}.
+    Durations 1–2 quarters by dimension. Launch cost = build + platform allocation + half-cost bundling of
+    remaining partial facets. Value ramps 25/50/75/100% per quarter after launch. Only net-positive use
+    cases are scheduled — net-negative ones appear in the portfolio table for kill/descope review.
+    These are planning defaults: recalibrate against actuals per the true-up rule (playbook Play 6).</div>`;
+}
+
+/* ---------------- nav / persistence ---------------- */
+document.getElementById("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-tab]"); if(!b) return;
+  for (const x of document.querySelectorAll("nav button[data-tab]")) x.setAttribute("aria-selected",x===b);
+  for (const s of document.querySelectorAll("section")) s.classList.toggle("active",s.id==="tab-"+b.dataset.tab);
+});
+document.getElementById("loadExample").onclick=()=>{
+  const ex=DRIVERS.example;
+  S.org={name:ex.org.name,npr:ex.financials.npr,wacc:ex.financials.wacc};
+  S.dims={...ex.dimensions}; S.facets={...S.facets,...ex.facets};
+  renderOrg(); renderAssess(); recompute();
+};
+document.getElementById("saveState").onclick=()=>{
+  const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="rcm-planner-state.json"; a.click();
+};
+document.getElementById("loadState").onclick=()=>document.getElementById("fileIn").click();
+document.getElementById("fileIn").onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  Object.assign(S,JSON.parse(await f.text()));
+  renderOrg(); renderAssess(); recompute();
+};
+document.getElementById("exportYaml").onclick=()=>{
+  const y=[`# generated by RCM AI Investment Planner — usable with score.py/value.py/cost.py/packet.py`,
+    `org:`,`  name: "${S.org.name}"`,`  date: "${new Date().toISOString().slice(0,10)}"`,
+    `dimensions:`,...DIM_ORDER.map(d=>`  ${d}: ${S.dims[d]}`),
+    `facets:`,...Object.keys(DRIVERS.facetCatalog).map(f=>`  ${f}: ${S.facets[f]}`),
+    ``,`# --- org profile (separate file for the CLI) ---`,
+    `# financials: {npr: ${S.org.npr}, wacc: ${S.org.wacc}}`].join("\n");
+  const blob=new Blob([y],{type:"text/yaml"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="assessment.yaml"; a.click();
+};
+
+renderOrg(); renderAssess(); recompute();
+</script>
+</body></html>

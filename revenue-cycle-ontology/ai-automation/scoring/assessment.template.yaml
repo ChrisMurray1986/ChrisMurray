@@ -1,0 +1,133 @@
+# Organization readiness assessment — fill in and run score.py against it.
+#
+# dimensions: overall maturity 0-4 per gate dimension
+#   (level anchors: 07-feasibility-gating.md; economics/legal top out at 3)
+# facets: 0 = absent, 1 = partial/in progress, 2 = ready.
+#   Facets marked (blockable) may instead be the string: blocked
+#   meaning legally/contractually prohibited, which KILLs dependent use cases.
+#
+# What does a passing demo look like on YOUR stack (Epic, Oracle Health,
+# multi-EHR)? See ../14-implementation-patterns.md for per-facet sufficiency
+# floors and overbuild flags before scoring — or buying — anything.
+
+org:
+  name: "<organization>"
+  assessed_by: "<assessor>"
+  date: "<yyyy-mm-dd>"
+
+dimensions:
+  data: 0
+  integration: 0
+  connectivity: 0
+  workflow: 0
+  org: 0
+  governance: 0
+  economics: 0
+  legal: 0
+
+facets:
+  # ---- data ----
+  orders_digitized: 0  # Orders/referrals are digitized at intake (e-fax or scan-at-receipt), not handled as physical paper
+  mspq_structured: 0  # MSP questionnaire answers are captured as structured data, not scanned paper
+  auth_structured: 0  # Authorization details (number, CPTs, units, date span) are stored structured, not in free-text notes
+  denial_labels: 0  # Denial outcomes >=12 months linked to accounts with defect/owner attribution (CAP-02)
+  appeal_outcomes: 0  # Appeal outcomes (win/loss/dollars, by level) have been recorded historically
+  touch_logging: 0  # Follow-up touches/actions are logged per account (who did what, when, with what result)
+  clinical_structured: 0  # Labs, vitals, and orders are available as structured data feeds
+  notes_access: 0  # Clinical note text corpus is programmatically accessible and its use is approved
+  charge_linkage: 0  # Orders, eMAR, schedules, and charges can be joined at encounter level across systems
+  supply_chain_feed: 0  # Supply-chain/item-master feed with invoice data, linked to the CDM, is available
+  acks_retained: 0  # 999 and 277CA acknowledgments are retained and parsed (not discarded)
+  lockbox_imaging: 0  # Lockbox/mail correspondence is imaged at receipt (bank imaging service or scan-at-receipt)
+  bank_feeds: 0  # Daily bank feeds (BAI2/API) with TRN retention are integrated
+  takeback_linkage: 0  # Recoupment/takeback transactions are linked to their original claims
+  contract_repository: 0  # All executed payer contracts and amendments are located, digitized, and centrally stored
+  contract_engine_loaded: 0  # Expected-reimbursement engine is loaded and verified for payers covering >=80% of volume
+  policy_library: 0  # Versioned, citation-linked payer policy/medical-policy library exists (CAP-04)
+  provider_master: 0  # Provider master is a governed single source (not spreadsheets)
+  gfe_stored: 0  # Good Faith Estimates and patient estimates are stored structured and linkable to final bills
+  consents_indexed: 0  # NSA notice-and-consent artifacts are captured, indexed, and linkable to claims
+  qa_history: 0  # Coding QA results history exists in analyzable (non-spreadsheet) form
+  audit_outcomes: 0  # External/internal audit findings and outcomes are recorded and linked to claims
+  plan_payment_history: 0  # Patient payment-plan histories (installments, declines, timing) are stored structured
+  payment_timing_history: 0  # >=24 months of payer payment-timing history is available
+  realization_history: 0  # >=24 months of cash-realization history by payer/cohort supports reserve modeling
+  deficiency_structured: 0  # HIM documentation-deficiency tracking is structured (not email)
+  working_drg_recorded: 0  # CDI working DRG is recorded and extractable alongside final coded DRG
+  clearance_outcomes: 0  # Financial-clearance outcomes (cleared/deferred/denied-payment results) are recorded as labels
+  statement_history: 0  # Statement response histories (channel, timing, payment response) are stored per patient
+  audit_channels_digitized: 0  # Every audit-correspondence channel (mail, portal, fax) is digitized/polled into one intake
+  peer_benchmarks: 0  # Peer benchmark data (E/M distributions etc.) is licensed and available
+  system_copy_extracts: 0  # Every system copy of CDM/payer/provider masters (billing, estimator, MRF, engine) is extractable
+  card_images: 0  # Insurance card images are captured digitally at registration/pre-registration (front and back)
+  um_worksheets: 0  # UR criteria worksheets and determinations (incl. final status outcomes) are stored structured
+  edi_telemetry: 0  # EDI transaction telemetry (volumes, acks, timestamps by payer/route) is retained
+  # ---- integration ----
+  writeback: 0  # Write-back path exists: transactions, flags, and queue routing can be set programmatically (I3)
+  fabric: 0  # Orchestration fabric live: event bus, queue APIs, observability, non-human identity (CAP-05/06/08 = I4)
+  prebill_hold: 0  # Charges/claims can be programmatically held pre-bill
+  statement_suppression: 0  # Statement vendor supports per-account suppression via interface
+  statement_vendor_flex: 0  # Statement vendor supports per-account channel/timing/content variation
+  ap_refund_path: 0  # Refunds can be executed programmatically into AP/check-issuance systems
+  cds_ordering_hook: 0  # A decision-support hook exists in the ordering/scheduling workflow
+  account_360: 0  # A unified account API can assemble balance provenance across HB/PB for a coherent patient answer
+  queue_api: 0  # Work-queue assignment is API-driven (not manual cherry-picking)
+  him_retrieval: 0  # Medical records can be retrieved programmatically from EHR/HIM for defined request types
+  # ---- connectivity ----
+  rte_eligibility: 0  # Real-time 270/271 eligibility live for payers covering >=80% of volume
+  era_coverage: 0  # ERA (835) covers >=80% of remittance volume
+  claim_status_edi: 0  # 276/277 claim status live for major payers
+  auth_transactions: 0  # 278/auth-API/portal submission channels available for major payers
+  portal_automation_permitted: 0  # Payer portal automation is viable: ToS reviewed/permitted, credentials & MFA managed (blockable)
+  attachment_channels: 0  # Electronic attachment channels (275/portal) exist for major payers
+  medicaid_files: 0  # State Medicaid eligibility files/API (incl. retroactive spans) are accessible
+  external_registries: 0  # Bankruptcy/death/probate data feeds are licensed and integrated (blockable)
+  agency_data_rights: 0  # Collection-agency/vendor contracts grant activity-data, remit-detail, and call-recording access (blockable)
+  vbc_data_sharing: 0  # VBC payer data-sharing (claims extracts, attribution rosters) is contractually granted and flowing
+  bulletin_access: 0  # Payer bulletins/policy pages/transmittals are systematically accessible for ingestion
+  # ---- workflow ----
+  denial_taxonomy: 0  # A governed denial taxonomy (categories, root-cause owners) exists and is used
+  appeal_process: 0  # Appeal processes are standardized by level/payer with owned templates
+  cdm_governance: 0  # CDM changes flow through a governed request/review/approval workflow
+  masterdata_governance: 0  # Master data (payer/plan, crosswalks) changes are governed with effective-dating (14.1)
+  collection_policy_unified: 0  # One POS collection policy / discount matrix applies across sites
+  plan_matrix_unified: 0  # One payment-plan and discount policy matrix applies across sites
+  writeoff_matrix: 0  # A write-off/adjustment approval authority matrix is defined and enforced
+  query_standardized: 0  # Physician query practice is standardized to the AHIMA/ACDIS brief
+  avoidable_day_taxonomy: 0  # An avoidable-day reason taxonomy exists and is consistently used
+  filing_matrix: 0  # Timely-filing limits (initial/corrected/secondary/appeal) are codified per payer/contract
+  kpi_dictionary: 0  # KPI definitions are governed in a data dictionary (13.1)
+  downtime_procedures: 0  # Downtime billing procedures are documented and have been drilled
+  refund_matrix: 0  # A refund approval matrix with thresholds is defined
+  placement_gates: 0  # Bad-debt placement gate conditions (statements, FA screen, disputes) are codified
+  edit_rule_governance: 0  # Custom claim-edit capability exists with a governed rule-change process (6.2.4)
+  audit_workflow: 0  # Audit response workflow with deadline tracking exists (12.1)
+  handback_queues: 0  # Named human hand-back queues exist for automation exceptions (GOV-05 wiring)
+  documentation_stability: 0  # Clinical documentation practice in target charging domains is complete and stable (start/stop times, criteria fields)
+  posting_standardized: 0  # Payment-posting rules use one standardized adjustment/transaction-code scheme
+  # ---- org ----
+  routing_authority: 0  # Cross-functional routing authority exists: named owners are obligated to accept prevention/policy-change actions
+  escalation_staffed: 0  # Live human escalation is staffed across the operating hours of patient-facing automation
+  hitl_capacity: 0  # Human-in-the-loop review/exception capacity is sized and staffed for planned automations
+  mpi_capacity: 0  # HIM MPI team has capacity to review merge candidates
+  dept_charge_owners: 0  # Departments have named charge owners who will work reconciliation/gap lists
+  ranked_list_adoption: 0  # AR management has committed to ranked worklists over aging-bucket cherry-picking
+  provider_adoption: 0  # A provider workflow-adoption path (champions, governance, training) exists for provider-facing tools
+  compliance_charter: 0  # Compliance charter covers billing-pattern surveillance and defines how findings are used
+  # ---- governance ----
+  gov_body: 0  # An AI governance body exists that tiers use cases and approves autonomy changes (GOV-01)
+  decision_logging: 0  # Decision logging + model/prompt version control are operational (GOV-02/11, CAP-10)
+  model_monitoring: 0  # Model monitoring with drift detection and auto-demotion is live (CAP-06, UC-13-04)
+  bias_program: 0  # Bias/adverse-impact testing program for patient-affecting models is operational (GOV-06)
+  citation_harness: 0  # A citation-verification harness validates generative citations against sources (GOV-03)
+  golden_sets: 0  # Golden evaluation datasets exist (or are planned per use case) for release gating (CAP-09)
+  lineage: 0  # Data/model lineage tooling can evidence how a figure was produced (external-audit grade)
+  # ---- legal ----
+  baa_program: 0  # BAA + privacy/security review process for AI vendors and PHI flows is in place
+  outreach_consent: 0  # TCPA/consent capture for automated outreach (text/voice) is implemented (blockable)
+  criteria_license: 0  # MCG/InterQual license permits programmatic criteria mapping (blockable)
+  reference_license: 0  # Coding references (Coding Clinic, NCCI manuals) are licensed for programmatic retrieval use (blockable)
+  socio_data_license: 0  # External socioeconomic/credit data for FA scoring is licensed and legally permissible (blockable)
+  privilege_protocol: 0  # A privilege protocol governs counsel-directed analytical work product
+  recoupment_law_matrix: 0  # A maintained matrix of state/contract recoupment rules exists
+  fa_501r_review: 0  # Financial assistance / collection policies have current 501(r) counsel review
