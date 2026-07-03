@@ -26,6 +26,8 @@ remediations that unlock the most portfolio value.
 | `example-packet/` | A generated example packet. |
 | `rcm-investment-app.html` | **Self-contained browser app**: enter org financials + the readiness assessment, get the scored portfolio and a budget-optimized quarterly roadmap. No server, nothing leaves the browser. Built from the driver YAMLs by `build_app.py` — rebuild after any driver change. |
 | `app-template.html`, `build_app.py` | App source template (JS ports of the three engines + roadmap optimizer) and its build script. |
+| `use-case-explorer.html` | **Self-contained catalog explorer**: browse all 99 use cases with search, phase/domain/pattern/risk/option filters, a value-map scatter (net value vs 3-yr TCO), and a detail panel per use case (function, guardrails, process bindings, facet/platform dependencies, value draws, sourcing-option TCO comparison). Figures at the $1B-NPR reference profile. |
+| `explorer-template.html`, `build_explorer.py` | Explorer source template and build script (parses the catalog markdown + merges driver YAMLs + computes reference figures via the Python engines). |
 
 ## How to run
 

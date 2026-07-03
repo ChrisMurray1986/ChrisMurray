@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revenue Cycle AI Use Case Explorer</title>
+<style>
+  :root {
+    --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,0.10); --shadow:rgba(11,11,11,0.08);
+    --ph-front:#2a78d6; --ph-mid:#1baf7a; --ph-back:#eda100; --ph-cross:#008300;
+    --good-ink:#006300; --critical-ink:#d03b3b; --warning-ink:#7a5200;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --grid:#2c2c2a;
+      --baseline:#383835; --ring:rgba(255,255,255,0.10); --shadow:rgba(0,0,0,0.5);
+      --ph-front:#3987e5; --ph-mid:#199e70; --ph-back:#c98500; --ph-cross:#008300;
+      --good-ink:#0ca30c; --critical-ink:#d03b3b; --warning-ink:#fab219; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+         font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  header { position:sticky; top:0; z-index:20; background:var(--page);
+           border-bottom:1px solid var(--grid); padding:14px 22px 12px; }
+  header .row { display:flex; gap:14px; align-items:center; flex-wrap:wrap; max-width:1400px; margin:0 auto; }
+  h1 { font-size:18px; margin:0; white-space:nowrap; }
+  .count { color:var(--muted); font-size:12.5px; white-space:nowrap; }
+  #q { flex:1; min-width:200px; max-width:420px; background:var(--surface); color:var(--ink);
+       border:1px solid var(--ring); border-radius:999px; padding:8px 16px; font:inherit; }
+  .viewtoggle { display:flex; gap:0; border:1px solid var(--ring); border-radius:8px; overflow:hidden; }
+  .viewtoggle button { border:0; background:var(--surface); color:var(--ink-2); padding:7px 14px;
+       font:inherit; font-weight:600; cursor:pointer; }
+  .viewtoggle button[aria-selected="true"] { background:var(--ink); color:var(--page); }
+  select { background:var(--surface); color:var(--ink); border:1px solid var(--ring);
+           border-radius:8px; padding:7px 10px; font:inherit; }
+
+  .layout { display:grid; grid-template-columns:250px 1fr; gap:0; max-width:1400px; margin:0 auto; }
+  @media (max-width:900px){ .layout{grid-template-columns:1fr;} aside{position:static!important;height:auto!important;} }
+  aside { position:sticky; top:63px; height:calc(100vh - 63px); overflow-y:auto;
+          padding:18px 18px 40px 22px; border-right:1px solid var(--grid); }
+  aside h3 { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:18px 0 7px; }
+  aside h3:first-child { margin-top:0; }
+  .fchip { display:flex; align-items:center; gap:8px; padding:4px 6px; border-radius:7px;
+           cursor:pointer; font-size:13px; color:var(--ink-2); user-select:none; }
+  .fchip:hover { background:var(--grid); }
+  .fchip input { accent-color:var(--ink); }
+  .fchip .sw { width:10px; height:10px; border-radius:3px; flex:none; }
+  .fchip .n { margin-left:auto; color:var(--muted); font-size:11.5px; font-variant-numeric:tabular-nums; }
+  .clearbtn { margin-top:16px; width:100%; border:1px solid var(--ring); background:var(--surface);
+           color:var(--ink-2); border-radius:8px; padding:6px; font:inherit; font-size:12.5px; cursor:pointer; }
+
+  main { padding:18px 22px 80px; min-width:0; }
+  .refnote { color:var(--muted); font-size:12px; margin:0 0 14px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:12px; }
+  .uc { background:var(--surface); border:1px solid var(--ring); border-top:3px solid var(--baseline);
+        border-radius:10px; padding:13px 14px 11px; cursor:pointer; display:flex; flex-direction:column; gap:6px;
+        transition:box-shadow .12s, transform .12s; }
+  .uc:hover { box-shadow:0 3px 14px var(--shadow); transform:translateY(-1px); }
+  .uc .top { display:flex; align-items:baseline; gap:8px; }
+  .uc .id { font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .uc .bdg { margin-left:auto; display:flex; gap:5px; }
+  .pill { font-size:10.5px; font-weight:700; border:1px solid var(--ring); color:var(--ink-2);
+          border-radius:5px; padding:0 6px; white-space:nowrap; }
+  .uc h4 { margin:0; font-size:14.5px; line-height:1.3; }
+  .uc .fx { color:var(--ink-2); font-size:12.3px; line-height:1.45; display:-webkit-box;
+            -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .uc .pats { display:flex; gap:4px; flex-wrap:wrap; }
+  .pat { font-size:10.5px; color:var(--muted); border:1px solid var(--grid); border-radius:999px; padding:0 7px; }
+  .uc .fin { display:flex; gap:14px; margin-top:auto; padding-top:8px; border-top:1px solid var(--grid); }
+  .fin div { font-size:11px; color:var(--muted); }
+  .fin b { display:block; font-size:13px; color:var(--ink); font-weight:650; font-variant-numeric:tabular-nums; }
+  .fin b.neg { color:var(--critical-ink); }
+  .empty { color:var(--muted); padding:60px 0; text-align:center; }
+
+  /* scatter */
+  .mapwrap { background:var(--surface); border:1px solid var(--ring); border-radius:10px; padding:16px; }
+  .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-2); margin-bottom:6px; }
+  .legend .sw { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; }
+  #tip { position:fixed; z-index:40; background:var(--surface); border:1px solid var(--baseline);
+         border-radius:8px; padding:8px 11px; font-size:12.5px; pointer-events:none; display:none;
+         box-shadow:0 4px 16px var(--shadow); max-width:280px; }
+  #tip b { font-size:12.5px; } #tip .m { color:var(--ink-2); }
+
+  /* detail panel */
+  #ovl { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:29; display:none; }
+  #panel { position:fixed; top:0; right:0; bottom:0; width:min(620px,94vw); z-index:30;
+           background:var(--page); border-left:1px solid var(--baseline); overflow-y:auto;
+           transform:translateX(102%); transition:transform .18s ease; box-shadow:-8px 0 30px var(--shadow); }
+  #panel.open { transform:none; }
+  #panel .inner { padding:20px 24px 60px; }
+  #panel .phead { display:flex; gap:10px; align-items:baseline; position:sticky; top:0;
+           background:var(--page); padding:16px 24px 10px; border-bottom:1px solid var(--grid); z-index:2; }
+  #panel .phead h2 { font-size:17px; margin:0; }
+  #panel .phead .id { color:var(--muted); font-size:12px; }
+  #panel .phead button { margin-left:auto; border:1px solid var(--ring); background:var(--surface);
+           color:var(--ink); border-radius:8px; padding:4px 12px; font:inherit; cursor:pointer; }
+  #panel h3 { font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:22px 0 8px; }
+  #panel p { margin:6px 0; color:var(--ink-2); font-size:13.5px; }
+  #panel p b, #panel td b { color:var(--ink); }
+  .kv { display:grid; grid-template-columns:130px 1fr; gap:4px 12px; font-size:13px; }
+  .kv .k { color:var(--muted); } .kv .v { color:var(--ink-2); } .kv .v b { color:var(--ink); }
+  .chip { display:inline-block; border:1px solid var(--ring); border-radius:6px; background:var(--surface);
+          padding:1px 7px; margin:2px 3px 2px 0; font-size:12px; color:var(--ink-2); }
+  .dep { padding:6px 0; border-bottom:1px solid var(--grid); font-size:12.5px; color:var(--ink-2); }
+  .dep b { color:var(--ink); font-weight:600; }
+  table { border-collapse:collapse; width:100%; font-size:12.5px; }
+  th { text-align:left; color:var(--muted); font-weight:600; font-size:11.5px;
+       border-bottom:1px solid var(--baseline); padding:5px 8px; }
+  td { border-bottom:1px solid var(--grid); padding:5px 8px; font-variant-numeric:tabular-nums; vertical-align:top; }
+  .rec { font-weight:700; }
+  footer { max-width:1400px; margin:0 auto; padding:10px 22px 40px; color:var(--muted); font-size:12px; }
+</style></head>
+<body>
+<header><div class="row">
+  <h1>Revenue Cycle AI Use Case Explorer</h1>
+  <span class="count" id="count"></span>
+  <input id="q" type="search" placeholder="Search use cases, processes, failure modes, KPIs…">
+  <div class="viewtoggle" role="tablist">
+    <button data-view="cards" aria-selected="true">Cards</button>
+    <button data-view="map" aria-selected="false">Value map</button>
+  </div>
+  <select id="sort">
+    <option value="net">Sort: net value/yr</option>
+    <option value="value">Sort: value/yr</option>
+    <option value="tco">Sort: 3-yr TCO</option>
+    <option value="payback">Sort: payback</option>
+    <option value="id">Sort: catalog order</option>
+  </select>
+</div></header>
+
+<div class="layout">
+  <aside id="rail"></aside>
+  <main>
+    <p class="refnote">Value and cost figures are computed at the <b>$1B-NPR reference profile</b>
+    with shared-pool capping and TCO-based sourcing decisions — indicative for comparison, not a
+    quote. For your own numbers, use the companion planner app (<code>rcm-investment-app.html</code>).</p>
+    <div id="cards" class="grid"></div>
+    <div id="map" class="mapwrap" style="display:none"></div>
+    <div id="emptyMsg" class="empty" style="display:none">No use cases match the current filters.</div>
+  </main>
+</div>
+
+<div id="tip"></div>
+<div id="ovl"></div>
+<div id="panel"><div class="phead"><span class="id" id="pId"></span><h2 id="pName"></h2>
+  <button id="pClose">Close ✕</button></div><div class="inner" id="pBody"></div></div>
+
+<footer>Generated from the revenue-cycle ontology (process ontology + AI/automation catalog, files
+01–10) by <code>build_explorer.py</code> — descriptions parsed from the catalog markdown; gates,
+value draws, and cost bindings from the driver YAMLs; $ figures from the Python engines at the
+reference profile. The YAML/markdown sources remain the source of truth.</footer>
+
+<script>
+const UCS = __UCS__;
+const META = __META__;
+const PHASES = [
+  {key:"front", label:"Front end (Patient Access)", color:"var(--ph-front)"},
+  {key:"mid",   label:"Mid cycle (UR·Charge·CDI·Coding)", color:"var(--ph-mid)"},
+  {key:"back",  label:"Back end (Claims→PFS)", color:"var(--ph-back)"},
+  {key:"cross", label:"Cross-cutting", color:"var(--ph-cross)"},
+];
+const PHC = Object.fromEntries(PHASES.map(p=>[p.key,p.color]));
+const fmt = x => x==null?"—":Math.abs(x)>=1e6?"$"+(x/1e6).toFixed(1)+"M":"$"+Math.round(x/1e3)+"k";
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const F = { q:"", phases:new Set(PHASES.map(p=>p.key)), domains:new Set(), patterns:new Set(),
+            risk:new Set(), options:new Set(), view:"cards", sort:"net" };
+
+/* -------- filter rail -------- */
+function counts(key){ const c={}; for (const u of UCS) for (const v of [].concat(u[key])) c[v]=(c[v]||0)+1; return c; }
+function railHTML(){
+  const dom=counts("domain"), pat=counts("patterns"), rk=counts("risk"), op=counts("rec");
+  const box=(group,val,label,sw,n,checked)=>`<label class="fchip">
+    <input type="checkbox" data-g="${group}" data-v="${esc(val)}" ${checked?"checked":""}>
+    ${sw?`<span class="sw" style="background:${sw}"></span>`:""}<span>${esc(label)}</span><span class="n">${n}</span></label>`;
+  return `<h3>Cycle phase</h3>${PHASES.map(p=>box("phases",p.key,p.label,p.color,
+      UCS.filter(u=>u.phase===p.key).length,true)).join("")}
+    <h3>Domain</h3>${Object.entries(dom).map(([d,n])=>box("domains",d,d,null,n,false)).join("")}
+    <h3>Pattern</h3>${Object.entries(pat).sort().map(([p,n])=>box("patterns",p,p,null,n,false)).join("")}
+    <h3>Risk tier</h3>${["R1","R2","R3","R4"].filter(r=>rk[r]).map(r=>box("risk",r,r+" — "+META.riskNames[r],null,rk[r],false)).join("")}
+    <h3>Recommended option</h3>${Object.entries(op).sort((a,b)=>b[1]-a[1]).map(([o,n])=>box("options",o,o,null,n,false)).join("")}
+    <button class="clearbtn" id="clear">Reset filters</button>`;
+}
+document.getElementById("rail").innerHTML = railHTML();
+document.getElementById("rail").addEventListener("change",e=>{
+  const g=e.target.dataset?.g; if(!g) return;
+  const set=F[g], v=e.target.dataset.v;
+  e.target.checked?set.add(v):set.delete(v);
+  if (g==="phases"&&!set.size) PHASES.forEach(p=>set.add(p.key));
+  render();
+});
+document.getElementById("rail").addEventListener("click",e=>{
+  if (e.target.id==="clear"){ F.q=""; document.getElementById("q").value="";
+    F.phases=new Set(PHASES.map(p=>p.key)); F.domains.clear(); F.patterns.clear(); F.risk.clear(); F.options.clear();
+    document.getElementById("rail").innerHTML=railHTML(); render(); }
+});
+document.getElementById("q").addEventListener("input",e=>{ F.q=e.target.value.toLowerCase(); render(); });
+document.getElementById("sort").addEventListener("change",e=>{ F.sort=e.target.value; render(); });
+document.querySelector(".viewtoggle").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  F.view=b.dataset.view;
+  for (const x of document.querySelectorAll(".viewtoggle button")) x.setAttribute("aria-selected",x===b);
+  render();
+});
+
+/* -------- filtering & sorting -------- */
+function visible(){
+  return UCS.filter(u=>{
+    if (!F.phases.has(u.phase)) return false;
+    if (F.domains.size && !F.domains.has(u.domain)) return false;
+    if (F.patterns.size && !u.patterns.some(p=>F.patterns.has(p))) return false;
+    if (F.risk.size && !F.risk.has(u.risk)) return false;
+    if (F.options.size && !F.options.has(u.rec)) return false;
+    if (F.q && !u.search.includes(F.q)) return false;
+    return true;
+  }).sort((a,b)=>{
+    if (F.sort==="id") return a.id<b.id?-1:1;
+    if (F.sort==="payback") return (a.payback??1e9)-(b.payback??1e9);
+    if (F.sort==="tco") return b.tcoAlloc-a.tcoAlloc;
+    if (F.sort==="value") return b.value-a.value;
+    return b.net-a.net;
+  });
+}
+
+/* -------- cards view -------- */
+function cardHTML(u){
+  return `<div class="uc" data-id="${u.id}" style="border-top-color:${PHC[u.phase]}" role="button" tabindex="0">
+    <div class="top"><span class="id">${u.id}</span>
+      <span class="bdg"><span class="pill">${esc(u.autonomyShort)}</span><span class="pill">${u.risk}</span></span></div>
+    <h4>${esc(u.name)}</h4>
+    <div class="fx">${esc(u.function)}</div>
+    <div class="pats">${u.patterns.map(p=>`<span class="pat">${p.replace("PAT-","")}</span>`).join("")}
+      <span class="pat">${esc(u.domain)}</span></div>
+    <div class="fin">
+      <div>value/yr<b>${fmt(u.value)}</b></div>
+      <div>net/yr<b class="${u.net<0?"neg":""}">${fmt(u.net)}</b></div>
+      <div>3-yr TCO<b>${fmt(u.tcoAlloc)}</b></div>
+      <div>payback<b>${u.payback?Math.round(u.payback)+" mo":"—"}</b></div>
+    </div></div>`;
+}
+
+/* -------- value map (scatter) -------- */
+function mapHTML(rows){
+  const w=1060,h=520,pl=70,pr=24,pt=18,pb=44;
+  const xs_=rows.map(u=>u.tcoAlloc), ys_=rows.map(u=>u.net);
+  const xmax=Math.max(...xs_,1)*1.06, ymin=Math.min(0,...ys_)*1.15, ymax=Math.max(...ys_,1)*1.08;
+  const X=v=>pl+v/xmax*(w-pl-pr), Y=v=>pt+(ymax-v)/(ymax-ymin)*(h-pt-pb);
+  const xt=[0,.25,.5,.75,1].map(f=>f*xmax), yt=[0,.25,.5,.75,1].map(f=>ymin+f*(ymax-ymin));
+  const top=rows.slice().sort((a,b)=>Math.abs(b.net)-Math.abs(a.net)).slice(0,6).map(u=>u.id);
+  return `<div class="legend">${PHASES.map(p=>`<span><span class="sw" style="background:${p.color}"></span>${p.label}</span>`).join("")}</div>
+  <svg viewBox="0 0 ${w} ${h}" style="width:100%" role="img" aria-label="Net value per year vs 3-year TCO per use case">
+    ${yt.map(v=>`<line x1="${pl}" x2="${w-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)"/>
+      <text x="${pl-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${fmt(v)}</text>`).join("")}
+    ${xt.map(v=>`<text x="${X(v)}" y="${h-22}" text-anchor="middle" font-size="11" fill="var(--muted)">${fmt(v)}</text>`).join("")}
+    <line x1="${pl}" x2="${w-pr}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--baseline)" stroke-width="1.5"/>
+    <text x="${(pl+w-pr)/2}" y="${h-4}" text-anchor="middle" font-size="11.5" fill="var(--muted)">3-year TCO (allocated) →</text>
+    <text x="14" y="${(pt+h-pb)/2}" font-size="11.5" fill="var(--muted)" transform="rotate(-90 14 ${(pt+h-pb)/2})" text-anchor="middle">steady-state net value / yr →</text>
+    ${rows.map(u=>`<g class="dot" data-id="${u.id}" style="cursor:pointer">
+      <circle cx="${X(u.tcoAlloc)}" cy="${Y(u.net)}" r="11" fill="transparent"/>
+      <circle cx="${X(u.tcoAlloc)}" cy="${Y(u.net)}" r="5.5" fill="${PHC[u.phase]}" stroke="var(--surface)" stroke-width="2"/>
+      ${top.includes(u.id)?`<text x="${X(u.tcoAlloc)+9}" y="${Y(u.net)+4}" font-size="10.5" fill="var(--ink-2)">${u.id.slice(3)}</text>`:""}
+    </g>`).join("")}
+  </svg>
+  <p class="refnote" style="margin-top:6px">Up and left is better: high recurring net value for
+  little total cost. Dots below the baseline are net-negative at the reference profile — kill,
+  descope, or risk-justified (see each use case's detail).</p>`;
+}
+const tip=document.getElementById("tip");
+document.addEventListener("mousemove",e=>{
+  const d=e.target.closest?.(".dot");
+  if (!d){ tip.style.display="none"; return; }
+  const u=UCS.find(x=>x.id===d.dataset.id);
+  tip.innerHTML=`<b>${u.id}</b> ${esc(u.name)}<div class="m">net ${fmt(u.net)}/yr · TCO ${fmt(u.tcoAlloc)} · ${u.rec}</div>`;
+  tip.style.display="block";
+  tip.style.left=Math.min(e.clientX+14,innerWidth-300)+"px"; tip.style.top=(e.clientY+14)+"px";
+});
+
+/* -------- detail panel -------- */
+function openPanel(id){
+  const u=UCS.find(x=>x.id===id); if(!u) return;
+  document.getElementById("pId").textContent=u.id+" · "+u.domain;
+  document.getElementById("pName").textContent=u.name;
+  const kv=(k,v)=>v?`<div class="k">${k}</div><div class="v">${v}</div>`:"";
+  const optRows=Object.entries(u.options).sort((a,b)=>a[1]-b[1]).map(([o,t])=>
+    `<tr class="${o===u.rec?"rec":""}"><td>${o}${o===u.rec?" ← recommended":""}</td><td>${fmt(t)}</td></tr>`).join("");
+  document.getElementById("pBody").innerHTML=`
+    <h3>What it does</h3><p>${esc(u.function)}</p>
+    ${u.note?`<p><b>Feasibility note:</b> ${esc(u.note)}</p>`:""}
+    <h3>Classification</h3><div class="kv">
+      ${kv("Patterns",u.patterns.map(p=>`<span class="chip">${p}</span>`).join(""))}
+      ${kv("Autonomy",esc(u.autonomy)+" <span style='color:var(--muted)'>(ceiling per risk tier)</span>")}
+      ${kv("Risk tier",`<b>${u.risk}</b> — ${esc(META.riskNames[u.risk]||"")}`)}
+      ${kv("Build tier",`${u.tier} · workload ${u.workload}${u.family?` · SLM family <b>${u.family}</b>`:""}`)}
+      ${kv("Annual volume",u.volume.toLocaleString()+" × "+esc(u.volKey))}</div>
+    <h3>Process bindings</h3><div class="kv">
+      ${kv("Targets",esc(u.targets))} ${kv("Trigger",esc(u.trigger))}
+      ${kv("Prevents",esc(u.prevents))} ${kv("Improves",esc(u.improves))}
+      ${Object.entries(u.extra).map(([k,v])=>kv(esc(k),esc(v))).join("")}</div>
+    <h3>Dependencies &amp; gates</h3>
+    <div class="kv">${kv("Gate vector",Object.entries(u.vector).filter(([,v])=>v!==null)
+      .map(([k,v])=>`<span class="chip">${k}≥${v}</span>`).join(""))}
+      ${kv("Platform assets",u.platform.map(p=>`<span class="chip">${p}</span>`).join("")||"—")}</div>
+    ${u.deps.length?u.deps.map(d=>`<div class="dep"><b>${d.id}</b>${d.blockable?" <span class='chip'>blockable</span>":""}<br>${esc(d.prompt)}</div>`).join(""):"<p>No named facet dependencies beyond the dimension vector.</p>"}
+    <h3>Value estimate <span style="text-transform:none;letter-spacing:0">(reference profile, pool-capped)</span></h3>
+    <table><thead><tr><th>Draw</th><th>Share</th><th>$ / yr</th></tr></thead><tbody>
+      ${u.draws.map(d=>`<tr><td>${esc(d.pool)}</td><td>${d.share}</td><td>${fmt(d.usd)}</td></tr>`).join("")}
+      <tr><td><b>Steady-state total</b></td><td></td><td><b>${fmt(u.value)}</b></td></tr>
+      ${u.onetime?`<tr><td>One-time cash release (AR days)</td><td></td><td>${fmt(u.onetime)}</td></tr>`:""}
+      ${u.riskEV?`<tr><td>Risk &amp; compliance EV (segregated)</td><td></td><td>${fmt(u.riskEV)}</td></tr>`:""}
+    </tbody></table>
+    <p>Range ${fmt(u.valueLow)} – ${fmt(u.valueHigh)} (global uncertainty band).</p>
+    <h3>Cost &amp; sourcing (3-yr TCO by option)</h3>
+    <table><thead><tr><th>Option</th><th>3-yr TCO</th></tr></thead><tbody>${optRows}</tbody></table>
+    <div class="kv" style="margin-top:8px">
+      ${kv("Build",fmt(u.build)+" + "+fmt(u.platB)+" platform allocation")}
+      ${kv("Run / yr",fmt(u.run)+" + "+fmt(u.platR)+" platform")}
+      ${kv("Net / yr",`<b class="${u.net<0?"neg":""}" style="color:${u.net<0?"var(--critical-ink)":"var(--good-ink)"}">${fmt(u.net)}</b>${u.net<0&&u.riskEV>=-u.net?" — risk-EV-justified; judge on risk grounds":""}`)}
+      ${kv("Payback",u.payback?Math.round(u.payback)+" months":"—")}</div>
+    ${u.guardrails?`<h3>Guardrails</h3><p>${esc(u.guardrails)}</p>`:""}`;
+  document.getElementById("panel").classList.add("open");
+  document.getElementById("ovl").style.display="block";
+}
+function closePanel(){ document.getElementById("panel").classList.remove("open");
+  document.getElementById("ovl").style.display="none"; }
+document.getElementById("pClose").onclick=closePanel;
+document.getElementById("ovl").onclick=closePanel;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closePanel(); });
+document.addEventListener("click",e=>{
+  const c=e.target.closest(".uc")||e.target.closest(".dot");
+  if (c) openPanel(c.dataset.id);
+});
+document.addEventListener("keydown",e=>{
+  if (e.key==="Enter"&&e.target.classList?.contains("uc")) openPanel(e.target.dataset.id);
+});
+
+/* -------- render -------- */
+function render(){
+  const rows=visible();
+  document.getElementById("count").textContent=`${rows.length} of ${UCS.length} use cases`;
+  const cards=document.getElementById("cards"), map=document.getElementById("map");
+  document.getElementById("emptyMsg").style.display=rows.length?"none":"block";
+  if (F.view==="cards"){ map.style.display="none"; cards.style.display="grid";
+    cards.innerHTML=rows.map(cardHTML).join(""); }
+  else { cards.style.display="none"; map.style.display="block";
+    map.innerHTML=rows.length?mapHTML(rows):""; }
+}
+render();
+</script>
+</body></html>
