@@ -55,7 +55,7 @@ It is fully self-contained (no network access needed) and respects light/dark sy
 When torn between two levels, take the lower — the framework is weakest-link by design, and
 optimistic self-assessment produces GO dispositions that fail in implementation.
 
-**Facets** (0 / 1 / 2 / `blocked`): the 98 specific readiness facts that appear as decisive
+**Facets** (0 / 1 / 2 / `blocked`): the 103 specific readiness facts that appear as decisive
 gates. Score `0` = absent, `1` = partial or in progress, `2` = operational. Facets marked
 *(blockable)* may instead be scored `blocked`, meaning a legal or contractual prohibition
 (e.g., a criteria licensor forbids programmatic use, a payer's portal ToS bans bots) — this
@@ -67,7 +67,11 @@ Assessment discipline:
 - Connectivity facets are judged against the payers covering ≥80% of the relevant volume.
 - Record evidence/notes inline as YAML comments — the worksheet doubles as the audit trail.
 - Not sure what "ready" looks like on your stack? `../14-implementation-patterns.md` gives per-facet
-  sufficiency floors (Epic / Oracle Health / multi-EHR) and flags where vendors routinely oversell.
+  sufficiency floors (Epic / Oracle Health / multi-EHR) and flags where vendors routinely oversell;
+  `../../vendor-crosswalks/` carries module-level depth markers (licensed / lit / configured-to-depth).
+- **2026-07 floor note:** five facets were added and several floors deepened (file 14 §8).
+  Assessments filled before that stamp score the new facets as absent and are not comparable
+  on the revised floors — re-score before reconciling or re-running packets.
 
 ## How dispositions are computed
 

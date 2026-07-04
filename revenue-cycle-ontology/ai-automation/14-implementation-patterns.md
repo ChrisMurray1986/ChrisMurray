@@ -20,7 +20,21 @@ change — verify current product scope before committing a plan to a named modu
 
 ---
 
-## 0. The two rules that prevent most overbuying
+## 0. The three rules that prevent most overbuying
+
+**Rule 0 — Native-first check.** Before pricing any option for a facet, consult the vendor
+crosswalk (`../vendor-crosswalks/`) for the shop's EHR: if a native module covers the gate,
+`native_module` (cost model §2) enters the option set and usually wins on TCO. Score native
+capability on the **three-state ladder**:
+
+| State | Meaning | The false positive it prevents |
+|---|---|---|
+| **Licensed** | The module is owned on paper | Buying a bolt-on for capability already owned (OFM-ET-09) |
+| **Lit** | Enabled/enrolled and processing volume | Counting a shelf license as readiness |
+| **Configured-to-depth** | Producing the output the dependent process actually needs (the crosswalk's depth markers) | Volume floors passing while every response/output is generically shallow — the `rte_benefit_depth` class |
+
+A facet is scored 2 only at configured-to-depth. "Licensed" alone scores 0; "lit" without
+depth scores 1. The crosswalk's `depth_markers` give the two-minute field demo per module.
 
 **Rule 1 — Latency decoder.** Sort every facet you're remediating into one of two lanes before
 choosing any technology:
@@ -93,6 +107,8 @@ outcomes, or UM worksheets. The scarce asset is recorded operational truth.
 | `charge_linkage` | Orders↔eMAR↔schedule↔charges join for one encounter | Native in Clarity (order, MAR, charge tables share encounter keys) | Multi-system: this is where the integration warehouse earns its keep | Single-EHR shops: score before building — you likely already pass |
 | `supply_chain_feed` | Implant case: item, invoice cost, charge in one view | ERP (Workday/Oracle/Infor) item master + invoice feed joined to CDM | Same | — |
 | `mspq_structured` / `auth_structured` / `gfe_stored` | The artifact (MSPQ answers / auth CPT-units-span / estimate) as fields, not scans | Registration items, auth/cert records, estimate module output retained | Same | Configuration + practice discipline; zero new platforms |
+| `auth_grid_accuracy` | Sample 25 payer/plan/CPT combos from last quarter's auth denials: current grid verdict matches the payer's published policy; edits versioned with source citations | Epic ASA (Auth Status Assignment) records under master-data change control (1.4.1.A4); accuracy sample quarterly | Millennium auth/cert rules equivalent | ⚠ Governance of a table already owned — a stale grid mass-produces false "no auth required" (PFM-1.4-05); no purchase fixes an unowned master |
+| `intended_cpt_accuracy` | Sample 25 scheduled procedural cases: order-set/visit-type-derived CPT vs performed CPT vs the auth-grid lookup key — mismatch and auth-workqueue routing-miss rates measured | Order-set and visit-type build reviewed at 14.2.A6; intended-CPT set recorded at 1.1.2.A9 and reconciled at 1.4.6 | Same — build review + measurement, not technology | Measurement discipline; the silent branch (account never routed to auth) is the expensive one |
 | `system_copy_extracts` / `peer_benchmarks` | Diff two system copies of a master; benchmark table queryable | Nightly extracts of each copy; benchmark data licensed (e.g., specialty societies, CMS PUFs) | Same | — |
 
 ## 4. Integration facets
@@ -104,7 +120,7 @@ outcomes, or UM worksheets. The scarce asset is recorded operational truth.
 | `prebill_hold` | Programmatically hold one claim pre-drop in test | Resolute billing indicators/workqueue routing (native config) | RevElate/bolt-on equivalent | Configuration |
 | `statement_suppression` / `statement_vendor_flex` | Suppress/vary one account's statement via file or API | Statement vendor interface spec; often a contract amendment | Same | Vendor negotiation, not integration heroics |
 | `ap_refund_path` | Issue one test refund end-to-end programmatically | Refund file/API to ERP AP | Same | — |
-| `cds_ordering_hook` | A rule fires in the ordering workflow in test | **CDS Hooks / BPA framework — native Epic**; the gate is governance to add rules | Discern rules | Do not stand up an external CDS platform for this |
+| `cds_ordering_hook` | A rule fires in the ordering workflow in test, **and** a governed path exists to add rules (alert-burden budget/committee) — a hook that fires where BPA fatigue makes new rules politically impossible scores 1, not 2 | **CDS Hooks / BPA framework — native Epic**; the gate is governance to add rules | Discern rules | Do not stand up an external CDS platform for this |
 | `account_360` | One API call assembles HB+PB balance provenance for a guarantor | Composite service over billing APIs; MyChart billing views prove the data exists | Harder multi-system — this is a real build | — |
 | `queue_api` | Reassign work items programmatically in test | Workqueue APIs / RPA-free routing config | Same | — |
 | `him_retrieval` | Fetch a defined record set for an encounter programmatically | Release-of-information module APIs / Bulk FHIR document references | Same | — |
@@ -116,8 +132,10 @@ work.
 
 | Facet | Passing demo (floor) | Pattern | Overbuild flag |
 |---|---|---|---|
-| `rte_eligibility` / `era_coverage` / `claim_status_edi` | Transaction volumes ≥80% coverage on last month's data | Clearinghouse enrollment campaigns (14.3); Epic RTE/remit modules consume natively | Enrollment project management — never a platform |
-| `auth_transactions` | Submit/inquire an auth electronically for top payers | 278 via clearinghouse, payer APIs (FHIR prior-auth era), Epic Payer Platform where both sides participate | Payer-by-payer; scope-cut the rest |
+| `rte_eligibility` | Transaction volumes ≥80% coverage on last month's data | Clearinghouse enrollment campaigns (14.3); Epic RTE consumes natively | Enrollment project management — never a platform |
+| `rte_benefit_depth` | Pull yesterday's 271s for the top 5 service lines: service-type-specific cost-share and carve-outs present, not generic STC-30 active/inactive | Payer-specific query construction + follow-up chaining in the RTE config (1.3.1.A4), reviewed against companion guides | ⚠ Configuration inside a module already owned — volume coverage without depth automates the portal-lookup workaround (PFM-1.3-05) |
+| `era_coverage` / `claim_status_edi` | Transaction volumes ≥80% coverage on last month's data, **consumed as data** (auto-posted / queue-routed, not printed and keyed) | Clearinghouse enrollment campaigns (14.3); Epic remit modules consume natively | Enrollment project management — never a platform |
+| `auth_transactions` | Submit/inquire an auth electronically for top payers, with responses captured structured (feeds `auth_structured`) | 278 via clearinghouse, payer APIs (FHIR prior-auth era), Epic Payer Platform where both sides participate | Payer-by-payer; scope-cut the rest |
 | `portal_automation_permitted` | ToS review memo + managed credentials for named portals | Legal review + credential vault + MFA handling | ⚠ Legal gate; no RPA tool purchase makes an unpermitted portal permitted |
 | `attachment_channels` | Send a 275/portal attachment for top payers | Clearinghouse attachment services | — |
 | `medicaid_files` | Pull the state file incl. retro spans on schedule | State-specific batch/API | — |
@@ -130,6 +148,13 @@ committee charters, and configuration discipline, not in any platform. The Epic-
 simply *where* the artifact lives: adjustment-code schemes and write-off matrices in Resolute
 configuration; queue/reason-code standardization in workqueue design; the denial taxonomy in
 the mapping tables of §1. Score them on the artifact's existence and enforcement.
+
+Two workflow facets added by the 2026-07 lineage/depth expansion have concrete floors:
+
+| Facet | Passing demo (floor) | Reference pattern | Overbuild flag |
+|---|---|---|---|
+| `clinical_build_governance` | Pull the last 5 order-set/visit-type changes: RC sign-off visible; a charge-trigger/auth-mapping regression ran; one denial cluster traced (or provably not traceable) to clinical build | Revenue seat in clinical change control (14.2.A6, D1); regression checklist per build class | Process + committee seat, zero software |
+| `native_capability_inventory` | Produce the current inventory of licensed EHR-native automation/AI with lit/unlit status and adoption owners; show one sourcing decision it changed | Living document against the vendor crosswalk (`../vendor-crosswalks/`), refreshed at every upgrade's feature harvest (BP-ET-09) | The inventory is a spreadsheet-grade artifact; the discipline is the gate |
 
 Governance facets have concrete reference patterns worth naming:
 
@@ -154,7 +179,10 @@ For a single-instance Epic organization, the honest starting position before buy
   much of `touch_logging`, `mspq_structured`/`auth_structured` (if configured), RTE/ERA
   connectivity for major payers.
 - **Configuration/process projects (weeks):** `acks_retained`, `posting_standardized`,
-  `takeback_linkage`, `card_images` compliance, `gfe_stored`, `bank_feeds`, `filing_matrix`.
+  `takeback_linkage`, `card_images` compliance, `gfe_stored`, `bank_feeds`, `filing_matrix`,
+  `rte_benefit_depth` (query-chain config), `auth_grid_accuracy` (ASA governance + sampling),
+  `native_capability_inventory`, `clinical_build_governance` (committee seat + regression
+  checklist), `intended_cpt_accuracy` (measurement wiring).
 - **Governance/contract projects (weeks–months, zero platform):** `notes_access` approval,
   `portal_automation_permitted`, all license facets, `um_worksheets` export rights,
   `statement_suppression` amendment.
@@ -174,3 +202,15 @@ This layer decays fastest of any document in the stack (product names, packaging
 Refresh triggers: EHR major-version upgrades, clearinghouse changes, any Rule-2 trigger firing,
 and the annual audit sweep (file 13). Corrections follow the same true-up discipline as every
 driver file: commit with a note, and record which facet score the correction changed.
+
+Module-level specifics (three-state status, depth markers, build surfaces, native AI catalogs)
+live in the **vendor crosswalks** (`../vendor-crosswalks/`), each entry `as_of`-stamped and
+confidence-rated — refresh them on the same triggers.
+
+**Floor-semantics note (2026-07):** the depth expansion revised several floors in place
+(`era_coverage`/`claim_status_edi` consumption clause, `auth_transactions` structured-capture
+clause, `cds_ordering_hook` governance clause) and added five facets (`rte_benefit_depth`,
+`auth_grid_accuracy`, `intended_cpt_accuracy`, `clinical_build_governance`,
+`native_capability_inventory`). Facet scores recorded before this change are not comparable on
+the revised floors and score the new facets as absent — re-score before reconciling
+(reconcile.py's ENG-06 version refusal enforces this for the field instrument).

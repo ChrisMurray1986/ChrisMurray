@@ -1,0 +1,227 @@
+# Oracle Health (Cerner Millennium) crosswalk — native capability bindings.
+# Schema: README.md in this directory. Neutral layer governs; as_of is load-bearing.
+# Confidence runs lower than the Epic file by design: Millennium revenue-cycle packaging
+# (Millennium Patient Accounting → RevElate transition, Oracle Health rebranding) is in
+# active motion — treat medium/needs-sme entries as structured hypotheses to confirm on site.
+
+meta:
+  vendor: "Oracle Health (Cerner Millennium)"
+  as_of: "2026-07"
+  archetype: "Millennium operational (PowerChart, Registration/Scheduling, SurgiNet, PharmNet);
+    RevElate / Millennium Patient Accounting billing; Discern Expert rules + CCL; Oracle Health
+    data platforms (HealtheIntent-lineage / Data Intelligence) for analytics; clearinghouse for EDI"
+  confidence_legend:
+    high: "Stable, widely deployed module behavior"
+    medium: "Real capability; packaging/licensing/naming churns — verify current product scope"
+    needs-sme-validation: "Structured hypothesis; confirm with certified analyst on site"
+
+facets:
+  # ---- data ----
+  orders_digitized: {module: "e-fax → content management indexed to person; CPOE for internal orders", states: {licensed: "Doc-mgmt integration", lit: "Faxes land as images", configured_to_depth: "Any inbound order retrievable as image/text within minutes"}, depth_markers: [], confidence: high}
+  mspq_structured: {module: "Registration conversation MSPQ fields (discrete)", states: {licensed: "Base registration", lit: "MSPQ conversation in use", configured_to_depth: "Answers as discrete fields driving value/condition codes"}, depth_markers: [{id: mspq-discrete, check: "Pull 10 recent Medicare registrations: MSPQ answers queryable as fields?", symptom_binding: PFM-1.2-03}], confidence: medium}
+  auth_structured: {module: "Authorization/precert fields on encounter (Registration/Scheduling)", states: {licensed: "Base", lit: "Auth numbers recorded", configured_to_depth: "Auth number, CPTs, units, span as discrete fields"}, depth_markers: [{id: auth-discrete-span, check: "Sample 10 approved auths: CPT/units/span discretely queryable?", symptom_binding: PFM-1.4-03}], confidence: medium}
+  denial_labels: {module: "Remit/denial data via CCL extracts or clearinghouse archive; attribution needs a built mapping table", states: {licensed: "Data exists", lit: "Remit detail flowing", configured_to_depth: "12mo denials joined to accounts with defect/owner attribution"}, depth_markers: [{id: attribution-table, check: "Run the join for last quarter: owner-attributed defect per denial, or CARC only?", symptom_binding: PFM-8.1-02}], confidence: medium, note: "Clearinghouse archive often the better source where Millennium remit detail is thin (file 14 §1)"}
+  appeal_outcomes: {module: "Bolt-on appeal trackers common; harvest their DB", states: {licensed: "varies", lit: "Appeals tracked", configured_to_depth: "Win/loss/$ by level queryable"}, depth_markers: [], confidence: medium}
+  touch_logging: {module: "Patient Accounting activity logs; integration-engine event capture for bolt-ons", states: {licensed: "Native core", lit: "Logs on", configured_to_depth: "Who/when/what for any account incl. vendor touches"}, depth_markers: [{id: bolt-on-gaps, check: "Pick 5 vendor-worked accounts: touches visible?", symptom_binding: PFM-9.1-02}], confidence: medium}
+  clinical_structured: {module: "Clinical events (HL7v2 feeds / CCL / Data Intelligence tables)", states: {licensed: "Native", lit: "Native", configured_to_depth: "Labs/vitals/meds as timestamped rows per encounter"}, depth_markers: [], confidence: high}
+  notes_access: {module: "Clinical events note export (Millennium) into a governed document store", states: {licensed: "Export paths", lit: "Pipeline exists", configured_to_depth: "Programmatic fetch of all notes for an encounter, approval on file"}, depth_markers: [], confidence: medium, note: "Governance approval is half the gate, same as Epic"}
+  charge_linkage: {module: "Orders/MAR/charges joinable at encounter via CCL/warehouse — multi-table work", states: {licensed: "Native data", lit: "Extracts exist", configured_to_depth: "Orders↔eMAR↔schedule↔charges join for one encounter"}, depth_markers: [], confidence: medium}
+  supply_chain_feed: {module: "ERP item master + invoice feed joined to CDM; SurgiNet case usage", states: {licensed: "ERP-side", lit: "Feed lands", configured_to_depth: "Implant case: item, cost, charge in one view"}, depth_markers: [], confidence: medium}
+  acks_retained: {module: "Clearinghouse portal retention → nightly archive", states: {licensed: "Clearinghouse-side", lit: "Retained", configured_to_depth: "Produce the 999/277CA for any claim from last quarter"}, depth_markers: [], confidence: high}
+  lockbox_imaging: {module: "Bank imaging service (contract) or scan-at-receipt", states: {licensed: "Banking amendment", lit: "Images arrive", configured_to_depth: "Yesterday's correspondence as images"}, depth_markers: [], confidence: high}
+  bank_feeds: {module: "Treasury BAI2/API → warehouse; TRN match to 835", states: {licensed: "Bank-side", lit: "Feed lands", configured_to_depth: "TRN visible, matched daily"}, depth_markers: [], confidence: high}
+  takeback_linkage: {module: "Posting convention in Patient Accounting (reversal linkage)", states: {licensed: "Native", lit: "Rules exist", configured_to_depth: "Any recoupment traces to original claim in one query"}, depth_markers: [{id: reversal-convention, check: "Trace 10 recoupments: linked or force-balanced?", symptom_binding: PFM-7.4-02}], confidence: medium}
+  contract_repository: {module: "Governed document library / CLM", states: {licensed: "—", lit: "Library exists", configured_to_depth: "Every contract + amendment retrievable by payer"}, depth_markers: [], confidence: high}
+  contract_engine_loaded: {module: "Contract Management (Millennium) or bolt-on expected-reimbursement engine", states: {licensed: "Module or bolt-on", lit: "Terms loaded for top payers", configured_to_depth: "Expected pay for ≥80% volume AND parallel-priced sample matches"}, depth_markers: [{id: parallel-price, check: "Parallel-price 20 claims vs source contracts", symptom_binding: PFM-11.2-01}], confidence: medium, note: "Bolt-on engines are the common pattern at Millennium shops"}
+  policy_library: {module: "No EHR module — built corpus (CAP-04)", states: {licensed: "n/a", lit: "n/a", configured_to_depth: "Policy version in force on a date, with citation"}, depth_markers: [], confidence: high}
+  provider_master: {module: "Millennium provider records reconciled with credentialing bolt-on (bolt-on frequently the truth source)", states: {licensed: "Native + bolt-on", lit: "Populated", configured_to_depth: "One governed source answers NPI/credential/enrollment"}, depth_markers: [{id: prov-recon, check: "Sample 10 providers: Millennium vs credentialing system agree?", symptom_binding: PFM-11.4-01}], confidence: medium}
+  gfe_stored: {module: "Estimate tool output retained (native estimator or bolt-on), linked to final bills", states: {licensed: "Estimator", lit: "Estimates generated", configured_to_depth: "Stored, versioned, linkable to final bill"}, depth_markers: [{id: estimate-retention, check: "Join last month's estimates to final claims", symptom_binding: PFM-1.6-03}], confidence: medium}
+  consents_indexed: {module: "Consent forms in content management indexed to encounter", states: {licensed: "Base", lit: "Captured", configured_to_depth: "Pull the NSA consent for a given OON claim"}, depth_markers: [], confidence: medium}
+  qa_history: {module: "Governed QA table (QA tooling usually spreadsheet-grade)", states: {licensed: "—", lit: "Recorded", configured_to_depth: "Rows, not workbooks"}, depth_markers: [], confidence: high}
+  audit_outcomes: {module: "Audit tracking bolt-on or governed table", states: {licensed: "varies", lit: "Logged", configured_to_depth: "Findings + dollars linked to claims"}, depth_markers: [], confidence: high}
+  plan_payment_history: {module: "Patient Accounting guarantor/plan tables", states: {licensed: "Native", lit: "Plans in system", configured_to_depth: "Installments/declines/timing per guarantor"}, depth_markers: [], confidence: medium}
+  payment_timing_history: {module: "Remit + transaction history via CCL/warehouse", states: {licensed: "Native", lit: "Native", configured_to_depth: "24-mo lag curves by payer"}, depth_markers: [], confidence: medium}
+  realization_history: {module: "Same tables, cohort math", states: {licensed: "Native", lit: "Native", configured_to_depth: "24-mo realization by payer/cohort"}, depth_markers: [], confidence: medium}
+  deficiency_structured: {module: "HIM deficiency tracking (Millennium)", states: {licensed: "Native", lit: "In use", configured_to_depth: "Deficiencies as rows with aging"}, depth_markers: [], confidence: medium}
+  working_drg_recorded: {module: "CDI bolt-on DB export (in-system CDI less common than Epic)", states: {licensed: "Bolt-on", lit: "CDI documents in tool", configured_to_depth: "Working + final DRG side-by-side per case"}, depth_markers: [], confidence: medium}
+  clearance_outcomes: {module: "Registration items + remit join (small build)", states: {licensed: "Native fields", lit: "Statuses set", configured_to_depth: "Clearance status joined to payment outcome"}, depth_markers: [], confidence: medium}
+  statement_history: {module: "Statement tables + statement-vendor return files", states: {licensed: "Native + vendor", lit: "Logged", configured_to_depth: "Channel/timing/response per patient"}, depth_markers: [], confidence: medium}
+  audit_channels_digitized: {module: "Mail imaging + portal polling + fax-to-image → one intake", states: {licensed: "—", lit: "Digital landing", configured_to_depth: "Every audit letter in one queue"}, depth_markers: [], confidence: high}
+  peer_benchmarks: {module: "Licensed benchmark content", states: {licensed: "Contract", lit: "Loaded", configured_to_depth: "Queryable with aligned definitions"}, depth_markers: [], confidence: high}
+  system_copy_extracts: {module: "Nightly extracts of each master copy", states: {licensed: "—", lit: "Extracts land", configured_to_depth: "Diff two copies of a master on demand"}, depth_markers: [], confidence: high}
+  card_images: {module: "Registration capture + patient-portal pre-check-in", states: {licensed: "Native", lit: "Paths on", configured_to_depth: "Front/back for yesterday's registrations"}, depth_markers: [], confidence: medium}
+  um_worksheets: {module: "CareManagement/UM documentation or criteria vendor export (contract)", states: {licensed: "Module / MCG-InterQual", lit: "Completed in-system", configured_to_depth: "Worksheets + determinations queryable"}, depth_markers: [], confidence: medium}
+  edi_telemetry: {module: "Clearinghouse archive + aggregates", states: {licensed: "—", lit: "Archive lands", configured_to_depth: "Daily volumes by payer for 12mo"}, depth_markers: [], confidence: high}
+  intended_cpt_accuracy:
+    module: "PowerPlan/visit-type build + measurement join (scheduled vs performed CPT vs auth-requirement key)"
+    states: {licensed: "n/a — measurement discipline", lit: "Intended CPTs recorded at scheduling (1.1.2.A9)", configured_to_depth: "Mismatch and auth-WQ routing-miss rates measured and trending"}
+    depth_markers:
+      - {id: intended-vs-performed, check: "Sample 25 scheduled procedural cases: PowerPlan/visit-type-derived CPT vs performed CPT vs auth-requirement key — mismatch rate; CO-197 denials on cases that never hit an auth queue", symptom_binding: PFM-1.1-05}
+    confidence: medium
+  auth_grid_accuracy:
+    module: "Auth/precert requirement rules in Registration/Scheduling build (Millennium's ASA analogue is shop-built more often than standard)"
+    states: {licensed: "Build framework", lit: "Rules driving auth tasks/queues", configured_to_depth: "Versioned, source-cited changes; quarterly accuracy sample vs payer policy (1.4.1.A4)"}
+    depth_markers:
+      - {id: grid-sample, check: "Sample 25 payer/plan/CPT combos from last quarter's CO-197 denials: current rule verdict vs published payer policy", symptom_binding: PFM-1.4-05}
+      - {id: grid-proof, check: "For 10 'no auth required' clears: dated proof captured (1.4.1.A3)?", symptom_binding: PFM-1.4-01}
+    confidence: needs-sme-validation
+    note: "Where the requirement grid lives (Millennium rules vs bolt-on vs spreadsheet) varies by shop — locating it is the first field task; a spreadsheet grid is OFM-ET-08 territory"
+
+  # ---- integration ----
+  writeback: {module: "Millennium operations APIs / FHIR write scopes / integration engine", states: {licensed: "APIs", lit: "Scopes granted", configured_to_depth: "Create flag/queue item/transaction via API in test"}, depth_markers: [], confidence: medium}
+  fabric: {module: "Integration engine (Mirth/Rhapsody/Cloverleaf class) as event backbone + queue/API layer + service accounts + telemetry", states: {licensed: "Components", lit: "Events flowing", configured_to_depth: "Event → agent → write-back, observable, non-human identity"}, depth_markers: [], confidence: high, note: "The engine is load-bearing earlier than at Epic shops (file 14 archetype note)"}
+  prebill_hold: {module: "RevElate/Patient Accounting bill-hold rules or bolt-on equivalent", states: {licensed: "Native/bolt-on", lit: "Holds defined", configured_to_depth: "Programmatically hold one claim pre-drop in test"}, depth_markers: [], confidence: medium}
+  statement_suppression: {module: "Statement vendor interface (contract amendment)", states: {licensed: "Vendor contract", lit: "Interface live", configured_to_depth: "Suppress one account via file/API in test"}, depth_markers: [], confidence: high}
+  statement_vendor_flex: {module: "Same interface — variation support", states: {licensed: "Vendor contract", lit: "Supported", configured_to_depth: "Vary one account's channel/timing/content in test"}, depth_markers: [], confidence: high}
+  ap_refund_path: {module: "Refund file/API to ERP AP", states: {licensed: "ERP-side", lit: "Path exists", configured_to_depth: "One test refund end-to-end"}, depth_markers: [], confidence: high}
+  cds_ordering_hook:
+    module: "Discern Expert rules (CPOE alerts/advisors)"
+    states: {licensed: "Native", lit: "A rule fires in test", configured_to_depth: "Governed path to add rules: alert-burden budget, committee, fatigue metrics"}
+    depth_markers:
+      - {id: discern-governance, check: "Last 3 revenue-facing Discern rule proposals: approved on what cadence? Alert-fatigue metrics tracked?", symptom_binding: PFM-1.5-01}
+    confidence: high
+    note: "Do not stand up an external CDS platform for this"
+  account_360: {module: "Composite service over Patient Accounting APIs — harder where HB/PB-equivalents or legacy AR are split systems", states: {licensed: "APIs", lit: "Partial views", configured_to_depth: "One call assembles balance provenance for a guarantor"}, depth_markers: [], confidence: medium, note: "A real build; multi-system shops hardest (file 14 §4)"}
+  queue_api:
+    module: "Patient Accounting workqueue config/APIs"
+    states: {licensed: "Native", lit: "Callable", configured_to_depth: "Reassign items programmatically against a rationalized queue estate (OFM-ET-01)"}
+    depth_markers:
+      - {id: queue-estate, check: "Queue count + 5 sampled queues: named owner and purpose each?", symptom_binding: PFM-14.2-01}
+    confidence: medium
+  him_retrieval: {module: "ROI module APIs / FHIR document references", states: {licensed: "Native", lit: "Scopes granted", configured_to_depth: "Fetch a defined record set programmatically"}, depth_markers: [], confidence: medium}
+
+  # ---- connectivity ----
+  rte_eligibility: {module: "270/271 via clearinghouse into Registration eligibility", states: {licensed: "Clearinghouse + Millennium consumption", lit: "Flowing for enrolled payers", configured_to_depth: "≥80% volume AND rte_benefit_depth passing"}, depth_markers: [], confidence: high}
+  rte_benefit_depth:
+    module: "Eligibility query/profile build in Millennium + clearinghouse query configuration (1.3.1.A4)"
+    states: {licensed: "Included", lit: "Default generic queries", configured_to_depth: "Payer-specific service-type codes + follow-up chains returning benefit-level detail for top service lines"}
+    depth_markers:
+      - {id: rte-query-chaining, check: "Pull one 271 for a scheduled MRI (top payer): imaging-specific cost-share, or generic STC-30?", symptom_binding: PFM-1.3-05}
+      - {id: portal-workaround, check: "Shadow a verifier 30 minutes: portal lookups for data the 270 could have requested?", symptom_binding: PFM-1.3-01}
+    confidence: medium
+    note: "Where query depth is configured (Millennium vs clearinghouse layer) varies — check both"
+  era_coverage: {module: "835 consumption into Patient Accounting posting", states: {licensed: "Native", lit: "835s arriving", configured_to_depth: "≥80% volume consumed as data, not printed and keyed"}, depth_markers: [{id: era-consumption, check: "Top 5 ERA payers: auto-post rate and exception routing?", symptom_binding: PFM-7.1-01}], confidence: medium}
+  claim_status_edi: {module: "276/277 via clearinghouse into follow-up queues", states: {licensed: "Clearinghouse", lit: "Flowing", configured_to_depth: "Status codes land in queues and cancel manual calls"}, depth_markers: [{id: status-consumption, check: "Reps still calling for statuses the 277 returned?", symptom_binding: PFM-9.2-01}], confidence: high}
+  auth_transactions: {module: "278 via clearinghouse; payer APIs (FHIR prior-auth era)", states: {licensed: "Channel-dependent", lit: "Submit/inquire electronically for top payers", configured_to_depth: "Responses captured structured"}, depth_markers: [], confidence: medium}
+  portal_automation_permitted: {module: "Legal review + credential vault + MFA handling", states: {licensed: "n/a", lit: "n/a", configured_to_depth: "ToS memo + managed credentials for named portals"}, depth_markers: [], confidence: high}
+  attachment_channels: {module: "Clearinghouse attachment services", states: {licensed: "Clearinghouse", lit: "Enrolled", configured_to_depth: "Send an attachment for top payers in test"}, depth_markers: [], confidence: high}
+  medicaid_files: {module: "State-specific batch/API", states: {licensed: "State agreement", lit: "Files land", configured_to_depth: "State file incl. retro spans on schedule"}, depth_markers: [], confidence: high}
+  external_registries: {module: "Bankruptcy/death/probate subscriptions", states: {licensed: "Contract", lit: "Feeds land", configured_to_depth: "Same-day stops fire"}, depth_markers: [], confidence: high}
+  agency_data_rights: {module: "Vendor contract amendments", states: {licensed: "Contract", lit: "Flowing", configured_to_depth: "Activity/remit/recording access with audit rights"}, depth_markers: [], confidence: high}
+  vbc_data_sharing: {module: "Payer data-sharing exhibits", states: {licensed: "Contract", lit: "Flowing", configured_to_depth: "Extracts + rosters on schedule"}, depth_markers: [], confidence: high}
+  bulletin_access: {module: "Payer portals/bulletins into ingestion", states: {licensed: "—", lit: "Reachable", configured_to_depth: "Systematic ingestion with change detection"}, depth_markers: [], confidence: high}
+
+  # ---- workflow facets with a named Oracle artifact location ----
+  cdm_governance: {module: "Charge Services / CDM maintenance under request/review workflow", states: {licensed: "—", lit: "Workflow exists", configured_to_depth: "Zero direct edits on sampling; downstream sync verified"}, depth_markers: [], confidence: medium}
+  masterdata_governance: {module: "Payer/plan and crosswalk masters under change control with effective dating", states: {licensed: "—", lit: "Change log exists", configured_to_depth: "Effective-dated, rollback-capable"}, depth_markers: [], confidence: high}
+  edit_rule_governance: {module: "Claim edit build (Millennium/RevElate + clearinghouse edit packages)", states: {licensed: "Native + clearinghouse", lit: "Custom edits exist", configured_to_depth: "Governed change process with false-positive retirement"}, depth_markers: [], confidence: medium}
+  posting_standardized: {module: "Patient Accounting adjustment/transaction-code scheme", states: {licensed: "Native", lit: "Codes defined", configured_to_depth: "One scheme; 'contractual—other' not in top codes"}, depth_markers: [], confidence: medium}
+  handback_queues: {module: "Named queues receiving automation exceptions", states: {licensed: "Native queues", lit: "Exist", configured_to_depth: "Every bot/agent failure routes to a named, staffed queue"}, depth_markers: [], confidence: high}
+  clinical_build_governance:
+    module: "Clinical change control (PowerPlans, visit types/scheduling build, SurgiNet preference cards, PowerNote/Dynamic Documentation templates) with an RC seat (14.2.A6)"
+    states: {licensed: "n/a — committee + checklist", lit: "RC notified of clinical releases", configured_to_depth: "RC sign-off pre-release; charge-trigger/auth-mapping/estimate regression; key fidelity sampled"}
+    depth_markers:
+      - {id: release-trace, check: "Last 5 PowerPlan/visit-type changes: RC sign-off visible? regression artifacts?", symptom_binding: PFM-14.2-02}
+      - {id: denial-cluster-trace, check: "Newest denial cluster traceable to (or cleared of) a clinical build change?", symptom_binding: PFM-3.1-05}
+    confidence: medium
+  native_capability_inventory: {module: "Living inventory against this crosswalk's native_catalog, refreshed at feature harvest", states: {licensed: "n/a", lit: "Inventory exists", configured_to_depth: "Lit/unlit + owner per item; one sourcing decision changed in the last year"}, depth_markers: [], confidence: high}
+
+stack_agnostic:
+  see: "ai-automation/14-implementation-patterns.md §6 — policy/committee/contract floors; score on artifact existence and enforcement"
+  facets: [denial_taxonomy, appeal_process, collection_policy_unified, plan_matrix_unified,
+    writeoff_matrix, query_standardized, avoidable_day_taxonomy, filing_matrix, kpi_dictionary,
+    downtime_procedures, refund_matrix, placement_gates, audit_workflow, documentation_stability,
+    routing_authority, escalation_staffed, hitl_capacity, mpi_capacity, dept_charge_owners,
+    ranked_list_adoption, provider_adoption, compliance_charter, gov_body, decision_logging,
+    model_monitoring, bias_program, citation_harness, golden_sets, lineage, baa_program,
+    outreach_consent, criteria_license, reference_license, socio_data_license,
+    privilege_protocol, recoupment_law_matrix, fa_501r_review]
+
+build_surfaces:
+  auth_requirement_rules:
+    module: "Auth/precert requirement rules (Registration/Scheduling build, bolt-on, or — worst case — spreadsheet)"
+    feeds: ["1.4.1", "UC-01-07", "UC-01-08", "auth queue routing"]
+    symptom_binding: [PFM-1.4-01, PFM-1.4-05]
+    depth_markers:
+      - {id: grid-location, check: "First task: WHERE is the grid? Millennium rules / bolt-on / spreadsheet (OFM-ET-08 if the last)", facet_binding: auth_grid_accuracy}
+    confidence: needs-sme-validation
+  order_sets:
+    module: "PowerPlans (embedded orderables carry CPT lineage and fire charges)"
+    feeds: ["1.1.2.A9", "1.4.1 lookup keys", "3.1.1 charge triggers", "UC-01-07", "UC-01-08", "UC-03-06"]
+    symptom_binding: [PFM-1.1-05, PFM-3.1-05, PFM-14.2-02]
+    depth_markers:
+      - {id: powerplan-charge-fire, check: "One high-volume PowerPlan: embedded orderables fire charges resolving to live CDM items in test?", facet_binding: clinical_build_governance}
+      - {id: powerplan-cpt-lineage, check: "10 cases scheduled off this PowerPlan: intended vs performed CPT vs auth key — mismatch rate?", facet_binding: intended_cpt_accuracy}
+    confidence: high
+  scheduling_build_visit_types:
+    module: "Millennium Scheduling (appointment types, scheduling rules/questionnaires) with auth/network/duration mappings"
+    feeds: ["1.1.2.A2/A4", "1.4.1 site/service keys", "1.6.1 estimates", "UC-01-04", "UC-01-12"]
+    symptom_binding: [PFM-1.1-05]
+    depth_markers:
+      - {id: appt-type-sample, check: "Sample 3 procedural appointment types: auth and network mapping correct vs current payer policy?", facet_binding: clinical_build_governance}
+    confidence: medium
+  preference_cards:
+    module: "SurgiNet preference cards (supplies/implants → charges)"
+    feeds: ["3.1.3.A1", "UC-03-01", "UC-03-07"]
+    symptom_binding: [PFM-3.1-02]
+    depth_markers:
+      - {id: pref-card-drift, check: "Compare 5 preference cards to actual pick lists: stale items firing (or missing) charges?", facet_binding: clinical_build_governance}
+    confidence: medium
+  documentation_templates:
+    module: "PowerNote / Dynamic Documentation templates driving documentation-derived charging and E/M leveling"
+    feeds: ["3.1.1 doc triggers", "5.4 E/M leveling", "UC-03-06"]
+    symptom_binding: [PFM-5.4-01, PFM-3.1-05]
+    depth_markers:
+      - {id: template-charge-map, check: "One documentation-charged service: discrete field actually drives the charge; retested after last template edit?", facet_binding: clinical_build_governance}
+    confidence: medium
+  anesthesia_billing_build:
+    module: "SurgiNet Anesthesia + anesthesia billing build (ASA-code base units, time increments, concurrency/medical-direction modifiers)"
+    feeds: ["3.1.3.A1", "5.5 specialty coding", "profee claims"]
+    symptom_binding: [PFM-5.5-02]
+    depth_markers:
+      - {id: anesthesia-recalc, check: "Recalculate 5 anesthesia claims from source: system math matches? Base-unit table version?", facet_binding: clinical_build_governance}
+    confidence: medium
+  eligibility_query_config:
+    module: "Eligibility query/profile build (Millennium + clearinghouse layer)"
+    feeds: ["1.3.1", "1.3.3", "UC-01-04", "UC-01-12"]
+    symptom_binding: [PFM-1.3-05]
+    depth_markers:
+      - {id: query-chain-config, check: "Query configuration for top 3 payers: service-type codes and chains, or install defaults?", facet_binding: rte_benefit_depth}
+    confidence: medium
+  charge_trigger_build:
+    module: "Charge Services trigger/mapping rules to CDM (3.1.1.A2)"
+    feeds: ["3.1.1", "UC-03-04"]
+    symptom_binding: [PFM-3.1-01, PFM-3.1-05]
+    depth_markers:
+      - {id: orphan-trend, check: "Orphan-charge volume across the last 6 clinical release dates: spikes correlate?", facet_binding: clinical_build_governance}
+    confidence: medium
+  claim_edit_build: {module: "Millennium/RevElate claim edits + clearinghouse edit packages", feeds: ["6.2", "UC-06-02", "UC-06-03"], symptom_binding: [PFM-6.2-02], depth_markers: [], confidence: medium}
+  statement_config: {module: "Statement cycles/qualification/dunning build", feeds: ["10.1", "UC-10-01"], symptom_binding: [PFM-10.1-01], depth_markers: [], confidence: medium}
+  estimator_config: {module: "Estimator build: contract terms + accumulator wiring (native or bolt-on)", feeds: ["1.6.1", "UC-01-12"], symptom_binding: [PFM-1.6-01], depth_markers: [{id: accumulator-live, check: "Test estimate mid-year for met-deductible patient: accumulator reflected?", facet_binding: contract_engine_loaded}], confidence: medium}
+
+native_catalog:
+  - capability: "Rules-class automation in clinical and revenue workflows"
+    module: "Discern Expert rules + CCL"
+    gates_addressed: [cds_ordering_hook, "rules-workload UCs"]
+    sourcing_note: "Discern is the native rules surface; the gate is rule governance, not tooling"
+    confidence: high
+  - capability: "Patient accounting workqueue automation"
+    module: "Millennium Patient Accounting / RevElate workqueue rules and auto-actions"
+    gates_addressed: [queue_api, prebill_hold, "rules-workload UCs"]
+    sourcing_note: "RevElate transition changes the surface — verify which patient-accounting generation is live before scoping"
+    confidence: needs-sme-validation
+  - capability: "Analytics and population data platform"
+    module: "Oracle Health Data Intelligence (HealtheIntent lineage)"
+    gates_addressed: ["analytical-lane data facets (Rule 1)"]
+    sourcing_note: "T+1 analytical lane; does not serve the operational lane"
+    confidence: medium
+  - capability: "Ambient/generative clinical documentation"
+    module: "Oracle Health Clinical AI Agent (ambient documentation lineage)"
+    gates_addressed: ["documentation_stability upstream support; UC-04-x adjacency"]
+    sourcing_note: "Clinical-side; revenue value is indirect (documentation completeness). GOV gates apply in full"
+    confidence: medium
+  - capability: "Native predictive/generative capability in revenue-cycle workflows"
+    module: "Oracle AI roadmap items within Millennium/RevElate and Fusion-adjacent services"
+    gates_addressed: ["ml/llm-workload UCs — coverage thinner than Epic's as of this stamp"]
+    sourcing_note: "Roadmap-heavy as of 2026-07: demand shipping-today evidence before pricing native_module; otherwise price vendor/build and note the crossover for revisit"
+    confidence: needs-sme-validation

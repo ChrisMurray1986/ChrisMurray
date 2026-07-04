@@ -88,6 +88,15 @@ clearinghouse admin, dictionaries/masters.
 - **A4.** Intake/prioritize system change requests from operations; maintain build backlog
 - **A5.** Support system conversions/migrations: legacy AR strategy (9.7.A4), parallel testing,
   cutover command center
+- **A6.** Review clinical-system build changes (order sets, visit types/scheduling decision
+  trees, preference cards, documentation templates) for revenue impact before release:
+  regression-test charge triggers (3.1.1.A2), auth-requirement lookups (1.4.1.A1), and estimate
+  assembly (1.6.1.A1) against the change; revenue cycle holds a standing seat in clinical
+  change control
+- **D1.** Does a clinical build change touch a revenue surface (orders→charges, visit
+  types→auth/network rules, documentation templates→documentation-driven charging)?
+  - ├─ Yes → revenue regression required pre-release; post-release monitoring window
+  - └─ No → standard clinical change control
 
 ## 14.3 EDI & Trading Partner Management
 - **A1.** Manage clearinghouse relationship: connectivity, transaction routing tables, edit package

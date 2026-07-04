@@ -37,6 +37,10 @@ management tool, estimation engine, payment processing, RTE clearinghouse, payer
 - **A6.** Link order/referral to appointment
 - **A7.** Send confirmation and prep instructions (SMS/email/portal/letter)
 - **A8.** Flag account for downstream financial clearance queue {triggers: 1.7.1}
+- **A9.** Derive intended procedure code(s) (CPT/HCPCS) from the order, order set, or visit-type
+  build {produces: intended CPT set} — the lookup key for auth requirement determination (1.4.1),
+  necessity screening (1.5.1), and estimation (1.6.1); intended-vs-performed mismatch is measured
+  (reconciled at 1.4.6)
 - **D1.** Is the requested provider in-network for the patient's plan?
   - ├─ In-network → book
   - ├─ Out-of-network → advise patient of OON implications; offer in-network alternative; if patient
@@ -125,6 +129,10 @@ duplicate MRN.
 - **A1.** Trigger real-time 270 eligibility request at scheduling, T-3 days, and day-of-service
 - **A2.** Parse 271 response: active/inactive, plan name, effective dates, service-type benefits
 - **A3.** Auto-post verified coverage details to account; set verification status/timestamp
+- **A4.** Maintain payer-specific eligibility query configuration: service-type codes requested,
+  benefit-detail prompts, and follow-up query chains per payer — reviewed against payer companion
+  guides and eligibility-denial patterns (a generic STC-30 query cannot return the benefit detail
+  1.3.3 needs, no matter how diligent the verifier)
 - **D1.** What did the 271 return?
   - ├─ Active coverage → proceed to benefits detailing (1.3.3)
   - ├─ Inactive/terminated → coverage discovery (1.3.5) + patient outreach for updated insurance
@@ -178,6 +186,9 @@ site-of-care redirection denials.
 - **A1.** Look up CPT/HCPCS + payer + plan + site in auth-requirements rules engine/payer grid
 - **A2.** Confirm requirement via payer portal/278 inquiry when rules are stale or ambiguous
 - **A3.** Document "no auth required" evidence (screenshot/reference number) — defensible proof for appeals
+- **A4.** Maintain the auth-requirements grid as governed master data: versioned changes with
+  source citations, sampled accuracy audits against current payer policy, staleness alarms
+  (a wrong grid mass-produces false "no auth required" — the most expensive wrong answer)
 - **D1.** Is authorization required for this service/payer/site?
   - ├─ Required → initiate auth (1.4.2)
   - ├─ Not required → document proof; clear requirement

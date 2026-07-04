@@ -31,7 +31,7 @@ Relationships: `signals` (what an assessor sees/hears), `damages` (RC-* processe
 | AD-01 | Operating Model & Organization | `01-operating-model.md` | 8 / 8 |
 | AD-02 | Process Improvement & Performance Management | `02-process-improvement.md` | 7 / 7 |
 | AD-03 | Workforce | `03-workforce.md` | 8 / 8 |
-| AD-04 | Enabling Technology (non-AI) | `04-enabling-technology.md` | 8 / 8 |
+| AD-04 | Enabling Technology (non-AI) | `04-enabling-technology.md` | 10 / 10 |
 | AD-05 | Vendor & Outsourcing Management | `05-vendor-outsourcing.md` | 6 / 6 |
 | AD-06 | Performance & Financial Governance | `06-performance-governance.md` | 5 / 5 |
 
@@ -56,7 +56,7 @@ failure-mode/best-practice structure down the **master ontology's spine** — fu
 | `pfm-couplings.yaml` | ENG-02: hand-maintained `degrades` couplings for all PFM/RFM items (token-validated at build) |
 | `reconcile.py`, `couplings.yaml`, `binding-validation.md` | Binding validator & reconciler: resolves every OFM/PFM/RFM binding against the master ontology and registries, emits the machine-readable coupling graph, and (with scores + a facet assessment) checks the causal-chain contract both ways — class-aware (ENG-01), version-refusing (ENG-06), chain-grouping (ENG-04), and `--profile` prices findings via FM→pool (ENG-03) |
 | `18-full-assessment-simulation.md` | Full-assessment simulation results: model strengths validated, weaknesses quantified, and the ENG-* hardening backlog |
-| `field-instrument.yaml` | Machine-readable instrument: all 278 items (42 OFM + 162 PFM + 74 RFM) with prompts, signals, and score/notes fields |
+| `field-instrument.yaml` | Machine-readable instrument: all 286 items (44 OFM + 168 PFM + 74 RFM) with prompts, signals, and score/notes fields |
 | `field-instrument.html` | **Self-contained interactive scoring instrument** — layer tabs, search, 0/1/2 scoring with evidence notes, paired practice revealed on flagged items, per-layer progress, save/open state, scored-YAML export. Works offline on a tablet in the field |
 
 The three layers compose into complete findings: **OFM** (systemic cause, files 01–06) enables
@@ -82,6 +82,8 @@ a degraded AI gate → locked automation value. The recurring chains:
 | OFM-WF-08 AI-anxiety unmanaged | HITL quality, FM-AI-03 rubber-stamping, labeler quality | The experts the AI needs most leave first |
 | OFM-ET-01 unoptimized EHR workqueues | `queue_api`, workflow gates | Optimizer schedules against queues nobody owns |
 | OFM-ET-04 RPA graveyard | `handback_queues`, FM-BOTSILENT precedent | Fleet observability inherits distrust |
+| OFM-ET-09 native capability unlit | `native_capability_inventory`, `native_module` sourcing | Bolt-ons bought for owned capability; readiness scored 0 for sourcing-blindness reasons |
+| OFM-ET-10 clinical build blindside | `clinical_build_governance`, `intended_cpt_accuracy` | Prior-auth automation family (UC-01-07/08) launches on unmeasured lookup keys |
 | OFM-VN-03 black-box vendors | `agency_data_rights`, GOV-14 | Oversight analytics and telemetry impossible |
 | OFM-FG-01 cost-center myopia | Economics gate (E), investment loop funding | The whole portfolio starves regardless of readiness |
 

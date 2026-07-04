@@ -1,8 +1,15 @@
 # AD-04 Enabling Technology (non-AI)
 
 The conventional technology estate the AI stack stands on: EHR optimization, workqueues,
-bolt-ons, legacy RPA, telephony, patient-facing tech, and integration hygiene. Most "AI
-readiness" gaps found by the facet assessment have their root cause here.
+bolt-ons, legacy RPA, telephony, patient-facing tech, integration hygiene, native-capability
+sourcing, and the clinical-build boundary. Most "AI readiness" gaps found by the facet
+assessment have their root cause here.
+
+Native EHR capability is assessed on a three-state ladder — **licensed** (owned on paper),
+**lit** (enabled/enrolled), **configured-to-depth** (producing the output the dependent process
+actually needs). Scoring any state as the one above it is the domain's characteristic
+false-positive; the vendor crosswalks (`../../vendor-crosswalks/`) carry the per-module depth
+markers that make the third state field-checkable.
 
 ---
 
@@ -80,6 +87,36 @@ laptop.
 **Degrades:** `masterdata_governance` and half the data facets score partial solely because the
 real system-of-record is a spreadsheet — the audit's "govern the table first" findings live here.
 
+### OFM-ET-09 — Native capability licensed but unlit
+The EHR already ships the automation or AI the organization is about to buy: native rules
+frameworks, workqueue automation, predictive models, RTE follow-up queries, payer-platform auth
+checks — licensed, and either never enabled or enabled at install-default depth while bolt-ons
+are procured for the same capability.
+**Signals:** no inventory of licensed-but-unlit capability; vendor demos for functions the EHR
+release notes already list; "we didn't know it did that" from the analysts; native predictive
+models unlit while a third-party scoring tool is under contract.
+**Damages:** total cost (double-paying for owned capability); upgrade leverage; OFM-ET-02
+bolt-on sprawl compounds from here.
+**Degrades:** `native_capability_inventory`; every facet whose cheapest passing pattern is a
+native module scores 0/1 for sourcing-blindness reasons, not capability ones — the AI-era
+generalization of OFM-ET-03's feature debt.
+
+### OFM-ET-10 — The clinical build blindside
+Clinical-system build — order sets, visit types and scheduling decision trees, preference
+cards, documentation templates — ships through clinical change control with no revenue-cycle
+seat; its defects surface weeks later as denial and edit clusters that get attributed to staff
+behavior. The build supplies the *lookup keys* revenue processes and their automations run on:
+order-set CPTs feed the auth grid (1.4.1) and estimates (1.6.1); visit types carry auth/network
+mappings; templates drive documentation-driven charging (3.1.1).
+**Signals:** denial cluster traced to an order-set change nobody in RC knew about; visit-type
+list maintained by clinical IT with no auth-grid sync; no RC sign-off in clinical change
+control; coaching prescribed for what recalculation proves is system arithmetic.
+**Damages:** FM-NOAUTH, FM-MEDNEC, FM-CHGMISS at volume; the causal-stack contract itself
+(build defects misattributed to PFM/RFM layers prescribe the wrong fix).
+**Degrades:** `clinical_build_governance`, `intended_cpt_accuracy`; the prior-auth automation
+family (UC-01-07/08) inherits unmeasured lookup keys; UC-03-06 autonomous charging inherits a
+silently shifting trigger surface.
+
 ## Best practices
 
 ### BP-ET-01 — Annual EHR optimization cycle
@@ -136,12 +173,36 @@ with the original builders as design authorities.
 stewardship, not routed around. **Prevents:** OFM-ET-08. **Enables:**
 `masterdata_governance`, the crosswalk and register facets, audit-grade control.
 
+### BP-ET-09 — Native-first sourcing with a capability inventory
+A maintained inventory of licensed EHR-native automation/AI capability with lit/unlit status
+and an adoption owner per item; every bolt-on or build proposal answers "why not the native
+module?" against the vendor crosswalk before procurement; feature harvest (BP-ET-03) extended
+to automation and AI capability explicitly, at all three ladder states (licensed → lit →
+configured-to-depth).
+**Markers:** `native_capability_inventory` current and dated; a bolt-on purchase blocked (or a
+native module lit) in the last year because the inventory caught the overlap; the cost model's
+`native_module` option priced on every applicable use case. **Prevents:** OFM-ET-09 (and
+starves -02). **Enables:** file 14's overbuild flags enforced as practice; score-don't-build
+becomes an auditable decision, not a slogan.
+
+### BP-ET-10 — Revenue-embedded clinical build governance
+Revenue cycle holds a standing seat in clinical change control (14.2.A6): order-set, visit-type
+/scheduling-tree, preference-card, and documentation-template changes are screened for revenue
+impact pre-release; charge triggers, auth-requirement mappings, and estimate assembly
+regression-tested against the change; lookup-key fidelity (intended-vs-performed CPT,
+visit-type→auth-grid sync) sampled on a cadence.
+**Markers:** RC sign-off visible in clinical release records; `intended_cpt_accuracy` measured
+and trending; zero denial clusters root-caused to an unreviewed clinical build change in the
+last two quarters. **Prevents:** OFM-ET-10. **Enables:** the prior-auth automation family
+launches on measured keys; PFM-1.1-05/1.4-05/3.1-05/5.5-02/14.2-02 findings get build-layer
+fixes instead of coaching prescriptions.
+
 ## Maturity anchors (AD-04)
 
 | Level | Anchor |
 |---|---|
-| 0 | Install-default EHR; unmanaged bots; spreadsheet-critical operations |
-| 1 | Inventories exist (queues, apps, interfaces, bots); optimization ad hoc |
-| 2 | Annual optimization cycle; bot registry; agent desktop integrated |
-| 3 | Capability-based portfolio governed; stay-current policy; digital adoption operation running |
-| 4 | Technology estate metrics in the investment packet; configuration-class changes ship in days; zero shadow systems-of-record |
+| 0 | Install-default EHR; unmanaged bots; spreadsheet-critical operations; native capability unknown |
+| 1 | Inventories exist (queues, apps, interfaces, bots, licensed native capability); optimization ad hoc |
+| 2 | Annual optimization cycle; bot registry; agent desktop integrated; native inventory carries lit/unlit status with owners |
+| 3 | Capability-based portfolio governed; stay-current policy; digital adoption operation running; revenue seat in clinical change control; native-first sourcing enforced at procurement |
+| 4 | Technology estate metrics in the investment packet; configuration-class changes ship in days; zero shadow systems-of-record; native capability scored at configured-to-depth with lookup-key fidelity measured and trending |

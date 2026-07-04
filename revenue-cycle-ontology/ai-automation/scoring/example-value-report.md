@@ -10,7 +10,7 @@ Profile date 2026-07-03; NPR $1.00B. 99 use cases valued. All figures annual ste
 | Recurring range (low–high) | $21.1M – $67.6M |
 | One-time cash release (AR days) | $15.9M |
 | Risk & compliance EV (VS-8, segregated) | $1.3M |
-| Year-1 value, disposition-adjusted | $6.0M |
+| Year-1 value, disposition-adjusted | $5.9M |
 
 ## By value stream (recurring, capped, base case)
 
@@ -93,10 +93,10 @@ Overlapping attribution — a use case with three gaps appears under all three; 
 | UC-05-01 | Coding | VS-1 VS-5 VS-6 | $444k | **$888k** | $1.4M | $1.4M | — | DEFER | $0k |
 | UC-03-07 | Charge Capture | VS-3 | $400k | **$800k** | $1.3M | — | — | CONDITIONAL | $200k |
 | UC-09-02 | AR Management | VS-5 VS-6 | $377k | **$754k** | $1.2M | $1.4M | — | DEFER | $113k |
-| UC-01-04 | Patient Access | VS-1 VS-5 VS-6 | $369k | **$738k** | $1.2M | $822k | — | CONDITIONAL | $185k |
+| UC-01-04 | Patient Access | VS-1 VS-5 VS-6 | $369k | **$738k** | $1.2M | $822k | — | DEFER | $111k |
 | UC-09-01 | AR Management | VS-4 VS-5 VS-6 | $359k | **$718k** | $1.1M | $2.7M | — | DEFER | $0k |
 | UC-11-06 | Contracting | VS-2 VS-3 | $345k | **$690k** | $1.1M | — | — | DEFER | $0k |
-| UC-01-07 | Patient Access | VS-1 | $344k | **$688k** | $1.1M | — | — | DEFER | $103k |
+| UC-01-07 | Patient Access | VS-1 | $344k | **$688k** | $1.1M | — | — | DEFER | $0k |
 | UC-01-08 | Patient Access | VS-1 VS-6 | $326k | **$651k** | $1.0M | — | — | DEFER | $0k |
 | UC-01-16 | Patient Access | VS-1 VS-6 | $325k | **$650k** | $1.0M | — | — | DEFER | $0k |
 | UC-10-03 | Patient Financial Svcs | VS-4 VS-6 | $314k | **$628k** | $1.0M | — | — | DEFER | $94k |

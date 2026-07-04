@@ -48,6 +48,8 @@ facet_catalog:
   card_images:             {dim: data, prompt: "Insurance card images are captured digitally at registration/pre-registration (front and back)", class: failure-explained}
   um_worksheets:           {dim: data, prompt: "UR criteria worksheets and determinations (incl. final status outcomes) are stored structured", class: failure-explained}
   edi_telemetry:           {dim: data, prompt: "EDI transaction telemetry (volumes, acks, timestamps by payer/route) is retained", class: failure-explained}
+  intended_cpt_accuracy:   {dim: data, prompt: "Intended-procedure codes at scheduling/order time (order-set, visit-type, or preference-card derived) are measured against performed CPTs, with mismatch and auth-workqueue routing-miss rates tracked", class: failure-explained}
+  auth_grid_accuracy:      {dim: data, prompt: "The auth-requirements grid (payer x plan x CPT x site — e.g., Epic ASA) is accuracy-sampled against current payer policy on a cadence, versioned with source citations", class: failure-explained}
 
   # ---- integration ----
   writeback:               {dim: integration, prompt: "Write-back path exists: transactions, flags, and queue routing can be set programmatically (I3)", class: new-capability}
@@ -73,6 +75,7 @@ facet_catalog:
   agency_data_rights:      {dim: connectivity, prompt: "Collection-agency/vendor contracts grant activity-data, remit-detail, and call-recording access", blockable: true, class: contractual}
   vbc_data_sharing:        {dim: connectivity, prompt: "VBC payer data-sharing (claims extracts, attribution rosters) is contractually granted and flowing", class: contractual}
   bulletin_access:         {dim: connectivity, prompt: "Payer bulletins/policy pages/transmittals are systematically accessible for ingestion", class: failure-explained}
+  rte_benefit_depth:       {dim: connectivity, prompt: "271 responses return service-type-specific benefit detail (cost-share, carve-outs) for top service lines/payers — payer-specific query construction and follow-up chaining configured, not generic STC-30 pings", class: failure-explained}
 
   # ---- workflow ----
   denial_taxonomy:         {dim: workflow, prompt: "A governed denial taxonomy (categories, root-cause owners) exists and is used", class: failure-explained}
@@ -94,6 +97,8 @@ facet_catalog:
   handback_queues:         {dim: workflow, prompt: "Named human hand-back queues exist for automation exceptions (GOV-05 wiring)", class: failure-explained}
   documentation_stability: {dim: workflow, prompt: "Clinical documentation practice in target charging domains is complete and stable (start/stop times, criteria fields)", class: failure-explained}
   posting_standardized:    {dim: workflow, prompt: "Payment-posting rules use one standardized adjustment/transaction-code scheme", class: failure-explained}
+  clinical_build_governance: {dim: workflow, prompt: "Clinical-system build changes (order sets, visit types/scheduling trees, preference cards, documentation templates) pass revenue-impact review before release, with charge-trigger/auth-mapping regression (14.2)", class: failure-explained}
+  native_capability_inventory: {dim: workflow, prompt: "A current inventory of licensed EHR-native automation/AI capabilities exists with lit/unlit status and adoption owners; native options are evaluated before any bolt-on purchase", class: failure-explained}
 
   # ---- org ----
   routing_authority:       {dim: org, prompt: "Cross-functional routing authority exists: named owners are obligated to accept prevention/policy-change actions", class: failure-explained}
@@ -131,15 +136,15 @@ use_cases:
   UC-01-01: {name: "Order intake document AI",            vector: {D: 2, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [orders_digitized, golden_sets], note: "Defer if orders remain physical paper; kill if volume immaterial"}
   UC-01-02: {name: "Identity resolution / dup MRN",       vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [mpi_capacity], note: "Merge is always human (GOV-09)"}
   UC-01-03: {name: "Card OCR & plan mapping",             vector: {D: 4, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [denial_labels, masterdata_governance, card_images], note: "Fix payer master governance before training a mapper into it"}
-  UC-01-04: {name: "Eligibility orchestration",           vector: {D: 3, I: 3, C: 2, W: 3, O: 1, V: 2, E: 2, L: 2}, facets: [rte_eligibility, portal_automation_permitted], note: "RTE enrollment campaign; scope-cut payers with no electronic path"}
+  UC-01-04: {name: "Eligibility orchestration",           vector: {D: 3, I: 3, C: 2, W: 3, O: 1, V: 2, E: 2, L: 2}, facets: [rte_eligibility, rte_benefit_depth, portal_automation_permitted], note: "RTE enrollment campaign; scope-cut payers with no electronic path. Volume without benefit depth automates the portal-lookup workaround, not verification"}
   UC-01-05: {name: "Coverage discovery sweep",            vector: {D: 3, I: 3, C: 2, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [medicaid_files, rte_eligibility], note: "Monitor false-attach rate from day one"}
   UC-01-06: {name: "COB/MSP primacy inference",           vector: {D: 3, I: 2, C: 2, W: 2, O: 2, V: 2, E: 1, L: 1}, facets: [mspq_structured], note: "Capture-first if MSPQ is paper-only"}
-  UC-01-07: {name: "Auth requirement engine",             vector: {D: 3, I: 3, C: 3, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [bulletin_access, portal_automation_permitted, masterdata_governance], note: "Stale grid worse than none — needs policy-monitoring feed"}
-  UC-01-08: {name: "Auth submission agent",               vector: {D: 3, I: 4, C: 3, W: 3, O: 2, V: 2, E: 2, L: 2}, facets: [fabric, auth_transactions, notes_access, citation_harness, portal_automation_permitted, policy_library], note: "Wave-0 fabric + GOV-03 harness prerequisites"}
+  UC-01-07: {name: "Auth requirement engine",             vector: {D: 3, I: 3, C: 3, W: 3, O: 2, V: 3, E: 2, L: 2}, facets: [bulletin_access, portal_automation_permitted, masterdata_governance, intended_cpt_accuracy], note: "Stale grid worse than none — needs policy-monitoring feed. The lookup key comes from order-set/visit-type build: a right grid answers wrong questions if intended CPTs are unmeasured"}
+  UC-01-08: {name: "Auth submission agent",               vector: {D: 3, I: 4, C: 3, W: 3, O: 2, V: 2, E: 2, L: 2}, facets: [fabric, auth_transactions, notes_access, citation_harness, portal_automation_permitted, policy_library, auth_grid_accuracy, intended_cpt_accuracy], note: "Wave-0 fabric + GOV-03 harness prerequisites. Consumes grid verdicts: false 'no-auth' upstream means the agent never sees the case"}
   UC-01-09: {name: "Auth status tracking bots",           vector: {D: 2, I: 3, C: 3, W: 3, O: 1, V: 2, E: 2, L: 2}, facets: [portal_automation_permitted, fabric], note: "Kill per payer segment if ToS prohibits with no 278/API alternative"}
   UC-01-10: {name: "Auth-to-service reconciliation",      vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [auth_structured], note: "Structure auth capture first if details live in notes"}
   UC-01-11: {name: "Necessity screening & dx assist",     vector: {D: 3, I: 3, C: null, W: 2, O: 2, V: 2, E: 2, L: 2}, facets: [cds_ordering_hook, provider_adoption, policy_library], note: "Post-hoc screening loses most value — needs ordering-workflow hook"}
-  UC-01-12: {name: "Estimate accuracy engine",            vector: {D: 4, I: 3, C: 2, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [contract_engine_loaded, rte_eligibility, gfe_stored], note: "Estimates without loaded contract terms are fiction"}
+  UC-01-12: {name: "Estimate accuracy engine",            vector: {D: 4, I: 3, C: 2, W: 2, O: 2, V: 3, E: 2, L: 2}, facets: [contract_engine_loaded, rte_eligibility, rte_benefit_depth, gfe_stored, intended_cpt_accuracy], note: "Estimates without loaded contract terms are fiction; without benefit depth and intended-CPT fidelity they are precise fictions"}
   UC-01-13: {name: "Clearance risk scoring",              vector: {D: 4, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [clearance_outcomes, hitl_capacity], note: "Deferral recommendations stay A1 forever (GOV-09)"}
   UC-01-14: {anchor: opportunity, name: "Conversational pre-registration",     vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 3}, facets: [outreach_consent, escalation_staffed], note: "Kill without staffed human escalation coverage"}
   UC-01-15: {name: "POS next-best-action",                vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 2}, facets: [collection_policy_unified], note: "Standardize collection policy across sites first"}
@@ -159,7 +164,7 @@ use_cases:
   UC-03-03: {name: "Drug units validator",                vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [masterdata_governance], note: "Govern the NDC crosswalk table first"}
   UC-03-04: {name: "Charge trigger surveillance",         vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 1, L: 1}, facets: [], note: "Low bar — Wave-1 candidate almost everywhere"}
   UC-03-05: {name: "CDM update automation",               vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 1, L: 1}, facets: [cdm_governance, reference_license], note: "Defer if CDM changes happen by direct edit"}
-  UC-03-06: {name: "Autonomous charging",                 vector: {D: 4, I: 3, C: null, W: 4, O: 2, V: 3, E: 2, L: 1}, facets: [documentation_stability, notes_access, golden_sets], note: "Enable domain-by-domain; capture-first where documentation incomplete"}
+  UC-03-06: {name: "Autonomous charging",                 vector: {D: 4, I: 3, C: null, W: 4, O: 2, V: 3, E: 2, L: 1}, facets: [documentation_stability, notes_access, golden_sets, clinical_build_governance], note: "Enable domain-by-domain; capture-first where documentation incomplete. Charges fire from order/doc build — ungoverned clinical build changes silently retrain the trigger surface"}
   UC-03-07: {anchor: opportunity, name: "Device/implant reconciliation",       vector: {D: 3, I: 2, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [supply_chain_feed], note: "Point-of-use capture project first if OR supplies are paper stickers"}
   UC-03-08: {name: "MRF/transparency pipeline",           vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 1, L: 2}, facets: [contract_engine_loaded], note: "Bad terms data automates noncompliance"}
 
@@ -191,7 +196,7 @@ use_cases:
 
   # ---------------- RC-07 Payments ----------------
   UC-07-01: {name: "Intelligent auto-posting",            vector: {D: 3, I: 3, C: 1, W: 3, O: 2, V: 3, E: 2, L: 1}, facets: [era_coverage, posting_standardized], note: "ERA/EFT enrollment campaign first if paper-heavy"}
-  UC-07-02: {name: "CARC mapping intelligence",           vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 2, E: 1, L: 1}, facets: [denial_taxonomy], note: "Without a taxonomy the model learns today's mis-mappings"}
+  UC-07-02: {name: "CARC mapping intelligence",           vector: {D: 4, I: 2, C: null, W: 2, O: 2, V: 2, E: 1, L: 1}, facets: [denial_taxonomy, masterdata_governance], note: "Without a taxonomy the model learns today's mis-mappings; the CARC-mapping table itself is ungoverned master data at most shops (PFM-7.1-03)"}
   UC-07-03: {name: "Paper EOB/correspondence IDP",        vector: {D: 2, I: 3, C: null, W: 2, O: 2, V: 3, E: 2, L: 1}, facets: [lockbox_imaging, golden_sets], note: "Switch lockbox to imaging service (contract change)"}
   UC-07-04: {name: "Treasury matching",                   vector: {D: 3, I: 3, C: null, W: 2, O: 1, V: 2, E: 2, L: 1}, facets: [bank_feeds], note: "Straightforward where bank feeds exist"}
   UC-07-05: {name: "Variance detection coverage",         vector: {D: 3, I: 3, C: null, W: 3, O: 2, V: 2, E: 2, L: 1}, facets: [contract_engine_loaded], note: "No engine = that IS the project"}

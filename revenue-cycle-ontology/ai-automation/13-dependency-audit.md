@@ -22,6 +22,7 @@ under-specifies):
 | **C3 Outcome labels** | Can the efficacy claim be trained and *falsified* — are the outcome labels recorded? | No `appeal_outcomes` → no golden set → unfalsifiable efficacy |
 | **C4 Execution hook** | Is there a concrete integration point where the output lands (not just generic write-back)? | Attachment auto-assembly needs programmatic record retrieval (`him_retrieval`) |
 | **C5 Release gating** | Does an A3-target system have the evaluation asset that earns the autonomy (CAP-09)? | Autonomous charging / edit agents without `golden_sets` |
+| **C6 Input lineage** *(added round 2)* | What upstream build or master supplies the decision keys (lookup values, routing keys) the automation runs on — and is their fidelity scored? | The auth engine's CPT key comes from order-set/visit-type build (`intended_cpt_accuracy`); the submission agent consumes grid verdicts (`auth_grid_accuracy`) |
 
 ## Findings by domain
 
@@ -92,11 +93,45 @@ core (governance stack, label pipeline, orchestration fabric, contract engine) k
 The audit sharpened the middle of the leverage table, not its head — which is itself a useful
 validation that the original sequencing guidance was sound.
 
+## Audit round 2 (2026-07) — the input-lineage sweep (C6)
+
+Field use of the ontology surfaced a dependency class the five-class checklist missed:
+**automations whose decision keys are supplied by upstream build** — the auth-requirements
+grid (Epic ASA class), order-set/visit-type-derived CPTs, eligibility query configuration.
+A gate vector can pass on every existing class while the automation runs on unmeasured keys;
+the failure is silent because the mis-keyed cases never enter the automation's own queues.
+The class was formalized as **C6** and swept across all 99 use cases with the same
+anti-inflation bias (decisive-only).
+
+**Amended (6 use cases):**
+
+| UC | Added | Class | Rationale |
+|---|---|---|---|
+| 01-04 Eligibility orchestration | `rte_benefit_depth` *(new facet)* | C6 | Volume coverage without payer-specific query chaining automates the portal-lookup workaround; the 271 cannot contain what the 270 never asked (PFM-1.3-05) |
+| 01-07 Auth requirement engine | `intended_cpt_accuracy` *(new facet)* | C6 | The engine answers per CPT+payer+site — a correct grid answers the wrong question when the order-set/visit-type-derived key is unmeasured |
+| 01-08 Auth submission agent | `auth_grid_accuracy` *(new facet)*, `intended_cpt_accuracy` | C6 | Consumes grid verdicts: a false "no auth required" upstream means the case never reaches the agent — the silent branch |
+| 01-12 Estimate engine | `rte_benefit_depth`, `intended_cpt_accuracy` | C6 | Cost-share math needs benefit depth; the estimate is keyed on the intended CPT |
+| 03-06 Autonomous charging | `clinical_build_governance` *(new facet)* | C6 | Charges fire from order/documentation build; ungoverned clinical releases silently shift the trigger surface |
+| 07-02 CARC mapping intelligence | `masterdata_governance` | C6 | The CARC→category mapping table is ungoverned master data at most shops (PFM-7.1-03) — the model trains on its drift |
+
+**New facets (catalog 98 → 103):** `rte_benefit_depth`, `auth_grid_accuracy`,
+`intended_cpt_accuracy`, `clinical_build_governance`, `native_capability_inventory` (the fifth
+supports the `native_module` sourcing option and OFM-ET-09 rather than a UC gate).
+
+**Sequencing implications:** the prior-auth family (01-07/08/09/10) is where C6 bites hardest —
+its keys and verdicts are all upstream build. Grid governance (1.4.1.A4) and intended-CPT
+measurement (1.1.2.A9) are cheap, prospective, and impossible to backfill — the same
+turn-on-capture-now logic as `um_worksheets`/`gfe_stored` in round 1. Considered and rejected
+(anti-inflation): notification-window grids for 02-03 (folded into payer-requirement masters),
+`contract_engine_loaded` on 09-01 (round 1 confirmed RC-09 as-is), lineage facets on detector
+UCs (01-10, 14-02) whose *purpose* is catching key drift.
+
 ## Standing rule (adopted into the loop)
 
 - **Depth-on-demand**: every XL-tier use case gets the full file-12-style deep-dive before
   council approval; every L-tier gets the one-week desk version; S/M tiers rely on this audit's
   five-class checklist at design time.
-- **Audit cadence**: re-run the five-class sweep annually, and whenever a deep-dive or a failed
-  build surfaces a dependency class the checklist missed — the checklist, like everything else
-  in this stack, is a living artifact under true-up.
+- **Audit cadence**: re-run the (now six-class) sweep annually, and whenever a deep-dive or a
+  failed build surfaces a dependency class the checklist missed — the checklist, like everything
+  else in this stack, is a living artifact under true-up. Round 2 (C6) is itself the precedent:
+  the class was found by field questioning, not by the annual sweep.

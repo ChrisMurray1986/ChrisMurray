@@ -20,8 +20,8 @@ rates:
   hitl_hourly: 38
   token_price_per_m: {api: 4.00, finetune: 1.00, slm: 0.10}
   ml_per_prediction: 0.0005
-  option_build_mult: {vendor: 0.30, build_rules: 0.80, build_rpa: 0.90, build_ml: 1.20, api: 1.00, finetune: 1.15, slm: 1.10}
-  maintenance_pct: {vendor: 0.05, build_rules: 0.25, build_rpa: 0.25, build_ml: 0.15, api: 0.15, finetune: 0.18, slm: 0.20}
+  option_build_mult: {native_module: 0.15, vendor: 0.30, build_rules: 0.80, build_rpa: 0.90, build_ml: 1.20, api: 1.00, finetune: 1.15, slm: 1.10}
+  maintenance_pct: {native_module: 0.08, vendor: 0.05, build_rules: 0.25, build_rpa: 0.25, build_ml: 0.15, api: 0.15, finetune: 0.18, slm: 0.20}
   finetune_fixed: 60000
   finetune_annual_retune: 25000
   ml_retrain_pct: 0.15          # of build, per year, for classical ML
@@ -33,9 +33,14 @@ rates:
   differentiator_threshold: 0.15
 
 workloads:   # option sets + per-txn defaults by workload type
-  rules: {options: [build_rules, vendor], tokens: 0,     hitl_share: 0.02, hitl_min: 3}
-  rpa:   {options: [build_rpa, vendor],   tokens: 0,     hitl_share: 0.05, hitl_min: 4}
-  ml:    {options: [build_ml, vendor],    tokens: 0,     hitl_share: 0.10, hitl_min: 2}
+  # native_module: the shop's EHR ships the capability (rules/BPA frameworks, workqueue
+  # automation, native predictive models) — config + activation, not procurement. Viability is
+  # shop-specific: confirm against the vendor crosswalk (../../vendor-crosswalks/) before
+  # accepting a native_module recommendation; module license uplifts, where charged, enter as
+  # a vendor_txn/rate override in the org profile.
+  rules: {options: [native_module, build_rules, vendor], tokens: 0, hitl_share: 0.02, hitl_min: 3}
+  rpa:   {options: [native_module, build_rpa, vendor],   tokens: 0, hitl_share: 0.05, hitl_min: 4}
+  ml:    {options: [native_module, build_ml, vendor],    tokens: 0, hitl_share: 0.10, hitl_min: 2}
   idp:   {options: [vendor, api, slm],    tokens: 3000,  hitl_share: 0.20, hitl_min: 2, family: doc_extraction}
   nlp:   {options: [vendor, api, finetune, slm], tokens: 2500, hitl_share: 0.30, hitl_min: 3, family: clinical_nlp}
   llm:   {options: [vendor, api, finetune, slm], tokens: 9000, hitl_share: 1.00, hitl_min: 8, family: gen_drafting}

@@ -1,0 +1,297 @@
+# Epic crosswalk — native capability bindings for a single-instance Epic shop.
+# Schema: README.md in this directory. Neutral layer governs; as_of is load-bearing.
+
+meta:
+  vendor: "Epic"
+  as_of: "2026-07"
+  archetype: "Single-instance Epic: Chronicles operational; Clarity (nightly) + Caboodle
+    (dimensional) analytics; Resolute HB/PB billing; Prelude/Cadence access; Interconnect/FHIR/
+    CDS Hooks interfaces; MyChart patient-facing"
+  confidence_legend:
+    high: "Stable, widely deployed module behavior"
+    medium: "Real capability; packaging/licensing/naming churns — verify current product scope"
+    needs-sme-validation: "Structured hypothesis; confirm with certified analyst on site"
+
+facets:
+  # ---- data ----
+  orders_digitized:
+    module: "e-fax → OnBase/ECM-class document management indexed to patient; Epic order transmittal for internal orders"
+    states: {licensed: "Doc-mgmt integration owned", lit: "Inbound faxes land as images", configured_to_depth: "Any inbound order retrievable as image/text within minutes, indexed to patient"}
+    depth_markers: []
+    confidence: high
+  mspq_structured:
+    module: "Registration questionnaires / MSPQ activity (Prelude) writing discrete items"
+    states: {licensed: "Base registration", lit: "MSPQ activity in use", configured_to_depth: "Answers as discrete fields driving value/condition codes, not scanned forms"}
+    depth_markers:
+      - {id: mspq-discrete, check: "Pull 10 recent Medicare registrations: MSPQ answers queryable as fields and value codes set from them?", symptom_binding: PFM-1.2-03}
+    confidence: high
+  auth_structured:
+    module: "Auth/cert records on the encounter/account (Prelude/Referrals)"
+    states: {licensed: "Base", lit: "Auth numbers recorded somewhere", configured_to_depth: "Auth number, approved CPTs, units, sites, date span as discrete fields; notes are commentary, not the record"}
+    depth_markers:
+      - {id: auth-discrete-span, check: "Sample 10 approved auths: CPT/units/span discretely queryable (not free-text)?", symptom_binding: PFM-1.4-03}
+    confidence: high
+  denial_labels:
+    module: "Clarity remit tables + denial/followup workqueue history; attribution needs a built CARC×context→owner mapping table"
+    states: {licensed: "Clarity standard", lit: "Remit detail flowing", configured_to_depth: "12mo denials joined to accounts with defect/owner attribution in one query"}
+    depth_markers:
+      - {id: attribution-table, check: "Run the join for last quarter: does an owner-attributed defect land per denial, or only CARC codes?", symptom_binding: PFM-8.1-02}
+    confidence: high
+    note: "Attribution is modeling work, not platform work (file 14 §1)"
+  appeal_outcomes:
+    module: "Appeal tracking in workqueues/extensions or bolt-on; outcomes often live in letter PDFs"
+    states: {licensed: "WQ framework", lit: "Appeals tracked as WQ items", configured_to_depth: "Win/loss/$ by level queryable for last year"}
+    depth_markers: []
+    confidence: high
+  touch_logging:
+    module: "HB/PB account activity/history tables (largely native)"
+    states: {licensed: "Native", lit: "Native", configured_to_depth: "Who/when/what-action for any account — including bolt-on and vendor touches fed back in"}
+    depth_markers:
+      - {id: bolt-on-gaps, check: "Pick 5 vendor-worked accounts: do their touches appear, or is the log blind outside Epic?", symptom_binding: PFM-9.1-02}
+    confidence: high
+  clinical_structured: {module: "Clarity/Caboodle flowsheet, lab, MAR tables", states: {licensed: "Native", lit: "Native", configured_to_depth: "Labs/vitals/meds as timestamped rows per encounter"}, depth_markers: [], confidence: high, note: "Score it, don't build it (file 14 §2)"}
+  notes_access:
+    module: "Bulk FHIR / Clarity HNO note text into a governed document store"
+    states: {licensed: "Interconnect/FHIR scopes", lit: "Extract pipeline exists", configured_to_depth: "Programmatic fetch of all notes for an encounter, with governance approval on file"}
+    depth_markers: []
+    confidence: high
+    note: "The blocker is approval and governance, not extraction tech"
+  charge_linkage: {module: "Clarity order/MAR/charge tables share encounter keys", states: {licensed: "Native", lit: "Native", configured_to_depth: "Orders↔eMAR↔schedule↔charges join for one encounter"}, depth_markers: [], confidence: high}
+  supply_chain_feed: {module: "ERP item master + invoice feed joined to CDM (Workday/Oracle/Infor + OpTime preference-card usage)", states: {licensed: "ERP-side", lit: "Feed lands", configured_to_depth: "Implant case: item, invoice cost, charge in one view"}, depth_markers: [], confidence: medium}
+  acks_retained: {module: "Clearinghouse portal retention → nightly archive to warehouse", states: {licensed: "Clearinghouse-side", lit: "Files retained", configured_to_depth: "Produce the 999/277CA for any claim from last quarter"}, depth_markers: [], confidence: high}
+  lockbox_imaging: {module: "Bank imaging service (contract) or scan-at-receipt", states: {licensed: "Banking amendment", lit: "Images arriving", configured_to_depth: "Yesterday's correspondence as images, indexed"}, depth_markers: [], confidence: high}
+  bank_feeds: {module: "Treasury BAI2/API feed → warehouse; match to 835 TRN", states: {licensed: "Bank-side", lit: "Daily feed lands", configured_to_depth: "TRN visible and matched daily"}, depth_markers: [], confidence: high}
+  takeback_linkage:
+    module: "Resolute posting convention: link reversal transactions to original claims"
+    states: {licensed: "Native", lit: "Posting rules exist", configured_to_depth: "Any recoupment traces to its original claim in one query"}
+    depth_markers:
+      - {id: reversal-convention, check: "Trace 10 recoupments end-to-end: linked, or force-balanced with generic codes?", symptom_binding: PFM-7.4-02}
+    confidence: high
+    note: "Pure configuration/process fix"
+  contract_repository: {module: "Governed document library or CLM; completeness is the work", states: {licensed: "—", lit: "Library exists", configured_to_depth: "Every executed contract + amendment retrievable by payer"}, depth_markers: [], confidence: high}
+  contract_engine_loaded:
+    module: "Resolute expected-reimbursement contracts (native)"
+    states: {licensed: "Resolute contracts module", lit: "Terms loaded for top payers", configured_to_depth: "Expected pay computes for ≥80% of volume AND a parallel-priced sample matches (UC-11-01 verification)"}
+    depth_markers:
+      - {id: parallel-price, check: "Parallel-price 20 claims against source contracts: engine matches? 'Loaded' without proof scores 1", symptom_binding: PFM-11.2-01}
+    confidence: high
+  policy_library: {module: "No EHR module does this — built corpus (CAP-04)", states: {licensed: "n/a", lit: "n/a", configured_to_depth: "Retrieve the policy version in force on a date, with citation"}, depth_markers: [], confidence: high, note: "True build; scope to top payers × categories"}
+  provider_master:
+    module: "Epic SER records reconciled with the credentialing system"
+    states: {licensed: "Native", lit: "SER populated", configured_to_depth: "One governed source answers NPI/credential/enrollment status; reconciliation process owned"}
+    depth_markers:
+      - {id: ser-recon, check: "Sample 10 providers: SER vs credentialing system agree on enrollment status/effective dates?", symptom_binding: PFM-11.4-01}
+    confidence: high
+  gfe_stored: {module: "Estimates module output retained, linked to final bills", states: {licensed: "Estimates module", lit: "Estimates generated", configured_to_depth: "Stored, versioned, linkable to final bill — accuracy loop closeable"}, depth_markers: [{id: estimate-retention, check: "Pull last month's estimates joined to final claims: does the join exist?", symptom_binding: PFM-1.6-03}], confidence: high}
+  consents_indexed: {module: "eSignature/consent module indexed to encounter", states: {licensed: "Base", lit: "Consents captured", configured_to_depth: "Pull the NSA consent for a given OON claim"}, depth_markers: [], confidence: high}
+  qa_history: {module: "Structured QA table (governed) — QA tooling is usually spreadsheet-grade", states: {licensed: "—", lit: "QA recorded", configured_to_depth: "QA results as analyzable rows, not workbooks"}, depth_markers: [], confidence: high}
+  audit_outcomes: {module: "Audit tracking module/bolt-on or governed table", states: {licensed: "varies", lit: "Audits logged", configured_to_depth: "Findings + dollars by audit, linked to claims"}, depth_markers: [], confidence: high}
+  plan_payment_history: {module: "HB guarantor/payment-plan tables", states: {licensed: "Native", lit: "Plans in system", configured_to_depth: "Installments, declines, timing as history per guarantor"}, depth_markers: [], confidence: high}
+  payment_timing_history: {module: "Clarity remit + transaction history (standard Cogito content)", states: {licensed: "Native", lit: "Native", configured_to_depth: "24-mo lag curves by payer render"}, depth_markers: [], confidence: high}
+  realization_history: {module: "Same tables, cohort math", states: {licensed: "Native", lit: "Native", configured_to_depth: "24-mo realization by payer/cohort"}, depth_markers: [], confidence: high}
+  deficiency_structured: {module: "HIM deficiency tracking (native)", states: {licensed: "Native", lit: "In use", configured_to_depth: "Deficiencies as rows with aging, not email"}, depth_markers: [], confidence: high}
+  working_drg_recorded: {module: "CDI module fields (native where CDI documents in-system)", states: {licensed: "CDI module", lit: "CDI in-system", configured_to_depth: "Working DRG and final DRG side-by-side per case"}, depth_markers: [], confidence: high}
+  clearance_outcomes: {module: "Prelude/registration items + remit join (small build)", states: {licensed: "Native fields", lit: "Statuses set", configured_to_depth: "Clearance status at service joined to downstream payment outcome"}, depth_markers: [], confidence: high, note: "Turn on capture now — prospective-label rule"}
+  statement_history: {module: "HB statement tables + statement-vendor return files ingested", states: {licensed: "Native + vendor files", lit: "Statements logged", configured_to_depth: "Channel/timing/response history per patient"}, depth_markers: [], confidence: high}
+  audit_channels_digitized: {module: "Mail imaging + payer-portal polling + fax-to-image → one intake queue", states: {licensed: "—", lit: "Channels land digitally", configured_to_depth: "Every audit letter from any channel in one queue"}, depth_markers: [], confidence: high}
+  peer_benchmarks: {module: "Licensed benchmark content (societies, CMS PUFs)", states: {licensed: "Contract", lit: "Table loaded", configured_to_depth: "Benchmark table queryable with definitions aligned"}, depth_markers: [], confidence: high}
+  system_copy_extracts: {module: "Nightly extracts of each master copy (billing, estimator, MRF, engine)", states: {licensed: "—", lit: "Extracts land", configured_to_depth: "Diff two system copies of a master on demand"}, depth_markers: [], confidence: high}
+  card_images: {module: "Prelude/Welcome kiosk + MyChart pre-check-in capture", states: {licensed: "Native", lit: "Capture paths on", configured_to_depth: "Front/back images for yesterday's registrations — desk compliance is the gap"}, depth_markers: [], confidence: high}
+  um_worksheets: {module: "UM/CM module documentation, or criteria vendor export (contract)", states: {licensed: "UM module / MCG-InterQual", lit: "Worksheets completed in-system", configured_to_depth: "Criteria worksheets + final status determinations queryable"}, depth_markers: [], confidence: high}
+  edi_telemetry: {module: "Clearinghouse archive + simple aggregates", states: {licensed: "—", lit: "Archive lands", configured_to_depth: "Daily 837/835/270 volumes by payer chart for 12mo"}, depth_markers: [], confidence: high}
+  intended_cpt_accuracy:
+    module: "Order-set/visit-type build + a measurement join (scheduled vs performed CPT vs auth-grid key)"
+    states: {licensed: "n/a — measurement discipline", lit: "Intended CPTs recorded at scheduling (1.1.2.A9)", configured_to_depth: "Mismatch and auth-WQ routing-miss rates measured and trending"}
+    depth_markers:
+      - {id: intended-vs-performed, check: "Sample 25 scheduled procedural cases: order-set/visit-type-derived CPT vs performed CPT vs ASA lookup key — measure mismatch; count cases that never hit an auth WQ but denied CO-197", symptom_binding: PFM-1.1-05}
+    confidence: high
+  auth_grid_accuracy:
+    module: "ASA — Auth Status Assignment records (payer/plan/CPT/site auth-requirement master)"
+    states: {licensed: "Native (Resolute/Prelude build)", lit: "ASA populated and driving auth WQs", configured_to_depth: "Versioned, source-cited changes; quarterly accuracy sample against payer policy; staleness alarms (1.4.1.A4)"}
+    depth_markers:
+      - {id: asa-sample, check: "Sample 25 payer/plan/CPT combos from last quarter's CO-197 denials: current ASA verdict vs the payer's published policy — count wrong verdicts and undated edits", symptom_binding: PFM-1.4-05}
+      - {id: asa-proof, check: "For 10 'no auth required' clears: dated proof evidence captured (1.4.1.A3)?", symptom_binding: PFM-1.4-01}
+    confidence: high
+    note: "The single highest-leverage C6 surface: every prior-auth automation consumes ASA verdicts"
+
+  # ---- integration ----
+  writeback: {module: "Interconnect web services, FHIR write scopes, workqueue APIs", states: {licensed: "Interconnect/FHIR", lit: "Scopes granted", configured_to_depth: "Create a flag/queue item/transaction via API in test"}, depth_markers: [], confidence: high}
+  fabric: {module: "Event feeds (HL7v2/FHIR subscriptions) + queue/API layer + service accounts + telemetry — a build, not a purchase", states: {licensed: "Components", lit: "Events flowing", configured_to_depth: "Event → agent → write-back, observable, non-human identity"}, depth_markers: [], confidence: high}
+  prebill_hold: {module: "Resolute billing indicators / workqueue routing (native config)", states: {licensed: "Native", lit: "Indicators defined", configured_to_depth: "Programmatically hold one claim pre-drop in test"}, depth_markers: [], confidence: high}
+  statement_suppression: {module: "Statement vendor interface spec (often contract amendment)", states: {licensed: "Vendor contract", lit: "Interface live", configured_to_depth: "Suppress one account's statement via file/API in test"}, depth_markers: [], confidence: high}
+  statement_vendor_flex: {module: "Same interface — channel/timing/content variation", states: {licensed: "Vendor contract", lit: "Variants supported", configured_to_depth: "Vary one account's channel/timing/content in test"}, depth_markers: [], confidence: high}
+  ap_refund_path: {module: "Refund file/API to ERP AP", states: {licensed: "ERP-side", lit: "Path exists", configured_to_depth: "One test refund end-to-end programmatically"}, depth_markers: [], confidence: high}
+  cds_ordering_hook:
+    module: "BPA framework / CDS Hooks — native"
+    states: {licensed: "Native", lit: "A rule fires in test", configured_to_depth: "Governed path to add rules exists: alert-burden budget, committee, fatigue metrics"}
+    depth_markers:
+      - {id: bpa-governance, check: "Ask for the last 3 revenue-facing BPA proposals: approved on what cadence? If 'we can't add BPAs anymore', score 1", symptom_binding: PFM-1.5-01}
+    confidence: high
+    note: "Do not stand up an external CDS platform for this"
+  account_360: {module: "Composite service over HB/PB billing APIs; MyChart billing views prove the data exists", states: {licensed: "APIs", lit: "Views exist", configured_to_depth: "One API call assembles HB+PB balance provenance for a guarantor"}, depth_markers: [], confidence: high, note: "A real build even at Epic shops"}
+  queue_api:
+    module: "Workqueue APIs / routing config"
+    states: {licensed: "Native", lit: "APIs callable", configured_to_depth: "Reassign work items programmatically in test — against a rationalized queue estate (OFM-ET-01), not 400 ownerless queues"}
+    depth_markers:
+      - {id: queue-estate, check: "Ask the WQ count and pick 5: named owner and purpose for each? APIs over chaos automate chaos", symptom_binding: PFM-14.2-01}
+    confidence: high
+  him_retrieval: {module: "Release-of-information APIs / Bulk FHIR document references", states: {licensed: "Native", lit: "Scopes granted", configured_to_depth: "Fetch a defined record set for an encounter programmatically"}, depth_markers: [], confidence: high}
+
+  # ---- connectivity ----
+  rte_eligibility:
+    module: "Epic RTE (Prelude eligibility) via clearinghouse"
+    states: {licensed: "RTE module", lit: "270/271 flowing for enrolled payers", configured_to_depth: "≥80% volume coverage AND rte_benefit_depth passing (split facet)"}
+    depth_markers: []
+    confidence: high
+  rte_benefit_depth:
+    module: "RTE eligibility profiles / payer query configuration (1.3.1.A4)"
+    states: {licensed: "Included in RTE", lit: "Default generic queries", configured_to_depth: "Payer-specific service-type codes + follow-up query chains returning benefit-level detail for top service lines"}
+    depth_markers:
+      - {id: rte-query-chaining, check: "Pull one 271 for a scheduled MRI (top payer): imaging-specific cost-share present, or generic STC-30 active/inactive only?", symptom_binding: PFM-1.3-05}
+      - {id: portal-workaround, check: "Shadow a verifier for 30 minutes: portal lookups for data the 270 could have requested?", symptom_binding: PFM-1.3-01}
+    confidence: high
+    note: "The defining configured-to-depth example: volume floors pass while every response is shallow"
+  era_coverage: {module: "Remittance modules consume 835 natively", states: {licensed: "Native", lit: "835s arriving", configured_to_depth: "≥80% volume consumed as data (auto-posted/exception-routed), not printed and keyed"}, depth_markers: [{id: era-consumption, check: "For top 5 ERA payers: auto-post rate and exception-queue routing, or PDF-print-and-key?", symptom_binding: PFM-7.1-01}], confidence: high}
+  claim_status_edi: {module: "276/277 via clearinghouse into follow-up WQs", states: {licensed: "Clearinghouse", lit: "Transactions flowing", configured_to_depth: "Status codes land in queues and cancel manual status calls"}, depth_markers: [{id: status-consumption, check: "Do reps still call payers for statuses the 277 already returned? (PFM-9.2-01 signal)", symptom_binding: PFM-9.2-01}], confidence: high}
+  auth_transactions: {module: "278 via clearinghouse; payer APIs; Epic Payer Platform where both sides participate", states: {licensed: "Channel-dependent", lit: "Submit/inquire electronically for top payers", configured_to_depth: "Responses captured structured (feeds auth_structured)"}, depth_markers: [], confidence: medium, note: "Payer-by-payer; Payer Platform participation is payer-side, verify per payer"}
+  portal_automation_permitted: {module: "Legal review + credential vault + MFA handling", states: {licensed: "n/a", lit: "n/a", configured_to_depth: "ToS memo + managed credentials for named portals"}, depth_markers: [], confidence: high, note: "Legal gate — no tool purchase substitutes"}
+  attachment_channels: {module: "Clearinghouse attachment services (275/portal)", states: {licensed: "Clearinghouse", lit: "Enrolled", configured_to_depth: "Send an attachment for top payers in test"}, depth_markers: [], confidence: high}
+  medicaid_files: {module: "State-specific batch/API", states: {licensed: "State agreement", lit: "Files land", configured_to_depth: "Pull the state file incl. retro spans on schedule"}, depth_markers: [], confidence: high}
+  external_registries: {module: "Bankruptcy/death/probate subscriptions", states: {licensed: "Contract", lit: "Feeds land", configured_to_depth: "Same-day stops fire from the feed"}, depth_markers: [], confidence: high}
+  agency_data_rights: {module: "Vendor contract amendments", states: {licensed: "Contract", lit: "Data flowing", configured_to_depth: "Activity/remit/recording access with audit rights"}, depth_markers: [], confidence: high}
+  vbc_data_sharing: {module: "Payer data-sharing exhibits", states: {licensed: "Contract", lit: "Extracts flowing", configured_to_depth: "Claims extracts + attribution rosters on schedule"}, depth_markers: [], confidence: high}
+  bulletin_access: {module: "Payer portals/bulletins scraped or subscribed into ingestion", states: {licensed: "—", lit: "Sources reachable", configured_to_depth: "Systematic ingestion with change detection"}, depth_markers: [], confidence: high}
+
+  # ---- workflow facets with a named Epic artifact location ----
+  cdm_governance: {module: "CDM request/review/approval workflow; changes effective-dated and pushed to downstream copies", states: {licensed: "—", lit: "Workflow exists", configured_to_depth: "Zero direct edits on sampling; downstream sync verified (3.3.4.A2)"}, depth_markers: [], confidence: high}
+  masterdata_governance: {module: "Payer/plan master, crosswalks under change control with effective dating", states: {licensed: "—", lit: "Change log exists", configured_to_depth: "Effective-dated, rollback-capable, Friday-afternoon edits impossible"}, depth_markers: [], confidence: high}
+  edit_rule_governance: {module: "Resolute claim edit/stop build + custom edit pipeline", states: {licensed: "Native", lit: "Custom edits exist", configured_to_depth: "Governed rule-change process with false-positive retirement (6.2.4)"}, depth_markers: [], confidence: high}
+  posting_standardized: {module: "Resolute adjustment/transaction-code scheme", states: {licensed: "Native", lit: "Codes defined", configured_to_depth: "One standardized scheme; 'contractual—other' not in top codes"}, depth_markers: [], confidence: high}
+  handback_queues: {module: "Named WQs receiving automation exceptions", states: {licensed: "Native WQs", lit: "Queues exist", configured_to_depth: "Every bot/agent failure routes to a named, staffed queue (GOV-05)"}, depth_markers: [], confidence: high}
+  clinical_build_governance:
+    module: "Clinical change control (order sets, Cadence visit types/decision trees, OpTime preference cards, documentation templates) with an RC seat (14.2.A6)"
+    states: {licensed: "n/a — committee + checklist", lit: "RC notified of clinical releases", configured_to_depth: "RC sign-off pre-release; charge-trigger/auth-mapping/estimate regression run; lookup-key fidelity sampled"}
+    depth_markers:
+      - {id: release-trace, check: "Pull the last 5 order-set/visit-type changes: RC sign-off visible? regression artifacts exist?", symptom_binding: PFM-14.2-02}
+      - {id: denial-cluster-trace, check: "Take the newest denial cluster: can it be traced to (or provably cleared of) a clinical build change?", symptom_binding: PFM-3.1-05}
+    confidence: high
+  native_capability_inventory:
+    module: "Living inventory against this crosswalk's native_catalog, refreshed at feature harvest"
+    states: {licensed: "n/a", lit: "Inventory exists", configured_to_depth: "Lit/unlit status + adoption owner per item; one sourcing decision it changed in the last year"}
+    depth_markers: []
+    confidence: high
+
+stack_agnostic:
+  see: "ai-automation/14-implementation-patterns.md §6 — policy/committee/contract floors; score on artifact existence and enforcement"
+  facets: [denial_taxonomy, appeal_process, collection_policy_unified, plan_matrix_unified,
+    writeoff_matrix, query_standardized, avoidable_day_taxonomy, filing_matrix, kpi_dictionary,
+    downtime_procedures, refund_matrix, placement_gates, audit_workflow, documentation_stability,
+    routing_authority, escalation_staffed, hitl_capacity, mpi_capacity, dept_charge_owners,
+    ranked_list_adoption, provider_adoption, compliance_charter, gov_body, decision_logging,
+    model_monitoring, bias_program, citation_harness, golden_sets, lineage, baa_program,
+    outreach_consent, criteria_license, reference_license, socio_data_license,
+    privilege_protocol, recoupment_law_matrix, fa_501r_review]
+
+build_surfaces:
+  auth_status_assignment:
+    module: "ASA (Auth Status Assignment) master records"
+    feeds: ["1.4.1", "UC-01-07", "UC-01-08", "auth workqueue routing"]
+    symptom_binding: [PFM-1.4-01, PFM-1.4-05]
+    depth_markers:
+      - {id: asa-governance, check: "Who owns ASA? When was the last accuracy sample? Are edits versioned with payer-source citations?", facet_binding: auth_grid_accuracy}
+    confidence: high
+  order_sets:
+    module: "Order sets / SmartSets (embedded orders carry the CPT lineage and fire charge triggers)"
+    feeds: ["1.1.2.A9", "1.4.1 lookup keys", "3.1.1 charge triggers", "UC-01-07", "UC-01-08", "UC-03-06"]
+    symptom_binding: [PFM-1.1-05, PFM-3.1-05, PFM-14.2-02]
+    depth_markers:
+      - {id: orderset-charge-fire, check: "Pick one high-volume order set: do embedded orders fire charges resolving to live CDM items in a test patient?", facet_binding: clinical_build_governance}
+      - {id: orderset-cpt-lineage, check: "For 10 cases scheduled off this order set: intended CPT vs performed CPT vs ASA key — mismatch rate?", facet_binding: intended_cpt_accuracy}
+    confidence: high
+  scheduling_trees_visit_types:
+    module: "Cadence decision trees, questionnaires, and visit-type build (auth/network/duration mappings)"
+    feeds: ["1.1.2.A2/A4", "1.4.1 site/service keys", "1.6.1 estimate assembly", "UC-01-04", "UC-01-12", "UC-01-14"]
+    symptom_binding: [PFM-1.1-05]
+    depth_markers:
+      - {id: visit-type-sample, check: "Sample 3 procedural visit types: auth requirement and network mapping correct against the current auth grid and top-payer policies?", facet_binding: clinical_build_governance}
+    confidence: high
+  preference_cards:
+    module: "OpTime preference cards (supplies/implants → charge capture)"
+    feeds: ["3.1.3.A1 OR charge capture", "UC-03-01", "UC-03-07"]
+    symptom_binding: [PFM-3.1-02]
+    depth_markers:
+      - {id: pref-card-drift, check: "Compare 5 preference cards to actual case pick lists: stale items still firing (or missing) charges?", facet_binding: clinical_build_governance}
+    confidence: high
+  documentation_templates:
+    module: "SmartText/SmartLists/note templates driving documentation-derived charging and E/M leveling"
+    feeds: ["3.1.1 doc triggers", "5.4 E/M leveling", "UC-03-06"]
+    symptom_binding: [PFM-5.4-01, PFM-3.1-05]
+    depth_markers:
+      - {id: template-charge-map, check: "For one documentation-charged service: does the template's discrete field actually drive the charge, and was the mapping retested after the last template edit?", facet_binding: clinical_build_governance}
+    confidence: high
+  anesthesia_billing_build:
+    module: "Anesthesia billing build: ASA-code base-unit table, time-unit increments, concurrency/medical-direction modifier logic"
+    feeds: ["3.1.3.A1 anesthesia units", "5.5 specialty coding", "profee claims"]
+    symptom_binding: [PFM-5.5-02]
+    depth_markers:
+      - {id: anesthesia-recalc, check: "Recalculate 5 anesthesia claims from source (base units × time ÷ increments + modifiers): does system math match? What version is the base-unit table?", facet_binding: clinical_build_governance}
+    confidence: high
+  eligibility_query_config:
+    module: "RTE eligibility profiles / payer query build"
+    feeds: ["1.3.1", "1.3.3 benefits detailing", "UC-01-04", "UC-01-12"]
+    symptom_binding: [PFM-1.3-05]
+    depth_markers:
+      - {id: query-chain-config, check: "Show the query configuration for the top 3 payers: service-type codes and follow-up chains, or install defaults?", facet_binding: rte_benefit_depth}
+    confidence: high
+  charge_router_triggers:
+    module: "Charge router / charge trigger rules mapped to CDM (3.1.1.A2)"
+    feeds: ["3.1.1", "UC-03-04"]
+    symptom_binding: [PFM-3.1-01, PFM-3.1-05]
+    depth_markers:
+      - {id: orphan-trend, check: "Orphan-charge queue volume over the last 6 clinical release dates: spikes correlate?", facet_binding: clinical_build_governance}
+    confidence: high
+  claim_edit_build: {module: "Resolute claim edits/stops + custom edit pipeline", feeds: ["6.2", "UC-06-02", "UC-06-03"], symptom_binding: [PFM-6.2-02], depth_markers: [], confidence: high}
+  statement_config: {module: "Statement cycles, qualification gates, dunning build", feeds: ["10.1", "UC-10-01"], symptom_binding: [PFM-10.1-01], depth_markers: [], confidence: high}
+  estimator_config: {module: "Estimates module: contract terms + accumulator wiring", feeds: ["1.6.1", "UC-01-12"], symptom_binding: [PFM-1.6-01], depth_markers: [{id: accumulator-live, check: "Generate a test estimate mid-year for a patient with met deductible: does it reflect the accumulator?", facet_binding: contract_engine_loaded}], confidence: high}
+
+native_catalog:
+  - capability: "Workqueue automation & auto-actions (rules-class work in Resolute/Prelude)"
+    module: "Workqueue rules, billing indicators, auto-actions"
+    gates_addressed: [queue_api, prebill_hold, "rules-workload UCs (UC-03-04, UC-06-06 class)"]
+    sourcing_note: "native_module option for most rules-workload UCs; depth = rationalized queue estate first (OFM-ET-01)"
+    confidence: high
+  - capability: "Ordering-workflow decision support"
+    module: "BPA / CDS Hooks framework"
+    gates_addressed: [cds_ordering_hook, "UC-01-11"]
+    sourcing_note: "Never buy an external CDS platform for this; the gate is alert-burden governance"
+    confidence: high
+  - capability: "Eligibility automation incl. follow-up queries"
+    module: "RTE + eligibility profiles"
+    gates_addressed: [rte_eligibility, rte_benefit_depth, "UC-01-04 (partial native path)"]
+    sourcing_note: "Configuration-to-depth substitutes for a chunk of eligibility-orchestration vendor scope"
+    confidence: high
+  - capability: "Payer-collaboration auth checks and status exchange"
+    module: "Epic Payer Platform (payer participation required)"
+    gates_addressed: [auth_transactions, "UC-01-07/08/09 partial native path per participating payer"]
+    sourcing_note: "Where a payer participates, prefer this channel over portal RPA; scope per payer"
+    confidence: medium
+  - capability: "Native predictive models (registered content + tooling for site-trained models)"
+    module: "Cognitive computing platform / cloud AI services (packaging varies by release)"
+    gates_addressed: ["ml-workload UCs: no-show (UC-01-17), propensity-class (UC-10-04/05 adjacent), denial-risk variants"]
+    sourcing_note: "native_module enters the ml option set; bias_program, model_monitoring, decision_logging still apply in full (GOV gates are sourcing-independent)"
+    confidence: medium
+  - capability: "Generative drafting in operational workflows"
+    module: "In Basket / MyChart message draft responses; note summarization; billing-communication drafts (rapidly evolving scope)"
+    gates_addressed: ["UC-10-03-adjacent A0/A1 drafting", "patient-communication drafting"]
+    sourcing_note: "Native availability changes the cost row, not the risk tier: GOV-03 citation discipline and golden_sets still gate patient-facing use"
+    confidence: medium
+  - capability: "Scheduling automation"
+    module: "Cadence decision trees, auto-search, MyChart self-scheduling"
+    gates_addressed: ["1.1.2 protocol adherence", "UC-01-14 adjacent"]
+    sourcing_note: "The build IS the automation — scheduling-tree depth (build_surfaces) is its readiness gate"
+    confidence: high
+  - capability: "Coding suggestion / CAC integration"
+    module: "Partner CAC integrations; native suggestion scope evolving"
+    gates_addressed: ["UC-05-01 adjacent"]
+    sourcing_note: "Verify current native scope before assuming vendor CAC is required"
+    confidence: needs-sme-validation
