@@ -44,6 +44,17 @@ items:
     - masterdata_governance
     group: Enabling Technology
     layer: enterprise
+  OFM-ET-09:
+    facets:
+    - native_capability_inventory
+    group: Enabling Technology
+    layer: enterprise
+  OFM-ET-10:
+    facets:
+    - clinical_build_governance
+    - intended_cpt_accuracy
+    group: Enabling Technology
+    layer: enterprise
   OFM-FG-01:
     degrades_dims:
     - economics
@@ -273,6 +284,17 @@ items:
     refs:
     - '1.1'
     - 1.1.5.A1
+  PFM-1.1-05:
+    facets:
+    - clinical_build_governance
+    - intended_cpt_accuracy
+    group: 1.1 Scheduling & Appointment Management
+    layer: process
+    refs:
+    - '1.1'
+    - 1.1.2.A2
+    - 1.1.2.A9
+    - 14.2.A6
   PFM-1.2-01:
     facets:
     - mpi_capacity
@@ -363,6 +385,17 @@ items:
     refs:
     - '1.3'
     - 1.3.5
+  PFM-1.3-05:
+    facets:
+    - rte_benefit_depth
+    - rte_eligibility
+    group: 1.3 Eligibility & Benefits Verification
+    hardened_by:
+    - UC-01-04
+    layer: process
+    refs:
+    - '1.3'
+    - 1.3.1.A4
   PFM-1.4-01:
     facets:
     - auth_structured
@@ -409,6 +442,19 @@ items:
     refs:
     - '1.4'
     - 1.4.6.A1
+  PFM-1.4-05:
+    facets:
+    - auth_grid_accuracy
+    - masterdata_governance
+    group: 1.4 Prior Authorization, Pre-Certification & Referral Management
+    hardened_by:
+    - UC-01-07
+    layer: process
+    produces:
+    - FM-NOAUTH
+    refs:
+    - '1.4'
+    - 1.4.1.A4
   PFM-1.5-01:
     facets:
     - cds_ordering_hook
@@ -1009,6 +1055,17 @@ items:
     refs:
     - '14.2'
     - 14.2.A1
+  PFM-14.2-02:
+    facets:
+    - clinical_build_governance
+    - intended_cpt_accuracy
+    group: 14.2 Revenue Cycle System Configuration & Maintenance
+    layer: process
+    refs:
+    - '1.1'
+    - '14.2'
+    - 14.2.A6
+    - '3.1'
   PFM-14.3-01:
     facets:
     - edi_telemetry
@@ -1189,6 +1246,21 @@ items:
     refs:
     - '3.1'
     - 3.1.4.A2
+  PFM-3.1-05:
+    facets:
+    - charge_linkage
+    - clinical_build_governance
+    group: 3.1 Charge Generation & Entry
+    hardened_by:
+    - UC-03-04
+    layer: process
+    produces:
+    - FM-CDMSTALE
+    - FM-CHGMISS
+    refs:
+    - 14.2.A6
+    - '3.1'
+    - 3.1.1.A2
   PFM-3.2-01:
     facets:
     - charge_linkage
@@ -1408,6 +1480,15 @@ items:
     group: 5.5 Specialty Coding
     layer: process
     refs:
+    - '5.5'
+    - 5.5.A1
+  PFM-5.5-02:
+    facets:
+    - clinical_build_governance
+    group: 5.5 Specialty Coding
+    layer: process
+    refs:
+    - 3.3.2.A1
     - '5.5'
     - 5.5.A1
   PFM-5.6-01:

@@ -33,6 +33,7 @@ upfront engineering for near-zero marginal inference.
 
 | Option | Build | Run structure | When it wins |
 |---|---|---|---|
+| `native_module` | Minimal (activation + configuration-to-depth, ~0.15×) | License usually already owned (uplifts entered as overrides) + config maintenance | The shop's EHR already ships the capability (rules/BPA frameworks, workqueue automation, native predictive models) — **always evaluated first** (file 14 Rule 0, vendor crosswalk); loses when the capability is genuinely differentiating or the native module can't reach configured-to-depth |
 | `vendor` | Low (config + integration, ~0.3×) | Per-transaction/subscription fees forever + your HITL | Low volume, undifferentiated capability, speed-to-value; loses at scale and cedes data/control |
 | `build_rules` / `build_rpa` | Low-medium | Maintenance-heavy (rules 25%/yr of build — brittle) | Deterministic work; always the interim while ML gates mature |
 | `build_ml` (classical predictive) | Medium (needs CAP-02 labels) | Negligible inference + annual retraining | Scoring/prioritization at any volume — tokens aren't the cost, labels are |
@@ -51,6 +52,10 @@ run-cost lever in the portfolio.
 ## 3. The decision procedure (per use case)
 
 ```
+0. NATIVE CHECK — consult the vendor crosswalk (vendor-crosswalks/) for the shop's EHR:
+   a native module covering the gate at configured-to-depth enters the option set as
+   native_module and usually wins TCO; "licensed" or "lit" without depth is a remediation
+   project priced into its build, not a free pass (file 14 Rule 0)
 1. CONSTRAINTS — filter the option set:
    ├─ PHI/BAA: every option must be BAA-grade (hosted APIs with BAA, or self-hosted)
    ├─ Latency: real-time flows (POS, conversational, RTE) exclude slow paths

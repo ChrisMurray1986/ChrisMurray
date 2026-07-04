@@ -101,6 +101,14 @@ improvement, workforce, enabling technology, vendor management, and performance 
 structured as named failure modes (`OFM-*`, with field-observable signals) and the best
 practices (`BP-*`) that prevent them, each coupled to the AI-stack gates it degrades or enables.
 
+A third layer, the **vendor crosswalks** (`vendor-crosswalks/`), binds the vendor-neutral
+facets, processes, and failure modes to named EHR modules (Epic, Oracle Health): three-state
+native-capability maturity (licensed / lit / configured-to-depth), per-module depth markers
+(two-minute field demos bound to the PFM symptoms they explain), upstream build surfaces
+(order sets, visit types/scheduling trees, auth-requirement grids), and first-party AI
+catalogs — machine-readable, `as_of`-stamped, and deliberately disposable so vendor packaging
+churn never contaminates the neutral core.
+
 ## Canonical end-to-end flow
 
 ```

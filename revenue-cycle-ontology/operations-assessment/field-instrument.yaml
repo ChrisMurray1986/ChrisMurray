@@ -301,6 +301,25 @@ layers:
         protocol:
           ask: executive + 2 frontline interviews in the domain
           artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-09:
+        prompt: EHR-native automation/AI licensed but unlit; bolt-ons bought for owned capability
+        score: 0
+        notes: ''
+        degrades:
+        - native_capability_inventory
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
+      OFM-ET-10:
+        prompt: Clinical build (order sets, visit types, scheduling trees) ships with no revenue-cycle review
+        score: 0
+        notes: ''
+        degrades:
+        - clinical_build_governance
+        - intended_cpt_accuracy
+        protocol:
+          ask: executive + 2 frontline interviews in the domain
+          artifact: the governance/policy artifact the prompt names (or its absence)
     Vendor Outsourcing:
       OFM-VN-01:
         prompt: Vendor footprint grew by accretion; no sourcing strategy; scope overlaps
@@ -449,6 +468,20 @@ layers:
         protocol:
           ask: ROLE-SCHED + supervisor
           artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.1-05:
+        prompt: 'Scheduling decision trees / visit-type build wrong or stale (1.1.2.A2, A4, A9): visit types map
+          to wrong auth, network, or duration rules — schedulers following the tree faithfully still mis-key every
+          downstream lookup'
+        score: 0
+        notes: ''
+        signals: Auth/site-of-care denials cluster on specific visit types; tree and visit-type list maintained
+          outside revenue-cycle change control; nobody can say when a branch was last validated
+        degrades:
+        - clinical_build_governance
+        - intended_cpt_accuracy
+        protocol:
+          ask: ROLE-SCHED + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
     1.2 Pre-Registration:
       PFM-1.2-01:
         prompt: Search-then-create discipline absent; duplicate MRNs created at 1.2.1.A3 → FM-DUPMRN
@@ -536,6 +569,20 @@ layers:
         protocol:
           ask: ROLE-VERIF + supervisor
           artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.3-05:
+        prompt: Benefit detail structurally absent from 271s — eligibility query configuration (1.3.1.A4) never
+          built to request service-type detail or chain follow-up queries; verifiers blamed for skipping detailing
+          the response cannot contain
+        score: 0
+        notes: ''
+        signals: 271s show generic active/inactive only across *all* verifiers; portal lookups dominate verification
+          time; benefit fields defaulted org-wide regardless of who works the queue
+        degrades:
+        - rte_benefit_depth
+        - rte_eligibility
+        protocol:
+          ask: ROLE-VERIF + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
     1.4 Prior Authorization, Pre-Certification & Referral Management:
       PFM-1.4-01:
         prompt: '"No auth required" concluded from stale grid; proof not captured (1.4.1.A3, D1) → FM-NOAUTH'
@@ -577,6 +624,20 @@ layers:
         signals: CPT-mismatch denials on surgical cases; claims released on hold-expiry autopilot
         degrades:
         - auth_structured
+        protocol:
+          ask: ROLE-AUTH + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-1.4-05:
+        prompt: 'Auth-requirements grid ungoverned as build (1.4.1.A4): ad-hoc edits without versioning, source
+          citations, or accuracy sampling — false "no auth required" ships at volume regardless of ROLE-AUTH diligence
+          → FM-NOAUTH'
+        score: 0
+        notes: ''
+        signals: Grid (e.g., Epic ASA) edits untracked; no accuracy sample ever run; grid owner unknown; auth denials
+          on "exempt" services persist after staff coaching
+        degrades:
+        - auth_grid_accuracy
+        - masterdata_governance
         protocol:
           ask: ROLE-AUTH + supervisor
           artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
@@ -893,6 +954,19 @@ layers:
         protocol:
           ask: ROLE-DEPTCHG, ROLE-CHGANALYST + supervisor
           artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-3.1-05:
+        prompt: 'Clinical build ships unreviewed into the charge surface: new/changed order sets and documentation
+          templates break charge-trigger mappings (3.1.1.A2, 14.2.A6) → FM-CHGMISS, FM-CDMSTALE'
+        score: 0
+        notes: ''
+        signals: Orphan-charge and interface-queue spikes correlate with clinical release dates; order-set changes
+          reach revenue integrity as edit/denial clusters weeks later
+        degrades:
+        - clinical_build_governance
+        - charge_linkage
+        protocol:
+          ask: ROLE-DEPTCHG, ROLE-CHGANALYST + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
     3.2 Charge Reconciliation:
       PFM-3.2-01:
         prompt: Daily reconciliation attested, not performed (3.2.1.A1–A2)
@@ -1128,6 +1202,19 @@ layers:
         degrades:
         - reference_license
         - dim:org
+        protocol:
+          ask: ROLE-CODER-IP/OP/PRO + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-5.5-02:
+        prompt: 'Specialty billing *build* unvalidated: anesthesia base-unit/time-unit math, concurrency/medical-direction
+          modifier logic, and specialty fee-schedule build configured once and never recalculated against payer
+          rules (5.5.A1–A4) — coder diligence cannot fix system arithmetic'
+        score: 0
+        notes: ''
+        signals: Hand-recalculated anesthesia claims disagree with system math; base-unit table version unknown;
+          concurrency modifiers suspiciously uniform across cases
+        degrades:
+        - clinical_build_governance
         protocol:
           ask: ROLE-CODER-IP/OP/PRO + supervisor
           artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
@@ -2171,6 +2258,20 @@ layers:
         protocol:
           ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
           artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
+      PFM-14.2-02:
+        prompt: Clinical-system build ships with no revenue-cycle seat (14.2.A6, D1) — order sets, visit types,
+          scheduling trees, and documentation templates change revenue surfaces silently; impact discovered as downstream
+          denial/edit spikes
+        score: 0
+        notes: ''
+        signals: Order-set changes reach revenue cycle as denial clusters weeks later; no RC sign-off in clinical
+          change control; visit-type→auth-grid sync manual or absent
+        degrades:
+        - clinical_build_governance
+        - intended_cpt_accuracy
+        protocol:
+          ask: ROLE-SYSANALYST, ROLE-EDI, ROLE-AUTOENG + supervisor
+          artifact: walk 10 sampled accounts through this process; request the report/log named in the signals
     14.3 EDI & Trading Partner Management:
       PFM-14.3-01:
         prompt: EDI monitored by absence-of-complaints (14.3.A1–A3) → FM-EDISILENT
@@ -2930,4 +3031,4 @@ layers:
         protocol:
           ask: observe 2+ incumbents at work + their supervisor; never accuse from the table
           artifact: 'sampled work product from the judgment surface: pervasive; every `hardened-by UC-*`'
-source_version: 2c0952099842
+source_version: 3cc2f796393f

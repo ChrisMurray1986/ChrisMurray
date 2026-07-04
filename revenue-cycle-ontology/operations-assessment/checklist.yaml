@@ -40,6 +40,8 @@ enabling_technology:
   OFM-ET-06: {prompt: "Patient-facing tech live with low adoption and no adoption owner", score: 0, degrades: [statement_history, statement_vendor_flex]}
   OFM-ET-07: {prompt: "Undocumented point-to-point interfaces; single-engineer dependency", score: 0, degrades: [fabric, edi_telemetry]}
   OFM-ET-08: {prompt: "Critical processes run on spreadsheets/Access outside governance", score: 0, degrades: [masterdata_governance]}
+  OFM-ET-09: {prompt: "EHR-native automation/AI licensed but unlit; bolt-ons bought for owned capability", score: 0, degrades: [native_capability_inventory]}
+  OFM-ET-10: {prompt: "Clinical build (order sets, visit types, scheduling trees) ships with no revenue-cycle review", score: 0, degrades: [clinical_build_governance, intended_cpt_accuracy]}
 vendor_outsourcing:
   OFM-VN-01: {prompt: "Vendor footprint grew by accretion; no sourcing strategy; scope overlaps", score: 0, degrades: [dim:economics]}
   OFM-VN-02: {prompt: "Auto-renewals; SLAs unenforced; rates stale vs volume", score: 0, degrades: [dim:legal]}

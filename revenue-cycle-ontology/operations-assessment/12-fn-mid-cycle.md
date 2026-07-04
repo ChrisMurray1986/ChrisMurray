@@ -45,6 +45,7 @@ ROLE-CODER-IP/OP/PRO, ROLE-CODEAUD, ROLE-HIM, ROLE-PROVIDER.
 | PFM-3.1-02 | High-complexity areas run folk charging: infusion hierarchy, ED leveling inconsistent (3.1.3.A2, A4) | Leveling distribution differs by shift; infusion charges flat regardless of documentation | PBP-3.1-02 Department charging standards with criteria sheets and audit; hardened-by UC-03-06 |
 | PFM-3.1-03 | Drug units converted by habit (3.1.3.A3) → FM-UNITERR; waste undocumented | MUE hits; JW/JZ absent; pharmacist never in the loop | PBP-3.1-03 NDC→HCPCS crosswalk governed; unit edits at entry; hardened-by UC-03-03 |
 | PFM-3.1-04 | Provider encounters closed without charges; missing-encounter list unworked (3.1.4.A2–A3, D1) | Profee charge lag >5 days; "the doctors will get to it" | PBP-3.1-04 Encounter-close SLA with chair-level escalation and mobile capture |
+| PFM-3.1-05 | Clinical build ships unreviewed into the charge surface: new/changed order sets and documentation templates break charge-trigger mappings (3.1.1.A2, 14.2.A6) → FM-CHGMISS, FM-CDMSTALE | Orphan-charge and interface-queue spikes correlate with clinical release dates; order-set changes reach revenue integrity as edit/denial clusters weeks later | PBP-3.1-05 Revenue regression on clinical build releases: trigger fire-tests against the CDM, order-set→charge mapping sampled (clinical_build_governance); hardened-by UC-03-04 |
 
 ### 3.2 Charge Reconciliation — ROLE-DEPTCHG
 
@@ -103,6 +104,7 @@ ROLE-CODER-IP/OP/PRO, ROLE-CODEAUD, ROLE-HIM, ROLE-PROVIDER.
 | PFM-5.3-01 | Modifier reflexes: 59/25 appended to clear edits (5.3.A2, 5.4.D1) → FM-CODEERR (over), audit exposure | Modifier rates outliers vs peers; edit-clearance correlates with modifier use | PBP-5.3-01 Modifier decision support with documentation prompts; pattern surveillance (UC-12-03) as guardrail |
 | PFM-5.4-01 | E/M leveled by habit/template, not MDM (5.4.A1) | Level distribution near-uniform per provider; cloned notes | PBP-5.4-01 MDM-based leveling education + distribution monitoring per provider |
 | PFM-5.5-01 | Specialty coding by generalists: anesthesia units, interventional bundling, PDPM/OASIS rules applied from memory (5.5.A1–A4) | Specialty denial/audit rates outliers; no credentialed specialty coverage or backup | PBP-5.5-01 Specialty coding assignments credential-matched with documented backup coverage (BP-WF-05); specialty reference sets licensed and current |
+| PFM-5.5-02 | Specialty billing *build* unvalidated: anesthesia base-unit/time-unit math, concurrency/medical-direction modifier logic, and specialty fee-schedule build configured once and never recalculated against payer rules (5.5.A1–A4) — coder diligence cannot fix system arithmetic | Hand-recalculated anesthesia claims disagree with system math; base-unit table version unknown; concurrency modifiers suspiciously uniform across cases | PBP-5.5-02 Specialty-build validation: sampled claims recomputed from source (base units × time ÷ increments + modifiers) at every fee-schedule load and annual code update (3.3.2.A1); clinical_build_governance |
 
 ### 5.6–5.8 CAC Oversight, QA, Support — ROLE-CODEAUD
 

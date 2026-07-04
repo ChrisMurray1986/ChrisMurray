@@ -6,14 +6,14 @@ Assessment dated 2026-07-03; generated from committed inputs (never hand-edit th
 
 | | |
 |---|---|
-| Dispositions | GO 0 / COND 42 / DEFER 57 / KILL 0 |
-| A0/A1 launchable now | 41 |
+| Dispositions | GO 0 / COND 41 / DEFER 58 / KILL 0 |
+| A0/A1 launchable now | 40 |
 | Steady-state value (base, capped) | $42.2M/yr |
-| Year-1 value (disposition-adjusted) | $6.0M |
+| Year-1 value (disposition-adjusted) | $5.9M |
 | One-time cash release | $15.9M |
-| Total run cost | $11.4M/yr |
-| 3-yr portfolio TCO | $51.3M |
-| Steady-state net (value − run) | **$30.9M/yr** |
+| Total run cost | $8.5M/yr |
+| 3-yr portfolio TCO | $34.6M |
+| Steady-state net (value − run) | **$33.8M/yr** |
 
 ## Top gates by locked value
 
@@ -29,13 +29,13 @@ Assessment dated 2026-07-03; generated from committed inputs (never hand-edit th
 
 | UC | Option | Net/yr | Payback | Disposition |
 |---|---|---|---|---|
-| UC-03-01 | build_ml | $2.3M | 2 mo | CONDITIONAL |
-| UC-07-05 | build_rules | $1.9M | 1 mo | CONDITIONAL |
-| UC-01-05 | vendor | $1.6M | 1 mo | DEFER |
-| UC-09-03 | build_ml | $1.5M | 2 mo | CONDITIONAL |
+| UC-03-01 | native_module | $2.4M | 0 mo | CONDITIONAL |
+| UC-07-05 | native_module | $1.9M | 0 mo | CONDITIONAL |
+| UC-01-05 | native_module | $1.7M | 0 mo | DEFER |
+| UC-09-03 | native_module | $1.6M | 0 mo | CONDITIONAL |
 | UC-03-06 | api | $1.3M | 2 mo | DEFER |
 
-**Net-negative use cases (kill/descope review, Play 7):** UC-05-07, UC-03-02, UC-01-01, UC-01-11*, UC-05-05, UC-01-02, UC-02-05, UC-07-04, UC-12-02*, UC-13-02, UC-14-05, UC-14-04, UC-12-03*, UC-13-04*, UC-01-17, UC-12-01*, UC-12-06*, UC-13-03, UC-10-06*, UC-12-04*, UC-03-08
+**Net-negative use cases (kill/descope review, Play 7):** UC-05-07, UC-03-02, UC-01-01, UC-01-11*, UC-02-05, UC-12-02*, UC-01-02, UC-14-05, UC-12-01*, UC-12-03*, UC-12-06*, UC-10-06*, UC-12-04*, UC-03-08*
 
 \* risk-EV-justified: segregated VS-8 expected value covers the cash shortfall — judge on risk grounds, not as an automatic descope.
 

@@ -2,7 +2,9 @@
 
 > **Audit note:** these profiles were verified at engineering depth by the portfolio dependency
 > audit (`13-dependency-audit.md`); 19 profiles were amended with additional decisive facets
-> (corpus, license, outcome-label, execution-hook, and release-gating dependencies).
+> (corpus, license, outcome-label, execution-hook, and release-gating dependencies). **Round 2
+> (2026-07)** added the input-lineage class (C6) and amended 6 further profiles (01-04, 01-07,
+> 01-08, 01-12, 03-06, 07-02) with upstream-key facets — see file 13's round-2 table.
 > **`scoring/gate-vectors.yaml` is the authoritative machine-readable record** — where this
 > file's narrative and the YAML differ, the YAML governs.
 
