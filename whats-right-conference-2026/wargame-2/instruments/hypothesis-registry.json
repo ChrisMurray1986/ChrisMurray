@@ -1,0 +1,139 @@
+{
+  "hypotheses": [
+    {
+      "id": "H01-YIELD-INVARIANCE",
+      "statement": "Yield displacement is doctrine- and world-invariant: in any game where the denial event is constrained (by contract term, statute, or White Cell ruling), at least one third of the constrained payer recovery value reappears within two in-game quarters in non-denial adverse-action channels (prepay pends, downcodes, billing-accuracy edits, COB/subrogation, postpay clawbacks), in every doctrine x world cell.",
+      "discriminatingTest": "For every game turn in which a denial constraint binds, the rapporteur extracts from the White Cell adjudication ledger the payer adverse-action mix (dollars by channel) for the two turns before and after the constraint, and computes displacement ratio = (increase in non-denial adverse-action recovery) / (decrease in denial recovery).",
+      "confirmCriteria": "Displacement ratio >= 0.33 within two quarters in >= 80% of constraint-binding games, with no doctrine x world cell falling below 50% of its constraint-binding games showing the effect.",
+      "refuteCriteria": "Any full cell (all games in one doctrine x world combination) in which the majority of constraint-binding games show headline denial decline with total adverse-action recovery falling commensurately (displacement ratio < 0.25), or overall incidence < 60% across cells.",
+      "comparisonCells": "All 9 cells (D1-D3 x W1-W3) with at least one binding denial constraint per cell; anchor comparison D1xW1 (original) vs D2xW2 and D3xW3.",
+      "priorStatus": "Re-test of F-A [confirmed 3/3 in Study 1, D1xW1 only]; Wargame 2.0 tests whether it survives outside the original cell."
+    },
+    {
+      "id": "H02-BOOMERANG-CHANNEL",
+      "statement": "The transparency boomerang replicates in all cells, but its channel and lag are world-dependent: under W1 (activist) published adjudication artifacts are weaponized via regulator/litigation within 1-3 in-game years; under W2 (slow) and W3 (hostile/deregulatory) the boomerang still occurs but shifts to media, employer-RFP, and counterparty-negotiation channels with lag up to 4 years; in no world do >= 50% of published artifacts remain cost-free to their publisher through end-game.",
+      "discriminatingTest": "Rapporteur builds an artifact registry (every published overturn stat, charter, settlement term, error-cap disclosure, or armed patient-AI dataset, with publisher and turn) and codes each for: (a) whether it is cited adversely against its publisher in a later White Cell adjudication or opposing move, (b) the turn lag, (c) the channel (regulatory/litigation vs media/employer/negotiation).",
+      "confirmCriteria": ">= 70% of published artifacts weaponized against publisher within 3 turns in W1 cells; >= 50% weaponized by end-game in W2/W3 cells with the modal channel being non-regulatory; publisher net payoff on published artifacts negative in majority of games in all worlds.",
+      "refuteCriteria": "In any world, >= 50% of published artifacts produce net-positive publisher payoff with no adverse citation through end-game; or W3 shows no boomerang at all (would falsify the channel-shift claim rather than merely the lag).",
+      "comparisonCells": "Fixed doctrine, varied world: D1xW1 vs D1xW2 vs D1xW3 (and replicated at D2).",
+      "priorStatus": "Re-test of F-B [confirmed 3/3], extended with a new world-dependence rider that Study 1 could not test (single W1 umpire)."
+    },
+    {
+      "id": "H03-TOLL-FLOOR",
+      "statement": "The toll structure is invariant: no game in any cell realizes a sustained cost-per-denial at or below $65; the realized floor is >= $80 because prevention, governance, audit, attestation, and arbitration are recurring tolls; and cost-per-denial mechanically rises as denial volume falls in games where prevention succeeds.",
+      "discriminatingTest": "White Cell maintains a per-turn Blue cost ledger (appeal ops + prevention + governance + audit + arbitration) and denial-volume count; rapporteur computes cost-per-denial and total adverse-adjudication cost as share of net revenue per turn per game.",
+      "confirmCriteria": "Zero games with two consecutive turns at cost-per-denial <= $65; median realized floor across cells >= $80; positive correlation (denial volume down, cost-per-denial up) in >= 75% of games where denial volume falls >= 20%.",
+      "refuteCriteria": "Any cell in which >= 2 games sustain cost-per-denial <= $65 for two consecutive turns without the White Cell flagging unmodeled tolls, or in which total adverse-adjudication cost share falls proportionally with denial volume (tolls turn out to be avoidable, not recurring).",
+      "comparisonCells": "All 9 cells; stress cells are D2xW2/W3 (high volume could dilute fixed tolls) and any VENDOR-active cell (vendor pricing pressure on the $59 benchmark).",
+      "priorStatus": "Re-test of F-C [confirmed 3/3]; dollar figures remain umpire constructs, so scoring is on the floor/ratio pattern, not the exact number."
+    },
+    {
+      "id": "H04-ASYMMETRIC-EXHAUSTION",
+      "statement": "With MLR/ASO fee mechanics modeled (correcting Study 1's under-specified payer economics), payer payment-integrity activity on self-funded volume is net fee-revenue-positive, so Red never initiates de-escalation from cumulative cost pain; every observed Red de-escalation is proximately triggered by litigation pricing, regulatory action, or employer abrasion.",
+      "discriminatingTest": "Wargame 2.0 requires the White Cell to publish a per-turn Red P&L split (fully-insured vs self-funded/ASO book). Rapporteur codes the proximate trigger stated or adjudicated for every Red de-escalation or concession move: cost-exhaustion vs litigation vs regulation vs employer channel.",
+      "confirmCriteria": "In >= 75% of games containing a Red de-escalation, the coded trigger is litigation/regulation/employer, not cost; and Red self-funded PI margin stays non-negative through end-game in >= 80% of D2 games.",
+      "refuteCriteria": "Red de-escalates citing own cumulative cost in >= one third of D2 games with ASO mechanics active, or Red self-funded PI margin goes materially negative from escalation alone in multiple cells (mutual-pain off-ramp would be rehabilitated).",
+      "comparisonCells": "D2xW2 and D2xW3 (escalation allowed to run, regulator slow/hostile) vs D1xW1 (original); GREEN-active vs GREEN-inactive variants to isolate the employer trigger.",
+      "priorStatus": "Re-test of F-D in CORRECTED form (Study 1 original 'symmetric self-canceling exhaustion' weakened; corrected claim is asymmetry + external off-ramps)."
+    },
+    {
+      "id": "H05-DETENTE-DOCTRINE-ARTIFACT",
+      "statement": "Detente convergence is a doctrine artifact: F2-primary end-states, which occurred in 7 of 8 Study-1 games under D1xW1, occur in fewer than one third of games under D2 and D3 in any world; and where instruments are signed in ANY cell they are process terms (machine-readable edit disclosure, 60-90 day change notice, audit rights, gold-card entry criteria) - never numeric denial-rate corridors, which Red counsel strikes in every cell.",
+      "discriminatingTest": "Rapporteur classifies every game's primary end-state against the five-futures frame, tabulated by cell; separately codes the text of every signed instrument as 'process term' vs 'numeric denial-rate corridor' and tracks whether any numeric corridor survives two turns after signing.",
+      "confirmCriteria": "F2-primary rate < 33% in each of the six D2/D3 cells AND zero numeric denial-rate corridors signed-and-sustained (>= 2 turns) anywhere in the design; process-term instruments appear in >= half of all cells.",
+      "refuteCriteria": "F2-primary rate >= 50% in any D2 or D3 cell (detente is real strategic logic, not doctrine physics), or a numeric denial-rate corridor is signed and sustained >= 2 turns in >= 2 cells (the UM-law non-signability correction fails).",
+      "comparisonCells": "The doctrine axis at fixed world: D1xW1 vs D2xW1 vs D3xW1, replicated at W2; this is the study's central ablation.",
+      "priorStatus": "Re-test of F-E in CORRECTED form (detente attractor was a generated hypothesis, not a tested result; convergence-artifact limitation #2 is the direct motivation for this design)."
+    },
+    {
+      "id": "H06-CHARTER-DUAL-EDGE",
+      "statement": "Published AI-governance charters are dual-edged: Blue actors who publish charters incur SIU-audit and qui-tam-type adverse events at at least twice the rate of actors who govern internally with gated publication; publication yields net-positive payoff only in W1 cells where a certification safe harbor exists to enter, and only when audit lookback/extrapolation limits were negotiated before disclosure.",
+      "discriminatingTest": "Paired within-cell comparison: games (or actors) that publish charters vs those that run internal governance + pre-emptive third-party coding audit without publication. Rapporteur counts White Cell-adjudicated SIU audit, qui tam, and acuity-inflation-accusation events per actor-turn, and codes whether lookback limits preceded any disclosure.",
+      "confirmCriteria": "Publishers suffer >= 2x the adverse audit/qui tam event rate of internal-governors in W2/W3 cells; the only games where publication is net-positive are W1 games with safe-harbor entry AND pre-negotiated lookback caps.",
+      "refuteCriteria": "Publication is net-positive in a majority of W2 or W3 games (no exposure penalty), or internal-governors suffer equal adverse event rates (publication is not the exposure vector).",
+      "comparisonCells": "Within-doctrine world contrast: D1xW1 vs D1xW3; plus publisher/non-publisher pairing inside each cell.",
+      "priorStatus": "Re-test of F-F in CORRECTED form (Study 1 original 'legitimacy asset' weakened to 'govern internally, gate publication')."
+    },
+    {
+      "id": "H07-SQUEEZED-MIDDLE",
+      "statement": "With Study 1's scoring protection removed (mid-size and rural solvency are no longer victory conditions for either side), the $300M-$1B tier remains the modal structural casualty: mid-tier distress events (distress sale, exclusive-terms delegation capture, PE acquisition) occur at >= 2x the rate of rural-system distress in every doctrine, and rural restraint persists wherever network-adequacy math binds - rural distress becomes common only under D3xW3.",
+      "discriminatingTest": "Rapporteur logs every distress event by actor tier (large / $300M-$1B middle / rural-small) and codes the White Cell's adjudicated mechanism (renewal leverage loss, gold-card wedge, delegation with exclusivity, network-adequacy release). Scoring sheets are audited to confirm no tier's solvency carries victory-condition weight.",
+      "confirmCriteria": "Mid-tier distress rate >= 2x rural rate pooled across D1/D2 cells; at least one mid-tier distress event in a majority of cells; rural distress concentrated in D3xW3 (where friction is asymmetric and the regulator is hostile).",
+      "refuteCriteria": "Rural distress rate matches or exceeds mid-tier in D1/D2 cells once protection is removed (Study 1's 'Prairie survived 8 of 8' was purely a scoring artifact and the squeezed-middle finding was tier-mislabeled), or no mid-tier distress occurs anywhere (the casualty pattern was seed-specific).",
+      "comparisonCells": "All 9 cells with protection removed; decisive contrast D1xW1 (replication of original conditions minus protection) vs D3xW1 and D3xW3.",
+      "priorStatus": "Re-test of F-G in CORRECTED form; Study 1's version carried the strongest diagnostic weight because it was unscored-emergent - this test removes the confound on the rural side."
+    },
+    {
+      "id": "H08-ROLLING-RENEWAL",
+      "statement": "There is no synchronized 2028 window: binding contract-term wins distribute contract-by-contract across 2027-2030 with no single in-game year capturing more than 25% of them; first-cycle wins are wedge provisions (single process terms) rather than full corridor economics in >= 70% of cases; and under D2 the escalation index peaks in 2029-30, not 2028, in at least half of games.",
+      "discriminatingTest": "Rapporteur timestamps every binding contract instrument by in-game year and classifies it wedge vs full-economics; White Cell publishes the escalation index per turn per game, from which peak-turn is read off.",
+      "confirmCriteria": "No calendar year holds > 25% of binding terms pooled across cells; >= 70% of first-cycle instruments are wedge-only; escalation index peaks in the final turn in >= 50% of D2 games.",
+      "refuteCriteria": ">= 40% of binding terms cluster in in-game 2028 across cells (a synchronized window exists after all), or full-economics packages routinely bind in cycle one, or escalation reliably peaks by 2028 even under D2 (front-loaded escalation rehabilitated).",
+      "comparisonCells": "All cells for the timing distribution; D2xW2 specifically for the late-peak claim (escalation allowed to run under a slow regulator).",
+      "priorStatus": "Re-test of F-H in CORRECTED form (original '2028 window' weakened to rolling 2027-2030 with possible late peak)."
+    },
+    {
+      "id": "H09-F1-DOCTRINE-DISPUTE",
+      "statement": "The inside/outside judge dispute on F1 resolves toward the outside view: under D2 (escalation-viable doctrine) with W2 or W3 (slow or hostile regulator), grinding uncoordinated escalation (F1) becomes a modal or near-modal end-state (>= 40% of games F1-primary), demonstrating that Study 1's ~6% in-game F1 weight was designed out by doctrine, not strategically unlikely.",
+      "discriminatingTest": "End-state classification frequency of F1-primary in D2xW2 and D2xW3, compared against D1xW1 replication games run in the same study with the same seeds and rapporteur.",
+      "confirmCriteria": "F1-primary >= 40% of games in D2x{W2,W3} pooled, while D1xW1 replication stays <= 15% (the doctrine ablation, not seed drift, moves the number toward the 25-30% outside-view anchor).",
+      "refuteCriteria": "F1-primary < 15% even in D2xW2 and D2xW3 - meaning even when escalation is scoreable as viable and the referee is slow, agents still find off-ramps; the inside view (F1 genuinely unlikely) wins and the outside-view 30% anchor should be revised down.",
+      "comparisonCells": "D2xW2 and D2xW3 vs D1xW1 (same seeds); this is the single most decision-relevant comparison in Wargame 2.0.",
+      "priorStatus": "New doctrine-dependence hypothesis, motivated directly by Study 1 limitation #2 (convergence artifact) and the irreducible F1 7%-30% judge split."
+    },
+    {
+      "id": "H10-ROBUST-STRATEGY-PORTABILITY",
+      "statement": "Study 1's robust/fragile strategy table is doctrine-portable with one predicted exception: the five robust strategies (renewal loading, governance-seat occupation, prevention-over-appeals, upcoding inoculation, BATNA-first for the small tail) yield non-negative payoff in >= 7 of 9 cells each; of the five fragile strategies, four remain losing in all cells, but symmetric escalation ('appeal factory') is predicted to become locally winning under D2xW2/W3 - if it does NOT, escalation-first is refuted as strategy, not just as doctrine artifact.",
+      "discriminatingTest": "Rapporteur scores each named strategy's payoff (actor-level outcome delta attributed by White Cell adjudication) wherever an actor commits >= 40 of 100 posture points to it, tabulated per cell; the escalation-first sub-test compares appeal-factory actors' end-state payoffs in D2 cells vs D1 cells.",
+      "confirmCriteria": "Each robust strategy non-negative in >= 7/9 cells; denial-rate-only corridors, weaponized transparency, weak-BATNA anchoring, and solidarity-only management negative in >= 8/9 cells; escalation-first payoff sign flips positive in at least one D2 cell.",
+      "refuteCriteria": "Any robust strategy turns materially negative in >= 3 cells (its Tier-1 'no-regret' status in the strategy brief must be withdrawn), or a fragile strategy other than escalation-first becomes winning in >= 2 cells (the robust/fragile table is doctrine-contingent and cannot be briefed as general).",
+      "comparisonCells": "All 9 cells; escalation sub-test D2x{W1,W2,W3} vs D1x{W1,W2,W3}.",
+      "priorStatus": "New; operationalizes Study 1's cross-excursion robust/fragile table (section 5.2) as a falsifiable portability claim rather than an assumed constant."
+    },
+    {
+      "id": "H11-GREEN-EMPLOYER-BRAKE",
+      "statement": "When employers/ASO purchasers are independently modeled (GREEN cell) with fiduciary-duty, PMPM-trend, and abrasion mechanics, the employer channel - not regulation - is the first binding constraint on payer payment-integrity intensity on self-funded volume in slow/hostile-regulator worlds; and corridor/gold-card term contagion propagates through employer RFPs faster than through statute in those worlds.",
+      "discriminatingTest": "In GREEN-active games, rapporteur codes the first event that measurably curtails Red PI behavior on self-funded volume (employer RFP demand, fiduciary-litigation threat, account loss vs statute, court order); contagion speed is measured as turns from first corridor/gold-card instrument to third adopter, by channel.",
+      "confirmCriteria": "In >= 60% of GREEN-active W2/W3 games, the first binding PI constraint originates in the employer channel; employer-RFP contagion reaches third adopter at least one turn faster than the statutory channel in those worlds; removing GREEN (control games) delays or eliminates the constraint.",
+      "refuteCriteria": "Employer moves never bind (Red absorbs abrasion without behavior change in a majority of GREEN-active W2/W3 games), or the statutory channel binds first even under W2/W3 - employers are not the off-ramp Study 1's correction assumed.",
+      "comparisonCells": "GREEN-active vs GREEN-inactive variants within D2xW2 and D2xW3; W1 as contrast (activist regulator should outrun employers).",
+      "priorStatus": "New (GREEN cell); addresses Study 1 limitation #5 - employers, the payer's actual customer, were never independently modeled."
+    },
+    {
+      "id": "H12-VENDOR-ARMS-DEALER",
+      "statement": "When the RCM/AI vendor layer is independently modeled (VENDOR cell), vendor incentives measurably extend the conflict (vendors re-arm the losing side and resist touchless/prevention terms that shrink billable volume); and a vendor side-switch event (payer acquisition of a provider-side rev-cycle vendor holding client denial/appeal/documentation data) degrades ex-client Blue performance unless data-rights, portability, and non-use clauses were pre-positioned in 2026-27 contracts.",
+      "discriminatingTest": "Two-part: (a) rapporteur compares conflict duration and prevention-term adoption between VENDOR-active and VENDOR-inactive runs of the same seeds; (b) a scripted acquisition inject fires mid-game in VENDOR-active cells, and ex-client adverse-action metrics (denial/pend/downcode rates) over the following two turns are compared between actors with and without pre-positioned contract protections.",
+      "confirmCriteria": "(a) VENDOR-active games run longer at elevated escalation index and adopt prevention/touchless terms at a lower rate; (b) unprotected ex-clients suffer measurable adverse-action deterioration in >= 60% of acquisition games while protected ex-clients do so in < 20%.",
+      "refuteCriteria": "VENDOR-active and inactive games are indistinguishable on duration and term adoption (the arms-dealer effect is rhetoric), or acquisition produces no differential harm regardless of contract protections (the Inject-2 data-rights screen is not a real 2026 no-regret move and must be demoted).",
+      "comparisonCells": "VENDOR-active vs VENDOR-inactive at D1xW1 and D2xW2; acquisition inject within all VENDOR-active cells.",
+      "priorStatus": "New (VENDOR cell); vendors appeared in Study 1 only as cost benchmarks and signposts, never as agents; also tests the live-session Inject 2 premise."
+    },
+    {
+      "id": "H13-FEDERAL-PREEMPTION",
+      "statement": "A federal preemption shock (deregulatory federal action nullifying state AI-UR statutes, consistent with the W3 lean) removes the F3 rail without producing detente: F3-primary end-states drop to near zero in preemption-seeded games, binding constraints migrate to private ordering (contract terms), litigation pricing, and the employer channel, and the F2 rate does NOT rise - under D2 the modal post-preemption path is F1/F5, and the squeezed-middle casualty rate increases.",
+      "discriminatingTest": "Preemption seed fires at turn 2 in designated W3 games across all three doctrines; rapporteur compares end-state distribution, source-of-first-binding-constraint coding, and mid-tier distress counts against non-preemption W3 controls with the same seeds.",
+      "confirmCriteria": "F3-primary <= 5% in preemption games; majority of binding constraints post-shock coded contract/litigation/employer; F2 rate flat or lower vs controls; mid-tier distress rate higher than controls under D2/D3.",
+      "refuteCriteria": "Preemption produces faster or more durable detente than controls (regulation was crowding out private deals - a strategically decisive reversal), or state-channel removal has no measurable effect on end-state distribution (the F3 rail was never load-bearing).",
+      "comparisonCells": "Preemption-seeded vs control within D1xW3, D2xW3, D3xW3.",
+      "priorStatus": "New (out-of-frame seed); addresses Study 1 limitation #8 - federal preemption was structurally invisible to the original five-futures taxonomy."
+    },
+    {
+      "id": "H14-VERTICAL-INTEGRATION-BYPASS",
+      "statement": "Vertical integration is the realized structural bypass, not VBC: in cells where Red may acquire provider assets (medical groups, squeezed-middle systems, rev-cycle vendors), acquisition becomes Red's dominant response to a constrained denial channel - converting the adverse-action war into internal transfer pricing - and 'F4-via-integration' end-states exceed classic F4-via-VBC (which stays <= 10%, consistent with 1-1.5 pt/yr VBC penetration base rates) wherever acquisition is enabled.",
+      "discriminatingTest": "Acquisition moves are priced and enabled in designated cells; rapporteur codes Red's response to each binding denial constraint (escalate elsewhere / negotiate / acquire) and classifies end-states with a new F4a (integration-bypass) sub-code, comparing acquisition-enabled vs acquisition-disabled runs of the same seeds.",
+      "confirmCriteria": "In >= 50% of acquisition-enabled games where the denial channel is constrained, Red allocates materially to provider-asset acquisition; F4a end-states exceed classic F4 in enabled cells; mid-tier capture rate rises vs disabled controls (linking to H07).",
+      "refuteCriteria": "Red prefers negotiated process-term detente over acquisition even when acquisition is priced attractively (integration is not the payer's constrained-channel response and the out-of-frame worry is overweighted), or classic F4-via-VBC exceeds 10% (Study 1's VBC-skepticism correction fails).",
+      "comparisonCells": "Acquisition-enabled vs disabled within D2xW2 and D3xW3; GREEN-active variant to test whether employer resistance prices acquisitions down.",
+      "priorStatus": "New (out-of-frame seed); addresses Study 1 limitation #8 - vertical integration absorbing the provider side was invisible to the original frame; also sharpens Study 1's weakened F4."
+    },
+    {
+      "id": "H15-PROCESS-TERM-CONVERGENCE-FLOOR",
+      "statement": "Whatever else varies, a convergence floor exists: in every doctrine x world cell, at least one bilateral process-term instrument from the payer-signable set (machine-readable edit-library disclosure, 60-90 day change notice, audit rights, gold-card entry criteria, model-change disclosure) binds at some renewal by end-game - i.e., the corrected F-E claim is not merely 'corridors fail' but 'process terms succeed everywhere', including under hostile worlds and escalation-viable doctrine.",
+      "discriminatingTest": "Rapporteur inventories all signed instruments per game against the payer-signable set and records the cell-level rate of games with >= 1 binding process-term instrument sustained to end-game.",
+      "confirmCriteria": ">= 1 binding, sustained process-term instrument in >= 60% of games in every one of the 9 cells (a floor, not a modal end-state claim - compatible with F1/F5 primaries).",
+      "refuteCriteria": "Any cell where fewer than one third of games produce a single sustained process-term instrument (under some doctrine/world combinations even the minimal cooperative layer fails, and the renewal-package Tier-1 recommendation is world-contingent, not no-regret).",
+      "comparisonCells": "All 9 cells; the decisive tests are the least cooperative corners, D2xW3 and D3xW3.",
+      "priorStatus": "New; the constructive half of corrected F-E (Study 1 established what payers will not sign; this pre-registers the falsifiable claim about what they will), and it is the load-bearing assumption behind Tier-1 recommendation 2 (pre-draft the renewal package)."
+    }
+  ]
+}
