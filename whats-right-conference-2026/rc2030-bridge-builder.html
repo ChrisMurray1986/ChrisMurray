@@ -39,14 +39,15 @@
   .lede{color:var(--ink2);margin:0 0 14px;max-width:70ch}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
   .cols{display:grid;gap:14px}
-  @media(min-width:820px){.cols.c2{grid-template-columns:1fr 1fr}.cols.c3{grid-template-columns:1fr 1fr 1fr}}
+  @media(min-width:820px){.cols.c2{grid-template-columns:1fr 1fr}}
   table{border-collapse:collapse;width:100%}
   th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
   td{padding:6px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
   td.num,th.num{text-align:right}
-  input[type=number],select{background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);padding:6px 8px;font:inherit;font-variant-numeric:tabular-nums;width:90px}
+  tr.total td{font-weight:700;border-top:2px solid var(--line)}
+  input[type=number],input[type=text],select{background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);padding:6px 8px;font:inherit;font-variant-numeric:tabular-nums;width:90px}
   input[type=number].wide{width:120px}
-  select{width:auto}
+  input[type=text].rolename{width:100%;max-width:280px}
   label.f{display:block;font-size:.8rem;font-weight:600;color:var(--ink2);margin-bottom:3px}
   .field{margin-bottom:12px}
   .hint{font-size:.78rem;color:var(--ink3);margin-top:2px}
@@ -56,12 +57,12 @@
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
-  .kpi .v{font-size:1.5rem;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .kpi .v{font-size:1.42rem;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
   .kpi .l{font-size:.75rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em}
   .kpi .d{font-size:.78rem;color:var(--ink2);margin-top:2px}
   .kpi.blue{border-top:3px solid var(--blue)} .kpi.aqua{border-top:3px solid var(--aqua)}
   .kpi.orange{border-top:3px solid var(--orange)} .kpi.violet{border-top:3px solid var(--violet)}
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
   .seg button{background:var(--panel);border:none;padding:8px 14px;font:inherit;font-size:.85rem;color:var(--ink2);cursor:pointer;border-right:1px solid var(--line)}
   .seg button:last-child{border-right:none}
   .seg button.on{background:var(--blue);color:#fff;font-weight:700}
@@ -78,7 +79,7 @@
   svg text{font:11px -apple-system,"Segoe UI",Roboto,sans-serif;fill:var(--ink2)}
   svg text.val{font-weight:700;fill:var(--ink)}
   svg .grid{stroke:var(--line);stroke-width:1}
-  .tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);border-radius:6px;padding:6px 9px;font-size:.78rem;display:none;z-index:50;max-width:240px}
+  .tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);border-radius:6px;padding:6px 9px;font-size:.78rem;display:none;z-index:50;max-width:250px}
   details{margin:8px 0}
   summary{cursor:pointer;font-weight:600;font-size:.88rem;color:var(--blue)}
   details .body{padding:8px 2px;font-size:.86rem;color:var(--ink2)}
@@ -103,13 +104,14 @@
   .badge.medium{background:var(--blue-soft);color:var(--blue)}
   .badge.long{background:var(--orange-soft);color:var(--orange)}
   .badge.risk{background:var(--orange-soft);color:var(--orange)}
+  .badge.ret{background:var(--violet-soft);color:var(--violet)}
   .script{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:.87rem;font-style:italic;color:var(--ink2)}
+  .denom{background:var(--violet-soft);border-radius:8px;padding:9px 12px;font-size:.83rem;margin-top:8px}
   .plan li{margin-bottom:10px}
   .plan .who{font-size:.76rem;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
   .foot{margin-top:30px;color:var(--ink3);font-size:.75rem;border-top:1px solid var(--line);padding-top:12px}
   .navrow{display:flex;justify-content:space-between;margin-top:18px}
   .tablewrap{overflow-x:auto}
-  .warnrow{color:var(--orange);font-weight:700}
   @media print{
     body{background:#fff;color:#000}
     .stepper,.btnrow,.navrow,.noprint,header.app .tagline{display:none!important}
@@ -129,7 +131,7 @@
 
 <nav class="stepper" id="stepper"></nav>
 
-<!-- ============ STEP 1: YOUR POD TODAY ============ -->
+<!-- ============ STEP 1 ============ -->
 <section class="step" id="s1">
   <h2>1 · Your pod today</h2>
   <p class="lede">Start with the operation you actually run. The table is pre-loaded with a modeled mid-size pod (94 FTE on a ~$1B NPR slice of denials &amp; AR) — <strong>overwrite it with your own numbers.</strong> Nothing here is saved anywhere but this browser.</p>
@@ -141,20 +143,20 @@
         <tbody></tbody>
         <tfoot><tr><th>Total</th><th class="num" id="rosterTotal">—</th></tr></tfoot>
       </table></div>
-      <p class="hint">Don't see your exact titles? Use the closest function — the math runs on function, not title.</p>
+      <p class="hint">The last row is yours — rename it for a function we missed (credit balance, cash posting exceptions…). It's treated as touch work that shrinks in the 2028 wave.</p>
     </div>
     <div class="panel">
       <div class="chart-title" style="margin-bottom:8px">Operating facts</div>
       <div class="field"><label class="f">Annual voluntary attrition in this pod (%)</label>
-        <input type="number" id="inAttr" min="2" max="45" step="1"> <span class="hint">Rev-cycle norm runs 15–25%. This number drives the entire "layoffs vs. attrition" answer — use your real one.</span></div>
+        <input type="number" id="inAttr" min="2" max="45" step="1"> <span class="hint">Rev-cycle norm runs 15–25%. This drives the entire "layoffs vs. attrition" answer — use your real one. (And know it won't stay put after you announce a plan; that's why Step 5 tells the truth about the gap.)</span></div>
       <div class="field"><label class="f">Average fully-loaded cost per FTE ($)</label>
         <input type="number" id="inSalary" class="wide" min="40000" max="200000" step="1000"> <span class="hint">Salary + benefits + overhead. Benchmark: ~31% load over base.</span></div>
       <div class="field"><label class="f">Denials worked per year (#)</label>
         <input type="number" id="inDenials" class="wide" min="1000" max="500000" step="500"></div>
       <div class="field"><label class="f">Initial denial rate (%)</label>
-        <input type="number" id="inDenRate" min="1" max="30" step="0.5"></div>
+        <input type="number" id="inDenRate" min="1" max="30" step="0.5"> <span class="hint">Drives the prevention line in Step 3's money table.</span></div>
       <div class="field"><label class="f">Open requisitions in this pod right now (#)</label>
-        <input type="number" id="inReqs" min="0" max="60" step="1"> <span class="hint">Vacancies you're currently trying to fill. They matter more than you think in Step 5.</span></div>
+        <input type="number" id="inReqs" min="0" max="60" step="1"> <span class="hint">Vacancies you're currently trying to fill. Every one you leave open is a seat removed without a conversation.</span></div>
       <div class="btnrow">
         <button class="btn ghost small" id="btnModelPod">Reset to the modeled pod</button>
       </div>
@@ -163,7 +165,7 @@
   <div class="navrow"><span></span><button class="btn" data-go="2">Next: design choices →</button></div>
 </section>
 
-<!-- ============ STEP 2: DESIGN CHOICES ============ -->
+<!-- ============ STEP 2 ============ -->
 <section class="step" id="s2">
   <h2>2 · Design choices</h2>
   <p class="lede">Four decisions shape the end state. These are <strong>your</strong> calls — the tool computes consequences, it doesn't make choices for you.</p>
@@ -210,12 +212,14 @@
         <input type="number" id="inOpex" min="5" max="40" step="1"> <span class="hint">Platform + connectors + model run-cost + human stewardship. Benchmark 18% (range 12–25%) for buy-mode at mature state. Anyone quoting you savings without this line is not giving you an honest number.</span></div>
       <div class="field"><label class="f">End-state seniority premium (× today's average loaded cost)</label>
         <input type="number" id="inSenior" min="1" max="2" step="0.05"> <span class="hint">Fewer people, more senior work. The modeled pod's average rises ~25% as operators become stewards.</span></div>
+      <div class="field"><label class="f">One-time transition cost ($)</label>
+        <input type="number" id="inOneTime" class="wide" min="0" step="50000"> <span class="hint">Implementation + integration + training + backfill-of-trainees. Benchmark seed: ~1.25× the end-state annual agent operating cost. Your IT shop will have a better number — put it here.</span></div>
     </div>
   </details>
   <div class="navrow"><button class="btn ghost" data-go="1">← Back</button><button class="btn" data-go="3">Next: your bridge →</button></div>
 </section>
 
-<!-- ============ STEP 3: THE BRIDGE ============ -->
+<!-- ============ STEP 3 ============ -->
 <section class="step" id="s3">
   <h2>3 · Your bridge</h2>
   <p class="lede" id="bridgeLede"></p>
@@ -235,9 +239,9 @@
   </div>
   <div class="cols c2">
     <div class="panel">
-      <div class="chart-title">The money (annual, at end state)</div>
+      <div class="chart-title">The money — steady state AND the transition</div>
       <div class="tablewrap"><table id="moneyTbl"><tbody></tbody></table></div>
-      <p class="hint">Net of agent operating cost — the line a CFO asks for first. Labor only; revenue-side upside (underpayment recovery, prevention, appeal yield) is deliberately excluded here so this number is one you can defend.</p>
+      <p class="hint">Net of agent operating cost, transition cost, and the glide carry — the lines a CFO asks for. Labor only; revenue-side upside (underpayment recovery, prevention yield, appeal yield) is deliberately excluded so this number is one you can defend.</p>
     </div>
     <div class="panel">
       <div class="chart-title">Reality checks</div>
@@ -248,7 +252,7 @@
   <div class="navrow"><button class="btn ghost" data-go="2">← Back</button><button class="btn" data-go="4">Next: your 2030 org →</button></div>
 </section>
 
-<!-- ============ STEP 4: THE 2030 ORG ============ -->
+<!-- ============ STEP 4 ============ -->
 <section class="step" id="s4">
   <h2>4 · Your <span class="tgtYear"></span> org</h2>
   <p class="lede" id="orgLede"></p>
@@ -263,17 +267,18 @@
   <div class="navrow"><button class="btn ghost" data-go="3">← Back</button><button class="btn" data-go="5">Next: your people →</button></div>
 </section>
 
-<!-- ============ STEP 5: YOUR PEOPLE ============ -->
+<!-- ============ STEP 5 ============ -->
 <section class="step" id="s5">
   <h2>5 · Your people — the journey from today to <span class="tgtYear"></span></h2>
-  <p class="lede">This is the part nobody hands you: role by role, where your people actually go, how long the bridge takes, and how much of the reduction happens without a single involuntary separation.</p>
+  <p class="lede">This is the part nobody hands you: role by role, where your people actually go, how long the bridge takes, and how much of the reduction really happens without an involuntary separation — counted honestly, role by role, not with a pod-wide wave of the hand.</p>
 
   <div class="panel chart-box">
     <div class="chart-head">
-      <span class="chart-title">The glide path — required headcount vs. what attrition alone delivers</span>
+      <span class="chart-title">The glide path — planned headcount vs. what a staged backfill freeze actually delivers</span>
       <span class="legend">
-        <span><span class="sw" style="background:var(--blue)"></span>Required glide path</span>
-        <span><span class="sw" style="background:var(--aqua)"></span>Attrition only (backfill frozen)</span>
+        <span><span class="sw" style="background:var(--blue)"></span>Planned glide path</span>
+        <span><span class="sw" style="background:var(--aqua)"></span>Staged freeze + attrition</span>
+        <span><span class="sw" style="background:var(--violet-soft);border:1px solid var(--violet)"></span>Glide carry (people ahead of plan)</span>
       </span>
     </div>
     <div id="glide"></div>
@@ -284,12 +289,12 @@
   </div>
 
   <div class="panel">
-    <div class="chart-title">Where each role goes</div>
+    <div class="chart-title">Where each role goes — reconciled to the Step 4 seats</div>
     <div class="tablewrap"><table id="redeployTbl">
-      <thead><tr><th>Today's role</th><th class="num">FTE</th><th>Primary destination</th><th class="num">Redeploy</th><th>Skill bridge</th><th>Start training by</th></tr></thead>
+      <thead><tr><th>Today's role</th><th class="num">FTE</th><th>Destination</th><th class="num">Move into seats</th><th class="num">Glide out</th><th>Skill bridge</th><th>Start training by</th></tr></thead>
       <tbody></tbody>
     </table></div>
-    <p class="hint">Suggested allocation — argue with it at the table. "Redeploy" counts fill the new-role seats from Step 4; the remainder glide out through frozen backfill (Step 5 chart) or move to other functions.</p>
+    <p class="hint" id="redeployHint"></p>
   </div>
 
   <div class="panel">
@@ -301,7 +306,7 @@
   <div class="navrow"><button class="btn ghost" data-go="4">← Back</button><button class="btn" data-go="6">Next: your 90-day plan →</button></div>
 </section>
 
-<!-- ============ STEP 6: THE 90-DAY PLAN ============ -->
+<!-- ============ STEP 6 ============ -->
 <section class="step" id="s6">
   <h2>6 · Your first 90 days</h2>
   <p class="lede">Generated from your numbers and your choices. Not one item needs a purchase order — every one is an operator's decision.</p>
@@ -321,7 +326,7 @@
 </section>
 
 <div class="foot">
-  Benchmarks drawn from a modeled mid-size IDN denials &amp; AR pod (94 FTE per ~$1B NPR; floor 17; agent OpEx ≈18% of replaced labor, range 12–25%; cost per denial $161→$59) and published industry data (HFMA, Experian 2025, AHA 2026). This is a planning aid, not an engagement deliverable — the numbers are yours, and so are the decisions. Nothing entered here leaves your browser.
+  Benchmarks drawn from a modeled mid-size IDN denials &amp; AR pod (94 FTE per ~$1B NPR; floor 17; agent OpEx ≈18% of replaced labor, range 12–25%). Cost-per-denial on this screen is computed from <em>your</em> inputs and will differ from the modeled pod's published figures, which use its own volume basis. The base-case ambition anchor (25/94) assumes minimal prevention; the prevention lever here is incremental to it, not double-counted. This is a planning aid, not an engagement deliverable — the numbers are yours, and so are the decisions. Nothing entered here leaves your browser.
 </div>
 </div>
 <div class="tip" id="tip"></div>
@@ -338,10 +343,12 @@ const DEFAULT_ROLES = [
   {id:'underpay', name:'Underpayment / Cash-Variance Analyst',fte:6},
   {id:'super',    name:'Supervisor (Denials & AR, HB/PB)',   fte:5},
   {id:'manager',  name:'Manager (Denials / AR)',             fte:2},
+  {id:'other',    name:'Other (rename me)',                  fte:0, custom:true},
 ];
-const DEFAULTS = {attr:18, salary:82000, denials:42000, denRate:11, reqs:6, ambition:'base', autonomy:'T3', prevent:'std', year:'2030', opex:18, senior:1.25, floor:null};
+const DEFAULTS = {attr:18, salary:82000, denials:42000, denRate:11, reqs:6, ambition:'base', autonomy:'T3', prevent:'std', year:'2030', opex:18, senior:1.25, floor:null, oneTime:null};
 let S = load() || {...DEFAULTS, roles: DEFAULT_ROLES.map(r=>({...r}))};
 if(!S.roles) S.roles = DEFAULT_ROLES.map(r=>({...r}));
+if(!S.roles.find(r=>r.id==='other')) S.roles.push({...DEFAULT_ROLES.find(r=>r.id==='other')});
 let currentStep = 1, journeyRole = 'denial';
 
 function save(){ try{ localStorage.setItem('rc2030bb', JSON.stringify(S)); }catch(e){} }
@@ -350,8 +357,8 @@ function load(){ try{ const j = localStorage.getItem('rc2030bb'); return j? JSON
 /* ================= MODEL ================= */
 const AMBITION = {
   cons:{f:56/94, label:'Conservative', desc:'Agents assist; humans still own most queues. End state ≈ 60% of today\'s FTE. This is where most organizations that "did automation" without redesigning the work end up.'},
-  base:{f:25/94, label:'Base case', desc:'Agents do the routine touches; humans run mission control and work exceptions. End state ≈ 27% of today\'s FTE — the modeled 94→25 pod. Requires real workflow redesign, not tools on top of old process.'},
-  aggr:{f:14/94, label:'Aggressive', desc:'Accelerated autonomy promotion, prevention biting hard, exceptions only. End state ≈ 15% of today\'s FTE. Only credible with a mature platform and a hard-nosed governance function.'}
+  base:{f:25/94, label:'Base case', desc:'Agents do the routine touches; humans run mission control and work exceptions. End state ≈ 27% of today\'s FTE — the modeled 94→25 pod, which assumes MINIMAL prevention (the prevention lever below is incremental, not double-counted). Requires real workflow redesign, not tools on top of old process.'},
+  aggr:{f:14/94, label:'Aggressive', desc:'Accelerated autonomy promotion, exceptions only. End state ≈ 15% of today\'s FTE. Only credible with a mature platform and a hard-nosed governance function.'}
 };
 const PREVENT = {
   none:{r:0,   label:'Minimal',   desc:'You keep working denials after they happen. Volume stays on today\'s trend.'},
@@ -359,6 +366,10 @@ const PREVENT = {
   aggr:{r:0.30,label:'Aggressive',desc:'Prevention as the primary strategy: clean-claim engineering, eligibility/auth at source, kill-list on denial-generating steps. Volume down ~30%. The cheapest FTE is the denial that never happens.'}
 };
 const T2_MULT = 1.35;
+/* staged backfill-freeze waves: [year, quarter] each role's freeze starts */
+const WAVES = {arRep:[2026,4], apCoord:[2027,1], arAnalyst:[2027,2], denial:[2027,4], underpay:[2028,1], super:[2028,1], manager:[2028,1], other:[2028,1], apSpec:[2031,4]};
+
+function getFte(id){ const r=S.roles.find(x=>x.id===id); return r? (+r.fte||0):0; }
 
 function calc(){
   const baseline = S.roles.reduce((a,r)=>a + (+r.fte||0), 0);
@@ -366,99 +377,151 @@ function calc(){
   let end = baseline * amb.f;
   if(S.autonomy==='T2') end *= T2_MULT;
   const prev = PREVENT[S.prevent].r;
-  // prevention shrinks the exception-ops half of the end state
-  end = end * (1 - 0.5*prev);
+  end = end * (1 - 0.5*prev);            // prevention shrinks the exception half; base anchor assumes minimal prevention
   end = Math.round(end);
   const floorDefault = Math.max(4, Math.round(baseline * 17/94));
   const floor = S.floor==null? floorDefault : +S.floor;
   end = Math.max(end, floor);
-  // composition (scaled from modeled 13/7/5 of 25)
+  /* pillars */
   let exOps = Math.max(2, Math.round(end*0.52));
   let gov   = Math.max(2, Math.round(end*0.28));
   let prod  = Math.max(1, end - exOps - gov);
-  // bridge decomposition
-  const newRoles = Math.max(3, Math.round(end*0.32));
-  const grossRed = baseline - end + newRoles;
-  const elim = Math.round(grossRed * 0.41);
-  const transform = grossRed - elim;
-  // money
+
+  /* ---------- SEAT LEDGER (one source of truth; Step 4 + Step 5 both read it) ---------- */
+  const apSpecRetained = Math.min(getFte('apSpec'), Math.max(2, Math.round(floor*0.3)));
+  const seats = {
+    exAnalyst: Math.max(1, exOps - apSpecRetained - 1),   // exception analysts
+    apSpec:    apSpecRetained,                            // retained clinical (floor)
+    curator:   1,
+    aiOps:     end>=22? 2:1,
+    auditor:   1,
+    contractIntel: 0, integration: 1,
+    podPO: 1, exPM: 1, ciLead: 1, ruleOps: Math.max(0, prod-3),
+  };
+  seats.contractIntel = Math.max(1, gov - seats.aiOps - seats.auditor - seats.integration);
+  /* allocation: fill seats from today's roster, never oversubscribe */
+  const cap = {}; Object.keys(seats).forEach(k=>cap[k]=seats[k]);
+  const takes=(k,n)=>{ const t=Math.max(0,Math.min(n,cap[k]||0)); cap[k]-=t; return t; };
+  const alloc = {};   // roleId -> {dest,label,n}
+  alloc.apSpec   = {n: takes('apSpec', getFte('apSpec')), label:'Retained — the human floor', retained:true};
+  alloc.denial   = {n: takes('exAnalyst', Math.min(getFte('denial'),  Math.round(seats.exAnalyst*0.5))), label:'Senior Exception Analyst'};
+  alloc.arAnalyst= {n: 0, label:'Exception Analyst / RuleOps'};
+  alloc.arAnalyst.n = takes('exAnalyst', Math.min(getFte('arAnalyst'), cap.exAnalyst)) + takes('ruleOps', Math.min(2, getFte('arAnalyst')));
+  alloc.arRep    = {n: takes('exAnalyst', Math.min(getFte('arRep'), cap.exAnalyst)), label:'Exception Analyst'};
+  alloc.apCoord  = {n: takes('curator', Math.min(getFte('apCoord'),1)), label:'Clinical Evidence Curator'};
+  alloc.underpay = {n: takes('contractIntel', Math.min(getFte('underpay'), seats.contractIntel)), label:'Contract Intelligence Analyst'};
+  alloc.super    = {n: takes('aiOps', Math.min(getFte('super'), seats.aiOps)) + takes('ciLead', getFte('super')>2?1:0), label:'AI Ops Supervisor / CI Lead'};
+  alloc.manager  = {n: takes('podPO', Math.min(getFte('manager'),1)) + takes('exPM', Math.min(Math.max(0,getFte('manager')-1),1)), label:'Pod Product Owner / Exception PM'};
+  alloc.other    = {n: 0, label:'Exception / posting support'};
+  const filled = Object.values(alloc).reduce((a,x)=>a+x.n,0);
+  const unfilled = Math.max(0, end - filled);            // seats needing external hires or later internal picks
+  const glideOut = {}; let removals = 0;
+  S.roles.forEach(r=>{ const a=alloc[r.id]? alloc[r.id].n:0; glideOut[r.id]=Math.max(0,(+r.fte||0)-a); removals += glideOut[r.id]; });
+  /* removals = baseline - filled = (baseline - end) + unfilled — self-reconciling */
+
+  /* money */
   const laborToday = baseline * S.salary;
   const laborEnd = end * S.salary * S.senior;
   const replaced = Math.max(0, laborToday - laborEnd);
   const agentOpex = replaced * (S.opex/100);
   const net = laborToday - laborEnd - agentOpex;
+  const oneTimeDefault = Math.round(agentOpex * 1.25 / 50000)*50000;
+  const oneTime = S.oneTime==null? oneTimeDefault : +S.oneTime;
   const denToday = Math.max(1, +S.denials||1);
   const denEnd = denToday * (1 - prev);
   const cpdToday = laborToday / denToday;
   const cpdEnd = (laborEnd + agentOpex) / Math.max(1,denEnd);
-  return {baseline, end, floor, floorDefault, exOps, gov, prod, newRoles, grossRed, elim, transform,
-          laborToday, laborEnd, agentOpex, net, cpdToday, cpdEnd, prev, denToday, denEnd};
+  return {baseline, end, floor, floorDefault, exOps, gov, prod, seats, alloc, filled, unfilled, glideOut, removals,
+          laborToday, laborEnd, agentOpex, net, oneTime, oneTimeDefault, cpdToday, cpdEnd, prev, denToday, denEnd};
 }
 
-/* glide-path quarterly simulation */
+/* ---------- glide sim: role-level pools, staged freeze, honest counting ---------- */
 function glideSim(m){
-  const startY=2026, startQ=4, endY=+S.year, endQ=4;
+  const startY=2026, startQ=4, endY=+S.year;
   const qs=[]; let y=startY,q=startQ;
-  while(y<endY || (y===endY&&q<=endQ)){ qs.push({y,q}); q++; if(q>4){q=1;y++;} }
-  const n=qs.length;
-  const seats = m.baseline - m.end + m.newRoles;         // seats to remove overall
-  const rate = (S.attr/100)/4;
-  // required path: hold thru 2027Q2 (foundation), then linear to end
+  while(y<endY || (y===endY&&q<=4)){ qs.push({y,q}); q++; if(q>4){q=1;y++;} }
+  const rate=(S.attr/100)/4;
+  /* pools: per-role glide-out counts, attrition starts at each role's wave */
+  const pools = S.roles.map(r=>({id:r.id, left:m.glideOut[r.id]||0, wave:WAVES[r.id]||[2028,1]}));
+  const reqCredit = Math.min(+S.reqs||0, m.removals);   // open reqs never filled = seats removed day one
+  let removedArr=[], removed = reqCredit;
+  qs.forEach((qq,i)=>{
+    if(i>0){ pools.forEach(p=>{
+      const started = (qq.y>p.wave[0]) || (qq.y===p.wave[0] && qq.q>=p.wave[1]);
+      if(started && p.left>0){ const dep = p.left*rate; const take=Math.min(dep,p.left); p.left-=take; removed+=take; }
+    }); }
+    removedArr.push(Math.min(removed, m.removals));
+  });
+  const natRemoved = Math.round(Math.min(removed, m.removals));
+  const hard = Math.max(0, m.removals - natRemoved);
+  /* planned path: hold thru 2027Q2 then linear to end */
   const holdIdx = qs.findIndex(x=>x.y===2027&&x.q===3);
   const req = qs.map((x,i)=>{
-    if(i<=holdIdx || holdIdx<0) return m.baseline;
-    const t=(i-holdIdx)/(n-1-holdIdx);
-    return Math.round(m.baseline - (m.baseline-m.end)*t);
+    if(i<=holdIdx||holdIdx<0) return m.baseline;
+    const t=(i-holdIdx)/(qs.length-1-holdIdx);
+    return Math.round(m.baseline-(m.baseline-m.end)*t);
   });
-  // attrition-only path: freeze backfill from day one; add current open reqs as instant credit
-  let cur = m.baseline; let removed = Math.min(+S.reqs||0, seats);
-  const nat = qs.map((x,i)=>{
-    if(i>0){ const dep = cur*rate; const usable=Math.min(dep, Math.max(0,seats-removed)); removed+=usable; cur=cur-dep + (dep-usable); /* retained-role backfills keep total steady except removed seats */ cur = m.baseline - removed; }
-    return Math.round(cur);
-  });
-  const natRemoved = removed;
-  const hard = Math.max(0, Math.round(seats - natRemoved));
-  return {qs, req, nat, seats, natRemoved:Math.round(natRemoved), hard, reqCredit: Math.min(+S.reqs||0, seats)};
+  const nat = qs.map((x,i)=> Math.round(m.baseline - removedArr[i]));
+  /* glide carry: quarters where actual (nat) sits above plan (req) — the price of no-RIF */
+  let carryFteQ=0, coverageFteQ=0;
+  qs.forEach((x,i)=>{ const d=nat[i]-req[i]; if(d>0) carryFteQ+=d; else coverageFteQ+=-d; });
+  const carryCost = carryFteQ * (S.salary/4);
+  const coverageCost = coverageFteQ * (S.salary/4) * 0.30;  // OT/temp premium on understaffed quarters
+  return {qs, req, nat, natRemoved, hard, reqCredit, carryFteQ, carryCost, coverageFteQ, coverageCost};
+}
+
+/* rough breakeven: savings ramp 2028→target; costs = oneTime + carry */
+function breakeven(m,g){
+  const startRamp=2028, endRamp=+S.year;
+  let cum=-m.oneTime - g.carryCost - g.coverageCost, quarter=null;
+  let y=2028,q=1;
+  for(let i=0;i<32;i++){
+    const frac = y>endRamp?1:Math.min(1, ((y-startRamp)*4+q)/((endRamp-startRamp+1)*4));
+    cum += (m.net/4)*frac;
+    if(cum>=0){ quarter={y,q}; break; }
+    q++; if(q>4){q=1;y++;}
+  }
+  return quarter;
 }
 
 /* ================= JOURNEYS ================= */
-function J(m){
+function J(){
  const yr=+S.year;
  return {
-  arRep:{name:'AR Rep — commercial follow-up', dest:'Exception Analyst', alt:'Patient financial advocate · other enterprise roles', dist:'medium', months:'4–6',
-    risk:'High displacement, earliest to feel it — status checks and portal work are the first things agents take.',
+  arRep:{name:'AR Rep — commercial follow-up', dest:'Exception Analyst', alt:'Hard-to-fill enterprise roles (HIM, scheduling, payer-relations support)', dist:'medium', months:'4–6',
+    risk:'High displacement, earliest to feel it — status checks and portal work are the first things agents take. Freeze wave: 2026 Q4.',
     phases:[['Today','A third of the day is portals, hold music, and status checks. The agent pilot takes status-polling first — the most hated part of the job goes before the job changes.'],
     ['2027','Queue volume visibly falls. Backfill frozen — every departure shrinks the pool without a termination. Top performers start exception-analyst training.'],
     ['2028','Follow-up runs straight-through except escalations. Remaining reps work agent-escalated exceptions with full context attached — fewer, harder, more interesting accounts.'],
-    [String(yr),'Role no longer exists as titled. The people are exception analysts, redeployed to other functions, or left through normal turnover on a frozen req.']],
+    [String(yr),'Role no longer exists as titled. Some are exception analysts; most of the reduction happened through reqs that were never refilled.']],
     skills:['Payer-rule literacy → exception judgment','Reading agent context packages','Escalation writing (why the agent was wrong)'],
-    script:'"The phone-and-portal part of this job is going away — honestly, it\'s the part everyone hates. The judgment part is growing. If you want the exception path, I\'ll put you in the first training group. Nobody in this room loses their job to a robot this year; reqs we don\'t backfill do the shrinking."'},
-  arAnalyst:{name:'AR Analyst — government follow-up', dest:'Exception Analyst / Payer-Behavior Analyst', alt:'Contract intelligence support', dist:'medium', months:'6',
-    risk:'Largest single population — the redeployment math lives or dies here.',
+    script:'"The phone-and-portal part of this job is going away — honestly, it\'s the part everyone hates. The judgment part is growing, and there are a limited number of those seats — selection will be on quality scores and I\'ll publish the criteria. Nobody in this room loses their job to a robot this year; reqs we don\'t backfill do the shrinking."'},
+  arAnalyst:{name:'AR Analyst — government follow-up', dest:'Exception Analyst / RuleOps', alt:'Payer-behavior analytics support', dist:'medium', months:'6',
+    risk:'Largest single population — the redeployment math lives or dies here. Freeze wave: 2027 Q2.',
     phases:[['Today','Aged-account chase, remit research, payer-specific rules held in heads.'],
-    ['2027','Agents take first-pass status + simple rebills. Analysts split: exception track vs. payer-behavior track (turning what they know about payer conduct into the intelligence the org negotiates with).'],
-    ['2028','Exception-only queues. Payer-behavior analysts feed the renewal team — the people who knew the payer\'s tricks now price them.'],
-    [String(yr),'Function is a third its size and twice its seniority. Institutional payer knowledge became an asset instead of a coping mechanism.']],
+    ['2027','Agents take first-pass status + simple rebills. Analysts split: exception track vs. rule-ops track (turning what they know about payer conduct into the rules the agents run on).'],
+    ['2028','Exception-only queues. Rule-ops analysts feed the learning loop — the people who knew the payer\'s tricks now encode them.'],
+    [String(yr),'Function is a fraction of its size and twice its seniority. Institutional payer knowledge became an asset instead of a coping mechanism.']],
     skills:['Root-cause analysis','Payer-conduct documentation (audit-grade)','Basic data literacy — reading agent telemetry'],
-    script:'"You know things about these payers that no model knows. There are two paths that pay for that knowledge — exceptions and payer intelligence. Pick one and I\'ll fund the bridge."'},
-  denial:{name:'Denial Analyst', dest:'Senior Exception Analyst', alt:'Continuous-Improvement / Payer-Behavior Analyst', dist:'short', months:'3',
-    risk:'Moderate — triage is automated early, but their judgment is exactly what the exception function needs.',
+    script:'"You know things about these payers that no model knows. There are two paths that pay for that knowledge — exceptions and rule-ops — and fewer seats than people, so I\'ll publish the selection criteria and the timeline. For everyone else: frozen reqs and transfers do the work, not walk-outs."'},
+  denial:{name:'Denial Analyst', dest:'Senior Exception Analyst', alt:'Continuous-Improvement / RuleOps Analyst', dist:'short', months:'3',
+    risk:'Moderate — triage is automated early, but their judgment is exactly what the exception function needs. Freeze wave: 2027 Q4.',
     phases:[['Today','43 in the queue, 15 minutes of lookup per denial, 8–12 human touches per case. She IS the triage intelligence.'],
     ['2027','Agent triage live: classification and routing automated. Analysts stop sorting and start deciding — working the escalated cases with evidence pre-assembled.'],
     ['2028','Exception work only: complex clinical, high-dollar, novel patterns. Each closed exception becomes a rule candidate — the same denial stops coming back.'],
     [String(yr),'Senior exception analysts and CI analysts. Fewer people, materially better jobs — the "denial that came back every month" is now their kill list.']],
     skills:['Exception adjudication (deciding, not sorting)','Rule-candidate writing','QA sampling of agent output'],
-    script:'"Your job today is 70% lookup and 30% judgment. The machine takes the lookup. I\'m hiring for the judgment — from inside this room first."'},
-  apCoord:{name:'Appeals Coordinator', dest:'Clinical Evidence Curator (support)', alt:'Exception Analyst', dist:'medium', months:'4–5',
-    risk:'Highest — package assembly is exactly what agents do best. Redeploy early or lose them badly.',
+    script:'"Your job today is 70% lookup and 30% judgment. The machine takes the lookup. The senior exception seats get filled from this team first — there are fewer seats than people, selection is on your exception-QA scores, and I\'ll show you the criteria today. For everyone who doesn\'t land one: the path is rule-ops, CI, or a transfer I\'ll help you make — and the timeline is years, not weeks."'},
+  apCoord:{name:'Appeals Coordinator', dest:'Clinical Evidence Curator', alt:'Exception Analyst', dist:'medium', months:'4–5',
+    risk:'Highest — package assembly is exactly what agents do best. Redeploy early or lose them badly. Freeze wave: 2027 Q1.',
     phases:[['Today','Assembles appeal packages, chases records, schedules peer-to-peers. Pure coordination.'],
     ['2027','Agent assembles the package; coordinator QAs it. Volume per person triples while headcount need halves — the crossover year. First movers into evidence-curation training.'],
     ['2028','Role substantially absorbed. Curators manage the clinical evidence library agents draw from.'],
     [String(yr),'Title retired. The people who moved early are in the evidence/curation function; the rest left through frozen reqs.']],
     skills:['Clinical documentation literacy','Evidence-library curation','Agent-output QA'],
-    script:'"I\'ll be straight: assembly is the most automatable work in this department, and it\'s most of your day. It\'s also true that the appeal engine is only as good as its evidence — and that\'s a job. Move early with me and you\'re first in line for it."'},
+    script:'"I\'ll be straight: assembly is the most automatable work in this department, and it\'s most of your day. There\'s one curation seat and an exception path — move early with me and you\'re first in line. Either way you\'ll hear it from me before you hear it from a rumor."'},
   apSpec:{name:'Appeals Specialist (clinical)', dest:'RETAINED — the human floor', alt:'Clinical Evidence Curator (lead)', dist:'short', months:'1–2',
-    risk:'Low displacement — but high flight risk if they think otherwise. Tell them first.',
+    risk:'Low displacement — but high flight risk if they think otherwise. Tell them first. No freeze — these seats stay.',
     phases:[['Today','Drafts clinical-necessity appeals, runs peer-to-peer, carries the judgment calls.'],
     ['2027','Agents draft; specialists review, edit, sign. Throughput up ~3× at the same headcount — same judgment, less typing.'],
     ['2028','Reviewing evidence-complete drafts only. Sets the standard the agent drafts are audited against.'],
@@ -466,7 +529,7 @@ function J(m){
     skills:['Draft-review discipline (edit, don\'t rewrite)','Attestation standards ownership','Teaching the model: structured feedback on agent drafts'],
     script:'"You\'re the floor. The rules we\'re writing say a machine never signs a clinical-necessity call — that\'s you, permanently. What changes is that you\'ll stop typing and start deciding."'},
   underpay:{name:'Underpayment / Cash-Variance Analyst', dest:'Contract Intelligence Analyst', alt:'Exception Analyst', dist:'short', months:'3–4',
-    risk:'Moderate — manual variance hunting automates; contract governance is the growth path.',
+    risk:'Moderate — manual variance hunting automates; contract governance is the growth path. Freeze wave: 2028 Q1.',
     phases:[['Today','Compares remits to contract terms by hand, one claim at a time.'],
     ['2027','Contracts become machine-readable; variance detection runs on submit. Analysts govern the converted contracts instead of hand-checking claims.'],
     ['2028','Owns variance signals, recovery priorities, and change control on the contract library.'],
@@ -491,33 +554,11 @@ function J(m){
     script:'"Two towers become one pod, and I\'d rather promote from this room than hire outside. The question isn\'t which of you survives — it\'s which track each of you wants, and there are more tracks than managers."'}
  };
 }
+const TRAIN_START = {denial:'2027 Q1', arAnalyst:'2027 Q2', arRep:'2027 Q3', apCoord:'2027 Q1', apSpec:'Now — tell them first', underpay:'2027 Q2', super:'2026 Q4 — the 18-month clock', manager:'2026 Q4', other:'2027 Q4'};
 
-/* redeployment allocation */
-function redeploy(m){
-  const rows=[]; const j=J(m);
-  // new-seat pool (approx): exception ops + specific named roles
-  let exSeats = m.exOps - Math.min(3, m.exOps); // exception analysts net of retained clinical seats
-  const get=id=>S.roles.find(r=>r.id===id)?.fte||0;
-  const push=(id,destOverride,cnt,startBy)=>{
-    const jr=j[id]; if(!jr||get(id)===0) return;
-    rows.push({role:jr.name, fte:get(id), dest:destOverride||jr.dest, cnt, dist:jr.dist, months:jr.months, startBy});
-  };
-  const y=+S.year;
-  const alloc=(id,share)=>{ const c=Math.min(Math.round(m.exOps*share), get(id)); return Math.max(0,c); };
-  push('denial', null, alloc('denial',0.30), '2027 Q1');
-  push('arAnalyst', null, alloc('arAnalyst',0.25), '2027 Q2');
-  push('arRep', null, alloc('arRep',0.15), '2027 Q3');
-  push('apCoord', null, Math.min(2,get('apCoord')), '2027 Q1');
-  push('apSpec', 'Retained on the human floor', Math.min(get('apSpec'), Math.max(2,Math.round(m.floor*0.3))), 'Now — tell them first');
-  push('underpay', null, Math.min(2,get('underpay')), '2027 Q2');
-  push('super', null, Math.min(2,get('super')), '2026 Q4 — the 18-month clock');
-  push('manager', null, Math.min(1,get('manager')), '2026 Q4');
-  return rows;
-}
-
-/* ================= FORMAole ================= */
+/* ================= FORMAT ================= */
 const fmt$ = v => (v<0?'-':'') + '$' + Math.abs(Math.round(v)).toLocaleString();
-const fmtM = v => (v<0?'-':'') + '$' + (Math.abs(v)/1e6).toFixed(1) + 'M';
+const fmtM = v => { const a=Math.abs(v); return (v<0?'-':'') + '$' + (a>=1e6? (a/1e6).toFixed(1)+'M' : Math.round(a/1000)+'K'); };
 
 /* ================= RENDER ================= */
 const STEPS=[[1,'Your pod'],[2,'Design choices'],[3,'The bridge'],[4,'The 2030 org'],[5,'Your people'],[6,'90-day plan']];
@@ -534,22 +575,27 @@ function go(n){
 
 function renderRoster(){
   const tb=document.querySelector('#rosterTbl tbody');
-  tb.innerHTML = S.roles.map((r,i)=>`<tr><td>${r.name}</td><td class="num"><input type="number" min="0" max="500" step="1" value="${r.fte}" data-ri="${i}"></td></tr>`).join('');
+  tb.innerHTML = S.roles.map((r,i)=>`<tr><td>${r.custom? `<input type="text" class="rolename" value="${r.name.replace(/"/g,'&quot;')}" data-rn="${i}">` : r.name}</td><td class="num"><input type="number" min="0" max="500" step="1" value="${r.fte}" data-ri="${i}"></td></tr>`).join('');
   document.getElementById('rosterTotal').textContent = S.roles.reduce((a,r)=>a+(+r.fte||0),0);
-  tb.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
+  tb.querySelectorAll('input[type=number]').forEach(inp=>inp.addEventListener('input',e=>{
     S.roles[+e.target.dataset.ri].fte = Math.max(0,+e.target.value||0);
     document.getElementById('rosterTotal').textContent = S.roles.reduce((a,r)=>a+(+r.fte||0),0);
     save();
   }));
+  tb.querySelectorAll('input[type=text]').forEach(inp=>inp.addEventListener('input',e=>{
+    S.roles[+e.target.dataset.rn].name = e.target.value||'Other'; save();
+  }));
 }
 function bindInputs(){
-  const map={inAttr:'attr',inSalary:'salary',inDenials:'denials',inDenRate:'denRate',inReqs:'reqs',inOpex:'opex',inSenior:'senior',inFloor:'floor'};
+  const map={inAttr:'attr',inSalary:'salary',inDenials:'denials',inDenRate:'denRate',inReqs:'reqs',inOpex:'opex',inSenior:'senior',inFloor:'floor',inOneTime:'oneTime'};
   Object.entries(map).forEach(([id,key])=>{
     const el=document.getElementById(id);
     el.value = S[key]==null? '' : S[key];
     el.addEventListener('input',()=>{ S[key]= el.value===''? null : +el.value; save(); });
   });
-  document.getElementById('inFloor').value = S.floor==null? calc().floorDefault : S.floor;
+  const m0=calc();
+  document.getElementById('inFloor').value = S.floor==null? m0.floorDefault : S.floor;
+  document.getElementById('inOneTime').placeholder = m0.oneTimeDefault;
   document.getElementById('btnFloorReset').onclick=()=>{ S.floor=null; document.getElementById('inFloor').value=calc().floorDefault; save(); };
   document.getElementById('btnModelPod').onclick=()=>{ S={...DEFAULTS, roles:DEFAULT_ROLES.map(r=>({...r}))}; save(); init(); };
   segBind('segAmbition','ambition',()=>{ document.getElementById('ambitionDesc').textContent=AMBITION[S.ambition].desc; });
@@ -568,26 +614,24 @@ function segBind(id,key,after){
 
 /* ---- charts ---- */
 const tip=document.getElementById('tip');
-function showTip(html,x,y){ tip.innerHTML=html; tip.style.display='block'; tip.style.left=Math.min(x+14, innerWidth-260)+'px'; tip.style.top=(y+14)+'px'; }
+function showTip(html,x,y){ tip.innerHTML=html; tip.style.display='block'; tip.style.left=Math.min(x+14, innerWidth-270)+'px'; tip.style.top=(y+14)+'px'; }
 function hideTip(){ tip.style.display='none'; }
 
 function waterfall(m){
+  const grossElim = Math.round(m.removals*0.45), grossTrans = m.removals-grossElim;
   const cats=[
     {l:'Today', v:m.baseline, type:'total'},
-    {l:'Eliminated steps', v:-m.elim, type:'down', d:'Work that stops existing: status-chasing, package assembly, manual posting, tower supervision of touch labor.'},
-    {l:'Automated & productivity', v:-m.transform, type:'down', d:'Roles that remain but need far fewer people once agents take the routine touches.'},
-    {l:'New roles', v:+m.newRoles, type:'up', d:'Seats that don\'t exist today: AI ops supervisor, contract intelligence, CI lead, evidence curator, pod product owner.'},
+    {l:'Eliminated steps', v:-grossElim, type:'down', d:'Work that stops existing: status-chasing, package assembly, manual posting, tower supervision of touch labor. These people glide out or move into new seats.'},
+    {l:'Automated + productivity', v:-grossTrans, type:'down', d:'Roles that remain but need far fewer people once agents take the routine touches.'},
+    {l:'External hires', v:+m.unfilled, type:'up', d:'New-shape seats your current roster can\'t credibly fill internally — likely outside hires.'},
     {l:String(S.year), v:m.end, type:'total'}
-  ];
+  ].filter(c=> !(c.type==='up' && c.v===0));
   const W=Math.min(940, document.querySelector('.wrap').clientWidth-70), H=250, P={l:44,r:10,t:26,b:38};
   const iw=W-P.l-P.r, ih=H-P.t-P.b, bw=Math.min(110, iw/cats.length*0.62), gap=(iw-bw*cats.length)/(cats.length-1||1);
-  const maxV=m.baseline*1.06; const y=v=>P.t+ih-(v/maxV)*ih;
+  const maxV=Math.ceil(m.baseline*1.06/10)*10; const y=v=>P.t+ih-(v/maxV)*ih;
   let run=0, x=P.l, out='';
-  // gridlines
-  for(let g=0; g<=4; g++){ const gv=maxV*g/4; out+=`<line class="grid" x1="${P.l}" x2="${W-P.r}" y1="${y(gv)}" y2="${y(gv)}"/><text x="${P.l-6}" y="${y(gv)+4}" text-anchor="end">${Math.round(gv)}</text>`; }
-  // floor line
-  out+=`<line x1="${P.l}" x2="${W-P.r}" y1="${y(m.floor)}" y2="${y(m.floor)}" stroke="var(--violet)" stroke-width="2" stroke-dasharray="5 4"/><text x="${P.l+iw*0.42}" y="${y(m.floor)-6}" text-anchor="middle" style="fill:var(--violet);font-weight:700">human floor ${m.floor}</text>`;
-  const bars=[];
+  for(let g=0; g<=4; g++){ const gv=Math.round(maxV*g/4); out+=`<line class="grid" x1="${P.l}" x2="${W-P.r}" y1="${y(gv)}" y2="${y(gv)}"/><text x="${P.l-6}" y="${y(gv)+4}" text-anchor="end">${gv}</text>`; }
+  let floorOut=`<line x1="${P.l}" x2="${W-P.r}" y1="${y(m.floor)}" y2="${y(m.floor)}" stroke="var(--violet)" stroke-width="2" stroke-dasharray="5 4"/><text x="${P.l+bw+gap*0.5+bw+gap*0.5}" y="${y(m.floor)-6}" text-anchor="middle" style="fill:var(--violet);font-weight:700">floor ${m.floor}</text>`;
   cats.forEach((c,i)=>{
     let y0,y1,fill;
     if(c.type==='total'){ y0=y(c.v); y1=y(0); fill='var(--blue)'; run=c.v; }
@@ -596,13 +640,11 @@ function waterfall(m){
     const top=Math.min(y0,y1), h=Math.max(3,Math.abs(y1-y0));
     out+=`<rect x="${x}" y="${top}" width="${bw}" height="${h}" rx="4" fill="${fill}" data-bi="${i}" style="cursor:default"/>`;
     out+=`<text class="val" x="${x+bw/2}" y="${top-6}" text-anchor="middle">${c.type==='total'?c.v:(c.v>0?'+':'')+c.v}</text>`;
-    const lines=c.l.split(' & ');
-    out+=`<text x="${x+bw/2}" y="${H-P.b+14}" text-anchor="middle">${c.l.length>16? c.l.slice(0,16)+'…':c.l}</text>`;
-    bars.push({x,top,bw,h,c});
+    out+=`<text x="${x+bw/2}" y="${H-P.b+14}" text-anchor="middle">${c.l.length>18? c.l.slice(0,18)+'…':c.l}</text>`;
     x+=bw+gap;
   });
   const el=document.getElementById('waterfall');
-  el.innerHTML=`<svg width="${W}" height="${H}" role="img" aria-label="FTE bridge waterfall from ${m.baseline} today to ${m.end} at target year">${out}</svg>`;
+  el.innerHTML=`<svg width="${W}" height="${H}" role="img" aria-label="FTE bridge waterfall from ${m.baseline} today to ${m.end} at target year">${out}${floorOut}</svg>`;
   el.querySelectorAll('rect').forEach(r=>{
     r.addEventListener('mousemove',e=>{ const c=cats[+r.dataset.bi]; showTip(`<strong>${c.l}</strong>: ${c.type==='total'?c.v+' FTE':(c.v>0?'+':'')+c.v+' FTE'}${c.d?'<br>'+c.d:''}`, e.clientX,e.clientY); });
     r.addEventListener('mouseleave',hideTip);
@@ -610,146 +652,171 @@ function waterfall(m){
   document.getElementById('bridgeTableWrap').innerHTML =
     '<table><thead><tr><th>Step</th><th class="num">FTE</th></tr></thead><tbody>'+
     cats.map(c=>`<tr><td>${c.l}</td><td class="num">${c.type==='total'?c.v:(c.v>0?'+':'')+c.v}</td></tr>`).join('')+
-    `<tr><td><strong>Human floor</strong></td><td class="num"><strong>${m.floor}</strong></td></tr></tbody></table>`;
+    `<tr><td><strong>Human floor</strong></td><td class="num"><strong>${m.floor}</strong></td></tr>`+
+    `<tr><td><strong>People leaving the pod (removals)</strong></td><td class="num"><strong>${m.removals}</strong></td></tr></tbody></table>`;
 }
 
 function glideChart(g,m){
-  const W=Math.min(940, document.querySelector('.wrap').clientWidth-70), H=240, P={l:44,r:120,t:18,b:34};
+  const W=Math.min(940, document.querySelector('.wrap').clientWidth-70), H=250, P={l:44,r:120,t:18,b:34};
   const iw=W-P.l-P.r, ih=H-P.t-P.b;
-  const maxV=m.baseline*1.05;
+  const maxV=Math.ceil(m.baseline*1.05/10)*10;
   const x=i=>P.l + (i/(g.qs.length-1))*iw, y=v=>P.t+ih-(v/maxV)*ih;
   let out='';
-  for(let gr=0; gr<=4; gr++){ const gv=maxV*gr/4; out+=`<line class="grid" x1="${P.l}" x2="${W-P.r}" y1="${y(gv)}" y2="${y(gv)}"/><text x="${P.l-6}" y="${y(gv)+4}" text-anchor="end">${Math.round(gv)}</text>`; }
+  for(let gr=0; gr<=4; gr++){ const gv=Math.round(maxV*gr/4); out+=`<line class="grid" x1="${P.l}" x2="${W-P.r}" y1="${y(gv)}" y2="${y(gv)}"/><text x="${P.l-6}" y="${y(gv)+4}" text-anchor="end">${gv}</text>`; }
   g.qs.forEach((q,i)=>{ if(q.q===1) out+=`<text x="${x(i)}" y="${H-P.b+14}" text-anchor="middle">${q.y}</text>`; });
+  /* carry band: nat above req */
+  let band='';
+  g.qs.forEach((q,i)=>{ if(i>0 && g.nat[i]>g.req[i] && g.nat[i-1]>=g.req[i-1]){ band+=`M${x(i-1)},${y(g.req[i-1])} L${x(i-1)},${y(g.nat[i-1])} L${x(i)},${y(g.nat[i])} L${x(i)},${y(g.req[i])} Z `; } });
+  out+=`<path d="${band}" fill="var(--violet)" opacity="0.14"/>`;
   const path=(arr)=>arr.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');
   out+=`<path d="${path(g.req)}" fill="none" stroke="var(--blue)" stroke-width="2"/>`;
   out+=`<path d="${path(g.nat)}" fill="none" stroke="var(--aqua)" stroke-width="2" stroke-dasharray="6 4"/>`;
   const li=g.qs.length-1;
   out+=`<text class="val" x="${x(li)+6}" y="${y(g.req[li])+4}" style="fill:var(--blue)">plan → ${g.req[li]}</text>`;
-  out+=`<text class="val" x="${x(li)+6}" y="${y(g.nat[li])+ (Math.abs(y(g.nat[li])-y(g.req[li]))<14?16:4)}" style="fill:var(--aqua)">attrition → ${g.nat[li]}</text>`;
+  out+=`<text class="val" x="${x(li)+6}" y="${y(g.nat[li])+ (Math.abs(y(g.nat[li])-y(g.req[li]))<14?16:4)}" style="fill:var(--aqua)">freeze+attrition → ${g.nat[li]}</text>`;
   const el=document.getElementById('glide');
-  el.innerHTML=`<svg width="${W}" height="${H}" id="glideSvg" role="img" aria-label="Headcount glide path versus attrition-only path">${out}</svg>`;
+  el.innerHTML=`<svg width="${W}" height="${H}" id="glideSvg" role="img" aria-label="Headcount glide path versus staged-freeze attrition path">${out}</svg>`;
   const svg=document.getElementById('glideSvg');
   svg.addEventListener('mousemove',e=>{
     const r=svg.getBoundingClientRect(); const px=e.clientX-r.left;
     let i=Math.round((px-P.l)/iw*(g.qs.length-1)); i=Math.max(0,Math.min(g.qs.length-1,i));
-    const q=g.qs[i];
-    showTip(`<strong>${q.y} Q${q.q}</strong><br>Plan: ${g.req[i]} FTE<br>Attrition-only: ${g.nat[i]} FTE`, e.clientX,e.clientY);
+    const q=g.qs[i]; const d=g.nat[i]-g.req[i];
+    showTip(`<strong>${q.y} Q${q.q}</strong><br>Plan: ${g.req[i]} FTE<br>Freeze+attrition: ${g.nat[i]} FTE${d>0?`<br>Carry: +${d} FTE ahead of plan`:''}`, e.clientX,e.clientY);
   });
   svg.addEventListener('mouseleave',hideTip);
   document.getElementById('glideTableWrap').innerHTML =
-    '<table><thead><tr><th>Quarter</th><th class="num">Plan</th><th class="num">Attrition-only</th></tr></thead><tbody>'+
-    g.qs.map((q,i)=>`<tr><td>${q.y} Q${q.q}</td><td class="num">${g.req[i]}</td><td class="num">${g.nat[i]}</td></tr>`).join('')+'</tbody></table>';
+    '<table><thead><tr><th>Quarter</th><th class="num">Plan</th><th class="num">Freeze+attrition</th><th class="num">Carry</th></tr></thead><tbody>'+
+    g.qs.map((q,i)=>`<tr><td>${q.y} Q${q.q}</td><td class="num">${g.req[i]}</td><td class="num">${g.nat[i]}</td><td class="num">${Math.max(0,g.nat[i]-g.req[i])||''}</td></tr>`).join('')+'</tbody></table>';
 }
 
 /* ---- step renders ---- */
 function renderAll(){
   const m=calc();
   document.querySelectorAll('.tgtYear').forEach(e=>e.textContent=S.year);
-  if(currentStep===1){ /* inputs already bound */ }
   if(currentStep===3){
+    const g=glideSim(m); const be=breakeven(m,g);
     document.getElementById('bridgeLede').innerHTML =
       `From <strong>${m.baseline} FTE today</strong> to <strong>${m.end} by ${S.year}</strong> under your choices (${AMBITION[S.ambition].label.toLowerCase()}, ${S.autonomy}, ${PREVENT[S.prevent].label.toLowerCase()} prevention). The floor under it all: <strong>${m.floor} humans</strong> this function cannot go below.`;
     document.getElementById('bridgeKpis').innerHTML = `
       <div class="kpi blue"><div class="l">FTE today → ${S.year}</div><div class="v">${m.baseline} → ${m.end}</div><div class="d">floor: ${m.floor}</div></div>
       <div class="kpi orange"><div class="l">Labor cost</div><div class="v">${fmtM(m.laborToday)} → ${fmtM(m.laborEnd)}</div><div class="d">end-state avg is ${Math.round((S.senior-1)*100)}% more senior</div></div>
       <div class="kpi violet"><div class="l">Agent operating cost</div><div class="v">−${fmtM(m.agentOpex)}</div><div class="d">${S.opex}% of replaced labor — the honest line</div></div>
-      <div class="kpi aqua"><div class="l">Net annual labor savings</div><div class="v">${fmtM(m.net)}</div><div class="d">before any revenue-side upside</div></div>`;
+      <div class="kpi aqua"><div class="l">Net annual labor savings</div><div class="v">${fmtM(m.net)}</div><div class="d">steady state, before revenue upside</div></div>
+      <div class="kpi blue"><div class="l">Rough breakeven</div><div class="v">${be? be.y+' Q'+be.q : '>'+(+S.year+3)}</div><div class="d">after one-time + glide carry</div></div>`;
     waterfall(m);
     document.querySelector('#moneyTbl tbody').innerHTML = [
-      ['Labor today', fmt$(m.laborToday)],
-      ['Labor at end state ('+m.end+' FTE × '+fmt$(S.salary*S.senior)+' avg)', fmt$(m.laborEnd)],
+      ['Labor today ('+m.baseline+' FTE)', fmt$(m.laborToday)],
+      ['Labor at end state ('+m.end+' FTE × '+fmt$(Math.round(S.salary*S.senior))+' avg)', fmt$(m.laborEnd)],
       ['Agent operating cost ('+S.opex+'% of replaced labor)', '−'+fmt$(m.agentOpex)],
-      ['<strong>Net annual labor savings</strong>', '<strong>'+fmt$(m.net)+'</strong>'],
-      ['Cost per denial worked', fmt$(m.cpdToday)+' → '+fmt$(m.cpdEnd)],
-      ['Denial volume (prevention effect)', Math.round(m.denToday).toLocaleString()+' → '+Math.round(m.denEnd).toLocaleString()],
-    ].map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td></tr>`).join('');
+      ['<strong>Net annual labor savings (steady state)</strong>', '<strong>'+fmt$(m.net)+'</strong>'],
+      ['One-time transition cost (edit in Step 2 → Advanced)', '−'+fmt$(m.oneTime)],
+      ['Glide carry — people ahead of plan while agents ramp ('+Math.round(g.carryFteQ)+' FTE-quarters)', '−'+fmt$(g.carryCost)],
+      (g.coverageFteQ>0? ['Interim coverage premium — quarters BELOW plan ('+Math.round(g.coverageFteQ)+' FTE-quarters × 30% OT/temp)', '−'+fmt$(g.coverageCost)]:null),
+      ['<strong>Rough breakeven</strong>', '<strong>'+(be? be.y+' Q'+be.q : 'beyond '+(+S.year+3))+'</strong>'],
+      ['Cost per denial worked (yours — see footnote)', fmt$(m.cpdToday)+' → '+fmt$(m.cpdEnd)],
+      ['Denial volume · initial denial rate (prevention effect)', Math.round(m.denToday).toLocaleString()+' → '+Math.round(m.denEnd).toLocaleString()+' · '+(+S.denRate).toFixed(1)+'% → '+((+S.denRate)*(1-m.prev)).toFixed(1)+'%'],
+    ].filter(Boolean).map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td></tr>`).join('');
     document.getElementById('realityChecks').innerHTML = [
-      'Contract cycles and IT deployments run 12–24 months — nothing on this bridge lands broadly before 2028.',
+      'Contract cycles and IT deployments run 12–24 months — nothing on this bridge lands broadly before 2028. That\'s why the glide carry line exists: you\'ll hold people ahead of the plan curve, and that costs real money. Budget it; don\'t discover it.',
       'The benchmark pod hit 27% of baseline (94→25). If your plan says 10% by 2028, someone is selling you something.',
       'T2 vs T3 is worth ~'+Math.round((T2_MULT-1)*100)+'% of end-state headcount. That is the price of a human approving every action — a governance choice, not a technology one.',
       'Cost per denial can RISE as volume falls — prevention shrinks the denominator. Watch total cost, not unit cost.',
+      'Attrition will not stay at '+S.attr+'% after you announce a plan — and it won\'t leave from the roles you want it to. That\'s why Step 5 counts role-by-role and why the specialists hear the plan from you first.',
       'This bridge shows labor only. The bigger prize (underpayment recovery, prevention, appeal yield) belongs in a separate, honest revenue case.',
     ].map(t=>`<li>${t}</li>`).join('');
     document.getElementById('mathBody').innerHTML =
       `<p>End state = baseline ${m.baseline} × ambition factor (${AMBITION[S.ambition].label}: ×${AMBITION[S.ambition].f.toFixed(2)})`+
       (S.autonomy==='T2'? ` × ${T2_MULT} (T2 approval overhead)`:'')+
-      (m.prev? ` × (1 − 0.5×${m.prev} prevention effect on exception volume)`:'')+
-      `, floored at ${m.floor}. Gross reduction ${m.grossRed} splits ~41% eliminated / 59% productivity (benchmark pod ratio). New roles ≈ 32% of end state. `+
-      `Agent OpEx = ${S.opex}% × (labor today − labor end). All benchmark anchors are from the modeled 94-FTE pod — every one is editable in Step 2 → Advanced.</p>`;
+      (m.prev? ` × (1 − 0.5×${m.prev} prevention effect on exception volume — incremental; the base anchor assumes minimal prevention)`:'')+
+      `, floored at ${m.floor}. People leaving the pod (removals) = ${m.removals}: that's the net reduction ${m.baseline-m.end} plus backfilling behind the ${m.filled-(m.baseline-m.removals)>0?m.filled-(m.baseline-m.removals):0} internal moves into new-shape seats${m.unfilled?`, less ${m.unfilled} seat(s) likely hired externally`:''}. `+
+      `Agent OpEx = ${S.opex}% × (labor today − labor end). One-time default = 1.25 × annual agent OpEx. Glide carry = Σ max(0, staged-freeze headcount − plan) × quarterly loaded cost. Every anchor is editable in Step 2 → Advanced.</p>`;
   }
   if(currentStep===4){
     document.getElementById('orgLede').innerHTML =
       `Two functional towers become <strong>one pod of ${m.end}</strong> — operators become the minority; governance and improvement get staffed on purpose. Here's yours, scaled from your numbers:`;
     const named=(n,c,from)=>`<li><span>${n}<span class="from">${from||''}</span></span><span class="cnt">${c}</span></li>`;
-    const exAnalysts=Math.max(1, m.exOps - Math.max(2,Math.round(m.floor*0.3)) - 1);
     document.getElementById('pillars').innerHTML = `
       <div class="pillar p1"><h4>Exception Operations — ${m.exOps}</h4><ul>
-        ${named('Exception Analysts (denials & AR)', exAnalysts, 'from: Denial Analysts, AR Analysts, AR Reps')}
-        ${named('Appeals Specialists (clinical)', Math.max(2,Math.round(m.floor*0.3)), 'retained — human floor')}
-        ${named('Clinical Evidence Curator', 1, 'from: Appeals Coordinators')}
+        ${named('Exception Analysts (denials & AR)', m.seats.exAnalyst, 'from: Denial Analysts, AR Analysts, AR Reps')}
+        ${named('Appeals Specialists (clinical)', m.seats.apSpec, 'retained — human floor')}
+        ${named('Clinical Evidence Curator', m.seats.curator, 'from: Appeals Coordinators')}
       </ul></div>
       <div class="pillar p2"><h4>Governance & Platform — ${m.gov}</h4><ul>
-        ${named('AI Operations Supervisor', m.end>=22?2:1, 'from: Supervisors — 18-month build')}
-        ${named('AI Control Auditor', 1, 'independent — signs tier promotions')}
-        ${named('Contract Intelligence Analyst', Math.max(1,m.gov-(m.end>=22?2:1)-2), 'from: Underpayment Analysts')}
-        ${named('Integration / Coding liaison (matrixed)', 1, '')}
+        ${named('AI Operations Supervisor', m.seats.aiOps, 'from: Supervisors — 18-month build')}
+        ${named('AI Control Auditor', m.seats.auditor, 'independent — dotted-line to Compliance; signs tier promotions')}
+        ${named('Contract Intelligence Analyst', m.seats.contractIntel, 'from: Underpayment Analysts')}
+        ${named('Integration / Coding liaison (matrixed)', m.seats.integration, '')}
       </ul></div>
       <div class="pillar p3"><h4>Product & Learning — ${m.prod}</h4><ul>
-        ${named('Pod Product Owner', 1, 'from: Managers — one throat to choke')}
-        ${named('Exception Product Manager', 1, 'owns what agents can\'t handle yet')}
-        ${named('Continuous-Improvement Lead', 1, 'owns "this denial never comes back"')}
-        ${m.prod>3? named('Learning / RuleOps analysts', m.prod-3, 'from: Denial & AR Analysts'):''}
+        ${named('Pod Product Owner', m.seats.podPO, 'from: Managers — one throat to choke')}
+        ${named('Exception Product Manager', m.seats.exPM, 'owns what agents can\'t handle yet')}
+        ${named('Continuous-Improvement Lead', m.seats.ciLead, 'owns "this denial never comes back"')}
+        ${m.seats.ruleOps? named('RuleOps / Learning Analysts', m.seats.ruleOps, 'from: AR & Denial Analysts'):''}
       </ul></div>`;
+    const touch = m.baseline - getFte('super') - getFte('manager') - getFte('apSpec') - getFte('underpay');
     document.getElementById('structuralRead').innerHTML =
-      `Today, ~${Math.round((m.baseline-S.roles.filter(r=>['super','manager'].includes(r.id)).reduce((a,r)=>a+(+r.fte||0),0))/m.baseline*100)}% of your pod works touches. At end state, <strong>every seat is judgment, governance, or improvement</strong> — the touches belong to the agent team. `+
+      `Today, ~${Math.round(touch/m.baseline*100)}% of your pod works transactional touches (your clinical specialists and contract analysts are already judgment workers — they're the seed of the new org). At end state, <strong>every seat is judgment, governance, or improvement</strong> — the touches belong to the agent team. `+
       `That's a smaller team doing harder work: fewer people, more senior, better jobs than the queue ever was. The org chart stops looking like a production floor and starts looking like a control room.`;
   }
   if(currentStep===5){
     const g=glideSim(m);
     glideChart(g,m);
     document.getElementById('glideKpis').innerHTML = `
-      <div class="kpi blue"><div class="l">Seats to remove by ${S.year}</div><div class="v">${g.seats}</div><div class="d">incl. backfilling ${m.newRoles} new seats internally</div></div>
-      <div class="kpi aqua"><div class="l">Covered by attrition alone</div><div class="v">${Math.min(g.natRemoved,g.seats)}</div><div class="d">at your ${S.attr}%/yr, backfill frozen${g.reqCredit?` + ${g.reqCredit} open reqs never filled`:''}</div></div>
-      <div class="kpi ${g.hard>0?'orange':'aqua'}"><div class="l">Gap attrition doesn't cover</div><div class="v">${g.hard}</div><div class="d">${g.hard>0?'needs redeployment out of the pod — or a later target year':'zero involuntary separations required'}</div></div>`;
+      <div class="kpi blue"><div class="l">People leaving the pod by ${S.year}</div><div class="v">${m.removals}</div><div class="d">${m.filled} of today's ${m.baseline} move into the ${m.end} new seats${m.unfilled?`; ${m.unfilled} seat(s) likely hired externally`:''}</div></div>
+      <div class="kpi aqua"><div class="l">Covered by staged freeze + attrition</div><div class="v">${g.natRemoved}</div><div class="d">role-by-role at your ${S.attr}%/yr${g.reqCredit?`, incl. ${g.reqCredit} open reqs never filled`:''} — no fungibility hand-waving</div></div>
+      <div class="kpi ${g.hard>0?'orange':'aqua'}"><div class="l">Gap attrition doesn't cover</div><div class="v">${g.hard}</div><div class="d">${g.hard>0?'needs managed redeployment out of the pod, voluntary programs, or a later target year':'zero involuntary separations required'}</div></div>
+      <div class="kpi violet"><div class="l">Glide carry cost</div><div class="v">${fmtM(g.carryCost)}</div><div class="d">${Math.round(g.carryFteQ)} FTE-quarters ahead of plan — the price of no-RIF, already in the Step 3 money table</div></div>`;
     document.getElementById('glideVerdict').innerHTML = g.hard===0
-      ? `<strong>At your numbers, this transition needs zero involuntary separations.</strong> Freeze backfill on the shrinking roles and normal turnover does the work. The discipline is saying no to the next backfill req — starting this quarter.`
-      : `<strong>Straight talk: attrition alone covers ${Math.min(g.natRemoved,g.seats)} of ${g.seats} seats by ${S.year}.</strong> The remaining ${g.hard} need redeployment to other functions (patient access, enterprise roles), voluntary programs, or a later target year — move the target to ${+S.year+1} in Step 2 and watch this number. What it should never be is a surprise RIF in ${+S.year-1} because nobody froze a req in 2026.`;
-    // redeploy table
-    const rows=redeploy(m);
+      ? `<strong>At your numbers, this transition needs zero involuntary separations.</strong> The staged freeze (AR Rep 2026 Q4 → Appeals Coord 2027 Q1 → AR Analyst 2027 Q2 → the rest 2028) plus normal turnover does the work. The discipline is saying no to the next backfill req — starting this quarter. The cost of that patience is the glide carry: ${fmtM(g.carryCost)}, on the table in Step 3.`
+      : `<strong>Straight talk: the staged freeze plus attrition covers ${g.natRemoved} of ${m.removals} departures by ${S.year} — counted role-by-role, no fungibility hand-waving.</strong> The remaining ${g.hard} need managed redeployment to genuinely hard-to-fill functions (HIM, quality, payer-relations support — not patient access, which is automating on the same wave), voluntary-exit programs, or a later target year (try ${+S.year+1} in Step 2 and watch this number). What it should never be is a surprise RIF in ${+S.year-1} because nobody froze a req in 2026. And plan for the announcement effect: attrition won't stay ${S.attr}% once this plan is public, and it won't leave from the roles you'd choose.`;
+    /* redeploy table — reconciled to seat ledger */
+    const j=J();
+    const rows = S.roles.filter(r=>(+r.fte||0)>0).map(r=>{
+      const a = m.alloc[r.id]||{n:0,label: r.custom? 'Exception / posting support':'—'};
+      const jr = j[r.id];
+      return {name:r.name, fte:+r.fte||0, dest:a.label + (a.retained?'':''), n:a.n, out:m.glideOut[r.id]||0,
+              dist: jr? jr.dist:'medium', months: jr? jr.months:'3–6', start: TRAIN_START[r.id]||'2027', retained: !!a.retained};
+    });
     document.querySelector('#redeployTbl tbody').innerHTML = rows.map(r=>
-      `<tr><td>${r.role}</td><td class="num">${r.fte}</td><td>${r.dest}</td><td class="num">${r.cnt}</td><td><span class="badge ${r.dist}">${r.dist} · ${r.months} mo</span></td><td>${r.startBy}</td></tr>`).join('');
-    // journey chips
-    const j=J(m);
-    document.getElementById('journeyChips').innerHTML = Object.entries(j).map(([id,x])=>
+      `<tr><td>${r.name}</td><td class="num">${r.fte}</td><td>${r.retained?'<span class="badge ret">retained</span> ':''}${r.dest}</td><td class="num">${r.n}</td><td class="num">${r.out}</td><td><span class="badge ${r.dist}">${r.dist} · ${r.months} mo</span></td><td>${r.start}</td></tr>`).join('') +
+      `<tr class="total"><td>Totals — must reconcile</td><td class="num">${m.baseline}</td><td>${S.year} seats: ${m.end}${m.unfilled?` (${m.unfilled} likely external hire)`:''}</td><td class="num">${m.filled}</td><td class="num">${m.removals}</td><td colspan="2">${m.baseline} = ${m.filled} staying + ${m.removals} gliding out ✓</td></tr>`;
+    document.getElementById('redeployHint').textContent =
+      `Reconciled to the Step 4 org: every "move into seats" count lands in a real seat — no training nine people for eight chairs. Argue with the allocation at the table; the totals row has to keep summing.`;
+    /* journey chips + card */
+    document.getElementById('journeyChips').innerHTML = Object.entries(j).filter(([id])=>getFte(id)>0).map(([id,x])=>
       `<button class="chip ${id===journeyRole?'on':''}" data-jr="${id}">${x.name.split(' — ')[0].split(' (')[0]}</button>`).join('');
     document.querySelectorAll('#journeyChips .chip').forEach(c=>c.onclick=()=>{ journeyRole=c.dataset.jr; renderAll(); });
-    const x=j[journeyRole];
-    document.getElementById('journeyCard').innerHTML = `
+    if(getFte(journeyRole)===0){ const first=Object.keys(j).find(id=>getFte(id)>0); if(first) journeyRole=first; }
+    const x=j[journeyRole]; const a=m.alloc[journeyRole]||{n:0}; const fteHere=getFte(journeyRole); const outHere=m.glideOut[journeyRole]||0;
+    document.getElementById('journeyCard').innerHTML = x? `
       <h3 style="margin:12px 0 2px">${x.name} <span class="badge ${x.dist}">${x.dist} bridge · ${x.months} months</span></h3>
       <p style="margin:2px 0 10px;font-size:.88rem;color:var(--ink2)"><strong>Destination:</strong> ${x.dest} &nbsp;·&nbsp; <strong>Alternate:</strong> ${x.alt}</p>
       <div class="callout" style="margin:8px 0"><span class="badge risk">watch</span> ${x.risk}</div>
       ${x.phases.map(p=>`<div class="phase"><div class="when">${p[0]}</div><div>${p[1]}</div></div>`).join('')}
+      <div class="denom"><strong>The denominator — say it out loud:</strong> on your roster this is <strong>${fteHere} people</strong>; <strong>${a.n}</strong> ${a.retained?'are retained on the floor':'move into destination seats'}${outHere?`, and <strong>${outHere}</strong> glide out over the horizon through frozen reqs, transfers, and normal turnover`:''}. The room does this arithmetic on itself within 24 hours of any announcement — do it first, with the selection criteria published.</div>
       <p style="margin:12px 0 4px;font-weight:700;font-size:.85rem">Skill bridge</p>
       <ul style="margin:0 0 10px;padding-left:18px;font-size:.86rem;color:var(--ink2)">${x.skills.map(s=>`<li>${s}</li>`).join('')}</ul>
       <p style="margin:10px 0 4px;font-weight:700;font-size:.85rem">The conversation — say it before the rumor does</p>
-      <div class="script">${x.script}</div>`;
+      <div class="script">${x.script}</div>` : '<p class="hint">Add FTE to a role to see its journey.</p>';
   }
   if(currentStep===6){
-    const g=glideSim(m); const rows=redeploy(m);
+    const g=glideSim(m); const be=breakeven(m,g);
     const shrinkers = S.roles.filter(r=>['arRep','arAnalyst','apCoord'].includes(r.id) && r.fte>0).map(r=>r.name.split(' — ')[0]);
+    const longBuilds=[];
+    if(getFte('super')>0) longBuilds.push(`your AI Operations Supervisor candidates (18-month development clock — pick ${m.seats.aiOps} from your supervisor bench)`);
+    if(getFte('manager')>0) longBuilds.push('your Pod Product Owner track');
     const plan=[
-      ['You', `Draw the honest current-state map of this pod — every human touch, every handoff. You did the short version today; do the real one with your leads within 30 days.`],
-      ['You + Finance', `Take the bridge to your CFO with the agent-OpEx line INCLUDED: ${m.baseline}→${m.end} FTE, ${fmtM(m.net)} net annual labor savings at ${S.opex}% agent operating cost. Lead with the honest number — it's the one that survives the meeting.`],
-      ['You + HR', `Freeze backfill on: ${shrinkers.join(', ')} — starting with the ${S.reqs||0} reqs open right now. Every one you fill in 2026 is a harder conversation in ${+S.year-1}. Attrition covers ${Math.min(g.natRemoved,g.seats)} of your ${g.seats} seats${g.hard>0?`; plan redeployment paths for the remaining ${g.hard} now, not later`:' — zero involuntary separations required at your numbers'}.`],
-      ['You + your leads', `Start the two long builds THIS quarter: ${rows.find(r=>r.role.startsWith('Supervisor'))? 'your AI Operations Supervisor candidates (18-month development clock — pick '+(m.end>=22?2:1)+' from your supervisor bench)':''} and your Pod Product Owner track. These are the roles you cannot buy later at sane prices.`],
-      ['You', `Tell the Appeals Specialists they're the floor — this week, in person. They are your lowest displacement risk and your highest flight risk if they hear the plan as a rumor. Then start the short-bridge reskilling: Denial Analysts → exception track (3 months), Underpayment → contract intelligence (3–4 months).`],
-      ['You + Compliance', `Declare your autonomy policy before a vendor declares it for you: routine work at ${S.autonomy}${S.autonomy==='T2'?' (moving to T3 as trust is earned — the difference is ~'+Math.round((T2_MULT-1)*100)+'% of end-state headcount)':''}, a ${m.floor}-person human floor on clinical attestation and high-dollar decisions, an error budget, and one-click pause. Write it in one page. That page is what makes the board say yes.`],
+      ['You', `Draw the honest current-state map of this pod — every human touch, every handoff — with your leads, within 30 days. (If you built one in the session, that's your draft, not your final.)`],
+      ['You + Finance', `Take the bridge to your CFO with ALL the cost lines: ${m.baseline}→${m.end} FTE, ${fmtM(m.net)} net annual labor savings at steady state, minus ${fmtM(m.oneTime)} one-time and ${fmtM(g.carryCost)} glide carry — rough breakeven ${be? be.y+' Q'+be.q:'beyond the horizon'}. Lead with the honest number; it's the one that survives the meeting.`],
+      ['You + HR', `Stage the backfill freeze — not everything at once: ${shrinkers.length? shrinkers.join(' (2026 Q4) → ')+'' : 'your touch-work roles'} on the wave schedule, starting with the ${S.reqs||0} reqs open right now. The staged freeze plus attrition covers ${g.natRemoved} of ${m.removals} departures${g.hard>0?`; build managed redeployment paths for the remaining ${g.hard} NOW (HIM, quality, payer-relations support — the genuinely hard-to-fill seats), not in ${+S.year-1}`:' — zero involuntary separations required at your numbers'}.`],
+      longBuilds.length? ['You + your leads', `Start the long builds THIS quarter: ${longBuilds.join(', and ')}. These are the roles you cannot buy later at sane prices.`] : null,
+      ['You', `Tell the Appeals Specialists they're the floor — this week, in person. Lowest displacement risk, highest flight risk if they hear it as a rumor. Then start the short bridges: Denial Analysts → exception track (3 months, ${m.alloc.denial.n} seats — publish the selection criteria with the seat count), Underpayment → contract intelligence (3–4 months, ${m.alloc.underpay.n} seat${m.alloc.underpay.n===1?'':'s'}).`],
+      ['You + Compliance', `Declare your autonomy policy before a vendor declares it for you: routine work at ${S.autonomy}${S.autonomy==='T2'?' (moving to T3 as trust is earned — the difference is ~'+Math.round((T2_MULT-1)*100)+'% of end-state headcount)':''}, a ${m.floor}-person human floor on clinical attestation and high-dollar decisions, an error budget, one-click pause, and an AI control auditor dotted-lined to Compliance. One page. That page is what makes the board say yes.`],
       ['You', `Kill two denial-generating steps at the source this year (${PREVENT[S.prevent].label.toLowerCase()} prevention track). The cheapest FTE on this whole bridge is the denial that never happens.`],
-    ];
+    ].filter(Boolean);
     document.getElementById('planList').innerHTML = plan.map(p=>`<li><span class="who">${p[0]}</span><br>${p[1]}</li>`).join('');
     document.getElementById('planScript').textContent =
-      `"Over the next ${+S.year-2026} years this operation goes from ${m.baseline} people working queues to ${m.end} people running the system that works the queues. Most of that happens through jobs we stop refilling, not people we walk out. There's a floor of ${m.floor} — judgment stays human here. The new jobs are better than the old ones, we're filling them from this room first, and the training starts this quarter. You'll hear every step from me before you hear it anywhere else."`;
+      `"Over the next ${+S.year-2026} years this operation goes from ${m.baseline} people working queues to ${m.end} people running the system that works the queues. There are ${m.filled} seats in the new structure and they get filled from this room first — and I'll be straight: not everyone maps to one. The rest of the change — ${m.removals} departures — happens mostly through jobs we stop refilling (${g.natRemoved} at our normal turnover${g.hard>0?`) plus managed moves for about ${g.hard}`:')'}. There's a floor of ${m.floor}: judgment stays human here. Selection criteria get published, training starts this quarter, and you'll hear every step from me before you hear it anywhere else."`;
   }
 }
 
@@ -762,11 +829,11 @@ document.getElementById('btnGlideTable').onclick=function(){ const w=document.ge
 document.getElementById('btnPrint').onclick=()=>{ document.getElementById('s6').classList.add('print-me'); window.print(); setTimeout(()=>document.getElementById('s6').classList.remove('print-me'),500); };
 document.getElementById('btnReset').onclick=()=>{ if(confirm('Clear everything and start over?')){ localStorage.removeItem('rc2030bb'); S={...DEFAULTS, roles:DEFAULT_ROLES.map(r=>({...r}))}; init(); go(1);} };
 document.getElementById('btnCopy').onclick=()=>{
-  const m=calc(); const g=glideSim(m);
+  const m=calc(); const g=glideSim(m); const be=breakeven(m,g);
   const txt=`RC 2030 BRIDGE — MY PLAN (${new Date().toLocaleDateString()})\n`+
   `Pod: ${m.baseline} FTE today → ${m.end} by ${S.year} (floor ${m.floor})\n`+
-  `Net annual labor savings: ${fmtM(m.net)} (agent OpEx ${S.opex}% included)\n`+
-  `Attrition covers ${Math.min(g.natRemoved,g.seats)} of ${g.seats} seats; gap: ${g.hard}\n\nFIRST 90 DAYS:\n`+
+  `Net annual labor savings (steady state): ${fmtM(m.net)} | one-time ${fmtM(m.oneTime)} | glide carry ${fmtM(g.carryCost)} | breakeven ${be? be.y+' Q'+be.q:'beyond horizon'}\n`+
+  `Departures: ${m.removals} | covered by staged freeze + attrition: ${g.natRemoved} | gap: ${g.hard}\n\nFIRST 90 DAYS:\n`+
   [...document.querySelectorAll('#planList li')].map((li,i)=>`${i+1}. ${li.innerText.replace(/\n/g,' — ')}`).join('\n')+
   `\n\nTHE MESSAGE:\n${document.getElementById('planScript').textContent}`;
   navigator.clipboard.writeText(txt).then(()=>{ const b=document.getElementById('btnCopy'); b.textContent='Copied ✓'; setTimeout(()=>b.textContent='Copy plan as text',1600); });
