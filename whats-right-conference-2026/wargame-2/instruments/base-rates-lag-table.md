@@ -1,0 +1,39 @@
+# Base-Rate & Lag Table: Institutional Change in US Healthcare Administration
+
+## 1. Multilateral standards adoption
+
+| Case | Historical record | Wargame rule |
+|---|---|---|
+| CAQH CORE operating rules | Federally mandated (ACA); Phase I/II compliance date Jan 1, 2013; new rules give industry ~25 months to conform post-rule. Even with mandate, adoption uneven a decade on: eligibility 96% electronic (2023) but claim status only 80% medical / 28% dental per 2024 CAQH Index ([CAQH mandate](https://www.caqh.org/core/operating-rules-mandate); [healthit.gov ISA](https://www.healthit.gov/isa/caqh-core-operating-rules-support-claim-status)) | Mandated transaction standard: ~2 yrs to compliance date; 10+ yrs to >90% real use; laggard segments stall at 30–50% indefinitely |
+| HL7 Da Vinci (founded 2018) | 8 yrs in: mature IGs (CRD/DTR/PAS v2.x), reference implementations, ONC test kits, but production use limited to pilot pairs (e.g., Humana–athenahealth–Availity). Scale arrives only via CMS-0057-F compulsion, APIs due Jan 1, 2027 ([HL7 PAS IG](https://hl7.org/fhir/us/davinci-pas/); [Availity case study](https://www.availity.com/case-studies/end-to-end-prior-authorizations-using-fhir-apis/); [CMS-0057-F](https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-prior-authorization-final-rule-cms-0057-f)) | Voluntary consortium: 3–4 yrs to spec, 5–7 yrs to first production dyads, <10% penetration without regulation. **25% adoption: earliest 6–8 yrs after founding, and only if a mandate lands** |
+| X12 275 attachments | HIPAA 1996 required attachment standards; ACA 2010 re-required; final rule only March 2026, effective May 2026 — **a 30-year statute-to-standard lag** ([Federal Register](https://www.federalregister.gov/documents/2026/03/24/2026-05676/administrative-simplification-adoption-of-standards-for-health-care-claims-attachments-transactions); [Hall Render](https://hallrender.com/2026/03/25/hhs-finalizes-hipaa-standards-for-health-care-claims-attachments-and-electronic-signatures-and-signals-more-regulatory-updates-in-2026/)) | A standard with no natural business champion can stall indefinitely (decades); treat "everyone agrees it's needed" as zero predictive weight |
+| FHIR PA API readiness | Pre-deadline WEDI survey: substantial share of payers/providers not started or partial on CMS-0057-F APIs despite 2027 deadline ([AJMC/WEDI](https://www.ajmc.com/view/survey-finds-slow-start-on-cms-interoperability-rule-implementation)) | Expect 30–50% of obligated actors non-ready at compliance date; real interop 2–3 yrs after deadline |
+
+## 2. Gold-carding
+
+Texas HB 3459 (2021, effective Oct 2022): only **~3% of physicians/providers qualified as of Dec 2024** — thresholds (≥5 requests per service per 6-month window, 90% approval) structurally exclude most ([TMA](https://www.texmed.org/TexasMedicineDetail.aspx?id=63122); [Healthcare Brew](https://www.healthcare-brew.com/stories/2025/04/16/prior-authorization-gold-cards-new-prescription)). UHC national Gold Card (Oct 2024): narrow — ~500 codes, 92% approval over 2 yrs, still requires advance notification ([UHC](https://www.uhcprovider.com/en/prior-auth-advance-notification/gold-card.html)). **Rule: gold-card statutes deliver single-digit-% provider coverage in years 1–3; payer-designed versions cover <20% of PA volume. Meaningful relief only via threshold redesign (a second legislative cycle, +2–4 yrs).**
+
+## 3. Statute-to-operational lags
+
+- CA SB 1120 (signed Sept 2024 → effective Jan 1, 2025; DMHC/CDI guidance and audits phase in after) — fast nominal effect, but enforcement is audit-driven and lags 1–2 yrs ([Fenwick](https://www.fenwick.com/insights/publications/californias-sb-1120-regulates-ai-in-health-plan-utilization-review-and-management-activities-starting-in-january); [CDI guidance](https://www.insurance.ca.gov/0250-insurers/0500-legal-info/0200-regulations/HealthGuidance/upload/SB-1120-1-Guidance-Use-of-Artificial-Intelligence-Algorithms-and-Other-Software-Tools-in-Utilization-Management.pdf)).
+- 1990s analog: 30 states + DC had external-review laws by Dec 1999, but consumer utilization stayed minimal; prompt-pay laws (late 1990s) were "riddled with loopholes" ([UH Law](https://www.law.uh.edu/healthlaw/perspectives/Managed/000821State.html); [Physicians Practice](https://www.physicianspractice.com/view/prompt-payment-laws)). Behavioral change came from reputational/market backlash, not enforcement (RAND; NY Fed).
+- **Rule: statute → effective date 6–18 mo; effective date → measurable behavior change 2–5 yrs; first-generation laws typically require a patch bill. Symbolic compliance is the modal year-1 outcome.**
+
+## 4. Contract innovation diffusion
+
+Prompt-pay terms: state laws spread to near-all states within ~5–7 yrs of late-1990s start, but contract loopholes persisted a decade. Value-based terms: HCP-LAN shows Category 3+4 payments at ~23% (2015) → ~40%+ (2023), i.e., **~2 pp/yr diffusion into payment mix**; novel terms in a *majority* of agreements takes 10–15 yrs. **Rule: new contract-language class reaches majority of agreements in 10–15 yrs organically; 5–7 yrs if statutorily forced.**
+
+## 5. VBC / two-sided risk penetration
+
+HCP-LAN: two-sided risk 19.6% (2021) → 24.5% (2022) → 28.5% (2023) → **28.7% (2024, plateau)**; MA leads at 43%, commercial 21.6% ([HCP-LAN 2024](https://hcp-lan.org/apm-measurement-effort/2024-apm/); [HFMA](https://www.hfma.org/fast-finance/downside-risk-alternative-payment-models-medicare/)). **Rule: downside-risk share grows 2–5 pp/yr in expansion phases, ~0 in consolidation years; never model >5 pp/yr sustained.**
+
+## 6. Tech deployment
+
+- EHR/HITECH: hospital basic-EHR 9% (2008) → 84% (2015); subsidy raised adoption ~8 pp/yr vs 3.2 pp/yr pre-HITECH ([ONC](https://dashboard.healthit.gov/evaluations/data-briefs/non-federal-acute-care-hospital-ehr-adoption-2008-2015.php); [AJMC](https://www.ajmc.com/view/hitech-act-resulted-in-significant-gains-in-ehr-adoption-in-hospitals)). **Rule: heavy subsidy ≈ 8 pp/yr; unsubsidized ≈ 3 pp/yr; ~7 yrs from 10% to 85% with money attached.**
+- Asymmetry: NAIC 2024 survey — 84% of large insurers use AI operationally; 56% in UM, 44% claims adjudication ([Health Affairs](https://www.healthaffairs.org/doi/10.1377/hlthaff.2025.00897)); providers at ~63% some RCM AI but only 15% with ROI ([HFMA/FinThrive](https://www.hfma.org/technology/most-healthcare-organizations-are-adopting-ai-in-the-revenue-cycle-hfma-poll/)). **Rule: payers deploy decision-automation 2–3 yrs ahead of providers; providers close the gap only in denial-response tooling.**
+
+## 7. Litigation clocks
+
+Lokken v. UnitedHealth (nH Predict, filed Nov 2023): motion-to-dismiss ruling Feb 2025 (contract/good-faith claims survive; Medicare preemption trims rest); broad class discovery ordered March 2026 — **~2.5 yrs to reach discovery, no merits resolution** ([ArentFox Schiff](https://www.afslaw.com/perspectives/alerts/federal-court-orders-broad-discovery-against-uhc-ai-coverage-denial-lawsuit); [Georgetown tracker](https://litigationtracker.law.georgetown.edu/litigation/estate-of-gene-b-lokken-the-et-al-v-unitedhealth-group-inc-et-al/)). Cigna PXDX (filed 2023): claims allowed to proceed March 2025 ([NFP](https://www.nfp.com/insights/court-allows-lawsuit-over-ai-use-in-benefit-denials-to-proceed/)). **Rule: algorithmic-denial class action: filing → MTD ruling 12–18 mo; → class-cert/discovery fights yrs 2–3; → settlement/trial yrs 4–7. Behavioral change (payer policy edits, disclosure) can arrive at the discovery stage, ~2 yrs in — litigation's operational effect precedes its legal resolution.**
+
+**Cross-cutting calibration:** voluntary multilateral change ≈ 5–10+ yrs to minority adoption; mandates compress to 2–3 yrs nominal but add 2–3 yrs of shadow non-compliance; carve-out programs (gold cards) start at single-digit uptake; subsidized tech is the only reliably fast curve (~8 pp/yr).
