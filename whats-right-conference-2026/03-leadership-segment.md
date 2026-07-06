@@ -17,7 +17,7 @@ So the segment's thesis is **not** "here are tools that save you time." It is:
 
 > **"Your personal AI practice is the single highest-leverage culture intervention you own. Your team will not become what you mandate. They will become what they watch you do."**
 
-Under that frame, every demo doubles as an organizational strategy artifact, and the segment completes the arc of the block: the keynote said what 2030 looks like, the war game showed why strategy beats tooling, and this segment answers *"what do I personally do about it, starting tomorrow morning?"*
+Under that frame, every demo doubles as an organizational strategy artifact, and the segment completes the arc of the block: the keynote said what 2030 looks like, the Lab put the 2030 operating model and workforce in their own hands, and this segment answers *"what do I personally do about it, starting tomorrow morning?"*
 
 **Authenticity is the differentiator.** Vendor demos are polished; yours should be real — your actual use cases, your actual prompts, including one that produces a mediocre first draft you improve live. The imperfection is the credibility.
 
@@ -46,7 +46,7 @@ Under that frame, every demo doubles as an organizational strategy artifact, and
 > *"Now here's why that chart matters more than any vendor selection you'll make this year: at the companies capturing the most AI value, 88% of managers visibly role-model AI in their decisions and daily work. At the laggards, 25%. Not budgets. Not tools. Whether the boss visibly uses it."*
 
 **Beat 3 — The Delegation Test.**
-> *"You might be thinking: I have people for this. Two problems. First — 77% of CEOs call AI transformative, but only 44% believe their CIO is equipped to navigate it. You can't delegate what you can't evaluate; you'll be arbitrating AI investment cases, vendor claims, and payer AI disputes personally — we just spent 40 minutes proving that in the war game. Second — the research says executives are structurally the SLOWEST people in their organizations to build AI fluency. Not because of age or aptitude: because your calendar is meetings and approvals, so you never get natural reps. Your analysts get fifty at-bats a day. You get zero — unless you engineer them."*
+> *"You might be thinking: I have people for this. Two problems. First — 77% of CEOs call AI transformative, but only 44% believe their CIO is equipped to navigate it. You can't delegate what you can't evaluate; you'll be arbitrating AI investment cases, vendor claims, and operating-model and workforce decisions personally — you just spent 40 minutes proving that in the Lab. Second — the research says executives are structurally the SLOWEST people in their organizations to build AI fluency. Not because of age or aptitude: because your calendar is meetings and approvals, so you never get natural reps. Your analysts get fifty at-bats a day. You get zero — unless you engineer them."*
 
 **Beat 4 — The promise + disclosure guardrail (say this before any demo).**
 > *"So for the next twenty minutes I'm going to show you my actual practice — not a vendor demo, my real workflows, including where the output is mediocre. Two ground rules I follow and recommend: I use an enterprise-grade tool with data protections for anything organizational, and nothing with PHI or identifiable personnel detail ever goes in. Same rule you'll set for your teams — model it here."*
@@ -55,7 +55,7 @@ Under that frame, every demo doubles as an organizational strategy artifact, and
 
 ## 4. G — The live stack (22 min, 4 demos × ~5 min)
 
-Selection criteria used: (1) CFO/SVP-native — board prep, payer negotiation, talent, strategy; (2) demonstrable live in ≤5 min; (3) each maps to a leadership development claim, not a productivity claim; (4) collectively they ladder from "safe" to "vulnerable" — the vulnerability builds the room's trust.
+Selection criteria used: (1) operational-SVP-native — board prep, operating-model & workforce design, talent, strategy; (2) demonstrable live in ≤5 min; (3) each maps to a leadership development claim, not a productivity claim; (4) collectively they ladder in altitude — board/up (A), org/team (B), individual/down (C), self/in (D) — and from "safe" to "vulnerable," which builds the room's trust.
 
 > **Presenter prep:** run every demo 3+ times beforehand with the same prompts; save transcripts as backup slides in case of Wi-Fi/tool failure (show the saved run and narrate). Keep prompts SHORT on screen — the lesson "good prompts are just clear delegation" is itself leadership content.
 
@@ -66,11 +66,15 @@ Selection criteria used: (1) CFO/SVP-native — board prep, payer negotiation, t
 **Live moment:** answer one generated question out loud, poorly on purpose, then ask the tool to critique the answer.
 **Leadership point:** *"This is rehearsal infrastructure. Every high-stakes conversation you have can now be rehearsed against a tireless, well-read opponent."*
 
-### Demo B — Payer Negotiation Prep (the war-game callback)
-**Setup line:** *"Remember move N1 from the war game — AI-governance terms in your payer contracts? Watch how I'd prep that negotiation."*
-**Prompt pattern:**
-> *"Act as the VP of network management for a large regional payer. I am a health system CFO proposing these contract terms: mutual disclosure of AI use in utilization review and appeals, human-review guarantees for AI-generated denials, and 60-day notice of adjudication-rule changes. Argue the payer's side hard. Then switch roles and tell me which of my terms you'd concede first and what you'd want in return."*
-**Leadership point:** *"The 2030 keynote said the human jobs are relationship jobs. This is how a relationship job gets superpowers — you walk in having already had the argument."*
+### Demo B — The Operating-Model & Workforce Partner (the Lab callback)
+**Setup line:** *"You just spent 20 minutes redesigning a pod and deciding where its people go. Here's what I do with that placemat on Monday — because the redesign is the easy part. Carrying it is the job."*
+**Prompt pattern (Move 1 — pressure-test the redesign):**
+> *"I'm a revenue cycle SVP. Here's my redesigned denials-and-AR pod: 94 FTE today → ~25, with agents running routine denials at execute-and-audit autonomy, a human floor of ~17 for clinical-necessity attestation and high-dollar write-offs, and five net-new roles (pod product owner, AI operations supervisor, contract intelligence, continuous-improvement lead, clinical evidence curator). Play three skeptics in turn — my compliance officer, my CFO, and a frontline denial supervisor — and give me the single hardest question each one asks. Then flag the one assumption in this design most likely to be wrong."*
+
+**Live moment:** answer the frontline supervisor's question out loud, then push the tool into the harder half —
+> *"Now build the workforce transition: a 4-quarter redeployment sequence — which roles convert first, which reqs I stop backfilling this quarter, the two reskilling paths I stand up (coder→AI-audit is short, AR-rep→contract-intelligence is long), and the three sentences I say to the team before the rumor gets there first."*
+
+**Leadership point:** *"This isn't a productivity trick — it's how a leader does org design and change management with a partner that never gets tired of your what-ifs. The redesign your table did is a napkin; this turns it into a plan you can defend to compliance and deliver to your people. And notice the last thing I asked it for: the hardest sentence you'll say all year, rehearsed before you have to say it live."*
 
 ### Demo C — The Feedback Synthesizer (the talent-development demo)
 **Setup line:** *"Leadership development, not productivity. I have a director who's technically brilliant and struggling with executive presence."* (Fictionalized composite — say so.)
@@ -146,6 +150,6 @@ Back side — **the team playbook (Theme 4 payoff):**
 
 ## 9. Connection points
 
-- **From the war game:** Demo B literally executes war-game move N1 — call that out; it stitches the block into one continuous argument.
+- **From the Lab:** Demo B picks up the exact placemat the room just built — it pressure-tests their pod redesign and sequences the workforce transition, so the segment feels like the natural "week two" of what they did in the Lab. Call that out; it stitches the block into one continuous argument.
 - **From the Mirror:** F Beat 1 pays off the Station-1 open loop (Q3), and H flows directly into Q8, the block's final image.
 - **To Huron follow-up (light touch, non-pitch):** the "What This Room Said" follow-up note (Mirror §5) can include the leave-behind PDF. Nothing else. The restraint is the brand.
