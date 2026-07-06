@@ -230,7 +230,7 @@
       <span class="legend">
         <span><span class="sw" style="background:var(--blue)"></span>Totals</span>
         <span><span class="sw" style="background:var(--orange)"></span>Reduction</span>
-        <span><span class="sw" style="background:var(--aqua)"></span>New roles added</span>
+        <span><span class="sw" style="background:var(--aqua)"></span>External hires</span>
       </span>
     </div>
     <div id="waterfall"></div>
@@ -398,7 +398,7 @@ function calc(){
   let prod  = Math.max(1, end - exOps - gov);
 
   /* ---------- SEAT LEDGER (one source of truth; Step 4 + Step 5 both read it) ---------- */
-  const apSpecRetained = Math.min(getFte('apSpec'), Math.max(2, Math.round(floor*0.3)));
+  const apSpecRetained = Math.min(getFte('apSpec'), Math.max(2, Math.round(floor*0.45)));
   const seats = {
     exAnalyst: Math.max(1, exOps - apSpecRetained - 1),   // exception analysts
     apSpec:    apSpecRetained,                            // retained clinical (floor)
@@ -574,12 +574,12 @@ const TRAIN_START = {denial:'2027 Q1', arAnalyst:'2027 Q2', arRep:'2027 Q3', apC
    model, and a selection score for you. h = have today, p = partial, n = new. */
 const SKILLS = {
  denial:{ weeks:12, hpw:6, instructor:'Appeals Specialist (4 hrs/wk per cohort of 6)',
-  selection:'Published criteria: top exception-QA agreement scores from the observation-mode grading period (min 50 graded cases), current quality audit ≥95%, and a written escalation sample scored by the specialist panel. No tenure weighting — published day one.',
+  selection:'Published criteria: top exception-QA agreement scores from the observation-mode grading period (min 50 graded cases; cohort 1 selects on current QA/audit history since that data doesn\'t exist yet), current quality audit ≥95%, and a written escalation sample scored by the specialist panel. Merit-based, published day one — where a CBA governs, its terms come first.',
   comp:[
    ['Exception adjudication','Decide escalated denials correctly — approve, appeal, adjust, or escalate — without a checklist','p','Grade 15 agent-triaged cases/week in observation mode against the specialist\'s answer key','≥90% agreement with specialist across 50 consecutive cases'],
    ['Agent-context literacy','Read the agent\'s evidence package: what it found, its confidence, and what it missed','n','Weekly 1-hr "why the agent was wrong" review of the 5 worst auto-triage misses','Catches the material miss in 8 of 10 seeded bad-package drills'],
    ['Escalation writing','Document why-the-agent-was-wrong in rule-ready form a RuleOps analyst can implement','n','Write 3 rule-candidate memos/week from own graded cases; CI Lead red-lines them','2 of 3 memos accepted into the rule backlog without rework, 3 weeks running'],
-   ['Payer-policy research depth','Go from denial code to the controlling payer policy paragraph in minutes, not hours','h','Already the job — timed drills to compress lookup from 15 min to 5','Median lookup ≤5 min on 20-case timed sample'],
+   ['Payer-policy research depth','Verify the controlling payer-policy language the agent cites — and catch when it cited the wrong paragraph','h','Already the job, aimed differently: the machine does the lookup; they verify the controlling language on 10 agent citations/wk','Catches 9 of 10 seeded wrong-policy citations'],
    ['QA sampling method','Sample agent output statistically, not anecdotally — know what 10% sampling can and can\'t catch','n','2-hr sampling-basics session + run one weekly sample cycle end-to-end, twice','Runs an audit cycle solo; findings accepted by AI Ops Supervisor']],
   curric:[['Wk 1–2','Foundations: exception taxonomy, the agent\'s evidence package anatomy, sampling basics. 2 hrs class + 4 hrs graded cases.'],
    ['Wk 3–8','Reps: 15 graded observation-mode cases/wk against the specialist answer key; weekly worst-miss review; rule-memo writing starts wk 5. Scores post weekly — this IS the selection data.'],
@@ -619,7 +619,7 @@ const SKILLS = {
  apSpec:{ weeks:6, hpw:3, instructor:'Peer panel + one external clinical-appeals audit',
   selection:'No selection — these seats are retained. The gate is a standards role, not a competition.',
   comp:[
-   ['Draft-review discipline','Edit the agent\'s draft; don\'t rewrite it. Fix what\'s wrong, feed back why, keep the throughput','n','4 wks reviewing agent drafts in observation mode with edit-time tracked','Median review ≤20 min/draft at unchanged overturn quality'],
+   ['Draft-review discipline','Edit the agent\'s draft; don\'t rewrite it. Fix what\'s wrong, feed back why, keep the throughput','n','4 wks reviewing agent drafts in observation mode with edit-time tracked','Wk 6: median review ≤20 min/draft at unchanged edit-quality scores (proxy); day-120 checkpoint confirms overturn rate held — outcomes lag, so certify in two stages'],
    ['Attestation standards ownership','Write the standard the agent drafts are audited against — what a signable appeal must contain','n','Author the attestation checklist with the auditor; test on 30 historical appeals','Checklist adopted; inter-rater agreement ≥90% between specialists using it'],
    ['Structured model feedback','Turn a bad draft into a categorized defect the platform team can fix (evidence gap vs logic vs tone)','n','Log defects in the taxonomy for 4 wks; monthly review with the platform team','Defect reports actionable without follow-up questions, per platform lead']],
   curric:[['Wk 1–2','Review-not-rewrite calibration: edit-time tracking, side-by-side quality checks.'],
@@ -627,7 +627,7 @@ const SKILLS = {
  underpay:{ weeks:14, hpw:6, instructor:'Managed-care contracting lead (2 hrs/wk) + platform analyst',
   selection:'Published criteria: contract-modeling practical (blind-scored), variance-triage case scores, and current recovery quality. Seats are few — the exception-track alternate path is posted with the same visibility.',
   comp:[
-   ['Contract term modeling','Read a payer contract and predict, line by line, what the machine-readable version must compute','p','Model 2 live contracts under the contracting lead\'s review — they already know where the bodies are buried','Modeled terms match adjudicated reality on a 100-claim back-test, ≤2% variance'],
+   ['Contract term modeling','Read a payer contract and predict, line by line, what the machine-readable version must compute','p','Model 2 live contracts under the contracting lead\'s review — they already know where the bodies are buried','100-claim back-test: modeled terms match CONTRACT INTENT, with every variance dispositioned as payer error vs model error (the payer being wrong is the job, not a model failure)'],
    ['Machine-readable contract QA','Audit the converted contract: does the code say what the paper says?','n','QA one conversion end-to-end per week with the platform analyst','Finds 100% of seeded conversion errors in the certification test'],
    ['Variance triage economics','Rank variances by recoverable dollars × win probability — not by discovery order','p','Re-triage 90 days of historical variances; compare yield vs what actually happened','Re-triaged queue beats historical recovery sequence by ≥15% in the back-test'],
    ['Change control discipline','Run the amendment process: version, test, release, notify — no silent changes','n','Own one quarterly contract-update cycle under supervision','Cycle ships on time, zero unlogged changes, auditor sign-off']],
@@ -825,7 +825,7 @@ function renderAll(){
       ['<strong>Net annual labor savings (steady state)</strong>', '<strong>'+fmt$(m.net)+'</strong>'],
       ['One-time transition cost — platform + integration (edit in Step 2 → Advanced)', '−'+fmt$(m.oneTime)],
       ['Training investment — computed from your Step 5 cohorts ('+Math.round(t.hours).toLocaleString()+' protected hours)', '−'+fmt$(t.cost)],
-      ['Glide carry — people ahead of plan while agents ramp ('+Math.round(g.carryFteQ)+' FTE-quarters)', '−'+fmt$(g.carryCost)],
+      ['Glide carry — people ahead of plan while agents ramp ('+Math.round(g.carryFteQ)+' FTE-quarters; prices the no-RIF glide as drawn — executing redeployment out shrinks this line)', '−'+fmt$(g.carryCost)],
       (g.coverageFteQ>0? ['Interim coverage premium — quarters BELOW plan ('+Math.round(g.coverageFteQ)+' FTE-quarters × 30% OT/temp)', '−'+fmt$(g.coverageCost)]:null),
       ['<strong>Rough breakeven</strong>', '<strong>'+(be? be.y+' Q'+be.q : 'beyond '+(+S.year+3))+'</strong>'],
       ['Cost per denial worked (yours — see footnote)', fmt$(m.cpdToday)+' → '+fmt$(m.cpdEnd)],
@@ -843,7 +843,7 @@ function renderAll(){
       `<p>End state = baseline ${m.baseline} × ambition factor (${AMBITION[S.ambition].label}: ×${AMBITION[S.ambition].f.toFixed(2)})`+
       (S.autonomy==='T2'? ` × ${T2_MULT} (T2 approval overhead)`:'')+
       (m.prev? ` × (1 − 0.5×${m.prev} prevention effect on exception volume — incremental; the base anchor assumes minimal prevention)`:'')+
-      `, floored at ${m.floor}. People leaving the pod (removals) = ${m.removals}: that's the net reduction ${m.baseline-m.end} plus backfilling behind the ${m.filled-(m.baseline-m.removals)>0?m.filled-(m.baseline-m.removals):0} internal moves into new-shape seats${m.unfilled?`, less ${m.unfilled} seat(s) likely hired externally`:''}. `+
+      `, floored at ${m.floor}. People leaving the pod (removals) = ${m.removals}: baseline ${m.baseline} minus the ${m.filled} people who move into end-state seats — i.e., the net reduction of ${m.baseline-m.end}${m.unfilled?` plus ${m.unfilled} seat(s) likely hired externally`:''}. `+
       `Agent OpEx = ${S.opex}% × (labor today − labor end). One-time default = 1.25 × annual agent OpEx. Glide carry = Σ max(0, staged-freeze headcount − plan) × quarterly loaded cost. Every anchor is editable in Step 2 → Advanced.</p>`;
   }
   if(currentStep===4){
@@ -907,6 +907,11 @@ function renderAll(){
     if(getFte(journeyRole)===0){ const first=Object.keys(j).find(id=>getFte(id)>0); if(first) journeyRole=first; }
     const x=j[journeyRole]; const a=m.alloc[journeyRole]||{n:0}; const fteHere=getFte(journeyRole); const outHere=m.glideOut[journeyRole]||0;
     const sk=SKILLS[journeyRole]; const hourly=S.salary/1820;
+    /* the floor speech must match the ledger — never promise 7 people 5 seats */
+    let scriptText = x? x.script : '';
+    if(journeyRole==='apSpec' && a.n < fteHere){
+      scriptText = `"The floor holds ${a.n} of these seats and there are ${fteHere} of you — I\'ll be straight about that before anyone else does the math. The rules we\'re writing say a machine never signs a clinical-necessity call: those ${a.n} seats are permanent, selection criteria are published today, and for the rest the evidence-curation lead role and the exception bench are first-refusal yours. What changes for everyone is the same: you\'ll stop typing and start deciding."`;
+    }
     const haveTag=h=> h==='h'? '<span class="badge short">have it</span>' : h==='p'? '<span class="badge medium">partial</span>' : '<span class="badge long">net-new</span>';
     const skillsHtml = sk? `
       <p style="margin:14px 0 4px;font-weight:700;font-size:.85rem">The skills — specifically. What they must be able to DO, what they already have, how you build it, and the gate that proves it</p>
@@ -917,6 +922,7 @@ function renderAll(){
       <p style="margin:12px 0 4px;font-weight:700;font-size:.85rem">The bridge — ${sk.weeks} weeks · ${sk.hpw} protected hrs/week · instructor: ${sk.instructor}</p>
       ${sk.curric.map(p=>`<div class="phase"><div class="when">${p[0]}</div><div>${p[1]}</div></div>`).join('')}
       <div class="callout blue" style="margin:10px 0"><strong>Selection — published, not whispered:</strong> ${sk.selection}</div>
+      <p class="hint" style="margin-top:-4px"><strong>Two ground rules before you publish:</strong> (1) Represented workforce? Selection and displacement terms defer to your CBA — adapt these criteria with Labor Relations first, or you'll violate the contract before lunch. (2) Cohort 1 predates the observation-mode data — select it on current QA/audit history and a written sample; grading scores govern cohort 2 onward.</p>
       <p class="hint">Cost for your ${a.n||0} ${a.retained?'retained':'movers'} on this path: ${a.n? fmt$(a.n*sk.weeks*sk.hpw*hourly):'$0'} in protected hours (${sk.weeks*sk.hpw} hrs/person) — already in the Step 3 money table. The reps run inside the observation-mode pilot, so most of these hours produce QA the platform needs anyway.</p>` : '';
     document.getElementById('journeyCard').innerHTML = x? `
       <h3 style="margin:12px 0 2px">${x.name} <span class="badge ${x.dist}">${x.dist} bridge · ${x.months} months</span></h3>
@@ -926,18 +932,20 @@ function renderAll(){
       <div class="denom"><strong>The denominator — say it out loud:</strong> on your roster this is <strong>${fteHere} people</strong>; <strong>${a.n}</strong> ${a.retained?'are retained on the floor':'move into destination seats'}${outHere?`, and <strong>${outHere}</strong> glide out over the horizon through frozen reqs, transfers, and normal turnover`:''}. The room does this arithmetic on itself within 24 hours of any announcement — do it first, with the selection criteria published.</div>
       ${skillsHtml}
       <p style="margin:10px 0 4px;font-weight:700;font-size:.85rem">The conversation — say it before the rumor does</p>
-      <div class="script">${x.script}</div>` : '<p class="hint">Add FTE to a role to see its journey.</p>';
+      <div class="script">${scriptText}</div>` : '<p class="hint">Add FTE to a role to see its journey.</p>';
   }
   if(currentStep===6){
     const g=glideSim(m); const t=trainPlan(m); const be=breakeven(m,g,t);
-    const shrinkers = S.roles.filter(r=>['arRep','arAnalyst','apCoord'].includes(r.id) && r.fte>0).map(r=>r.name.split(' — ')[0]);
+    const shrinkers = S.roles.filter(r=>['arRep','apCoord','arAnalyst'].includes(r.id) && r.fte>0)
+      .sort((a,b)=>{ const wa=WAVES[a.id],wb=WAVES[b.id]; return (wa[0]*4+wa[1])-(wb[0]*4+wb[1]); })
+      .map(r=>{ const w=WAVES[r.id]; return `${r.name.split(' — ')[0]} (${w[0]} Q${w[1]})`; });
     const longBuilds=[];
     if(getFte('super')>0) longBuilds.push(`your AI Operations Supervisor candidates (18-month development clock — pick ${m.seats.aiOps} from your supervisor bench)`);
     if(getFte('manager')>0) longBuilds.push('your Pod Product Owner track');
     const plan=[
       ['You', `Draw the honest current-state map of this pod — every human touch, every handoff — with your leads, within 30 days. (If you built one in the session, that's your draft, not your final.)`],
       ['You + Finance', `Take the bridge to your CFO with ALL the cost lines: ${m.baseline}→${m.end} FTE, ${fmtM(m.net)} net annual labor savings at steady state, minus ${fmtM(m.oneTime)} one-time, ${fmtM(t.cost)} training, and ${fmtM(g.carryCost)} glide carry — rough breakeven ${be? be.y+' Q'+be.q:'beyond the horizon'}. Lead with the honest number; it's the one that survives the meeting.`],
-      ['You + HR', `Stage the backfill freeze — not everything at once: ${shrinkers.length? shrinkers.join(' (2026 Q4) → ')+'' : 'your touch-work roles'} on the wave schedule, starting with the ${S.reqs||0} reqs open right now. The staged freeze plus attrition covers ${g.natRemoved} of ${m.removals} departures${g.hard>0?`; build managed redeployment paths for the remaining ${g.hard} NOW (HIM, quality, payer-relations support — the genuinely hard-to-fill seats), not in ${+S.year-1}`:' — zero involuntary separations required at your numbers'}.`],
+      ['You + HR', `Stage the backfill freeze — not everything at once: ${shrinkers.length? shrinkers.join(' → ') : 'your touch-work roles on the wave schedule'}, starting with the ${S.reqs||0} reqs open right now. The staged freeze plus attrition covers ${g.natRemoved} of ${m.removals} departures${g.hard>0?`; build managed redeployment paths for the remaining ${g.hard} NOW (HIM, quality, payer-relations support — the genuinely hard-to-fill seats), not in ${+S.year-1}`:' — zero involuntary separations required at your numbers'}.`],
       longBuilds.length? ['You + your leads', `Start the long builds THIS quarter: ${longBuilds.join(', and ')}. These are the roles you cannot buy later at sane prices.`] : null,
       ['You', `Tell the Appeals Specialists they're the floor — this week, in person. Lowest displacement risk, highest flight risk if they hear it as a rumor. Then commission the curricula, not just "training": the 12-week exception bridge (${m.alloc.denial.n} seats, gate = 90% specialist-agreement on 50 graded cases) and the 14-week contract-intelligence bridge (${m.alloc.underpay.n} seat${m.alloc.underpay.n===1?'':'s'}, gate = 100-claim back-test). Publish seat counts, gates, and selection criteria on day one — Step 5 has all three per role.`],
       ['You + your platform team', `Design the 2027 observation-mode pilot as a triple-duty system BEFORE it starts: every agent output your people grade must produce (1) a training rep for them, (2) QA for the model, and (3) a logged selection score for you. If the pilot only does the middle one, you paid for a simulator and used it as a spreadsheet.`],
