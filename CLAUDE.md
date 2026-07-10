@@ -56,7 +56,8 @@ python3 score.py --init my-org.yaml        # blank assessment worksheet
 python3 score.py my-org.yaml -o report.md --csv report.csv [--html report.html]
 python3 value.py ...                       # value model (joins feasibility)
 python3 cost.py ... [--roi]                # cost model / ROI join
-python3 packet.py ...                      # quarterly investment packet (runs all three)
+python3 packet.py ... [--ops-report R.md]  # quarterly packet (all three engines; dual-track
+                                           # with the ops improvement plan from reconcile.py)
 python3 build_app.py                       # rebuild rcm-investment-app.html from driver YAMLs
 python3 build_explorer.py                  # rebuild use-case-explorer.html
 ```

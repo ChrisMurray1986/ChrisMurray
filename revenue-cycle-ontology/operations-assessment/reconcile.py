@@ -17,6 +17,11 @@ Reconciliation mode (--scores + --facets):
   - checks the README contract both ways: facets scored 0/1 with no linked
     finding (unexplained gaps) and flagged findings that degrade no facet
     (unmotivated findings)
+  - emits the operational improvement plan (ENG-07): every flagged finding
+    with its paired best-practice prescription, typed by fix layer
+    (structure/incentives, standard work/tooling, coaching/competency) —
+    a co-equal output to the AI portfolio, priced standalone when --profile
+    is given, with AI-gate unlock listed as the secondary benefit
 
 Usage:
   python3 reconcile.py
@@ -51,6 +56,16 @@ import build_field_instrument as bfi  # noqa: E402  (sibling module)
 DOMAIN_FILES = ["01-patient-access.md", "02-mid-cycle.md", "03-claims.md", "04-payments.md",
                 "05-denials-ar.md", "06-patient-financial-services.md", "07-payer-contracting.md",
                 "08-compliance-audit.md", "09-analytics-support.md"]
+
+ENTERPRISE_FILES = ["01-operating-model.md", "02-process-improvement.md", "03-workforce.md",
+                    "04-enabling-technology.md", "05-vendor-outsourcing.md",
+                    "06-performance-governance.md"]
+
+# The fix prescription differs by layer (README): assessments that prescribe
+# only one layer relapse.
+FIX_TYPES = {"enterprise": "structure & incentives (operating model)",
+             "process": "standard work & tooling",
+             "role": "coaching & competency"}
 
 
 def master_structure():
@@ -141,6 +156,66 @@ def price_findings(couplings, flagged, chains):
             pools |= {fm_pools[fm] for fm in couplings.get(i, {}).get("produces", []) if fm in fm_pools}
         chain_priced.append((sorted(members), sum(amounts.get(p, 0.0) for p in pools), sorted(pools)))
     return priced, chain_priced
+
+
+def bp_titles():
+    """OFM -> paired BP prescription: 1:1 numbered pairing per enterprise domain file."""
+    titles = {}
+    for fname in ENTERPRISE_FILES:
+        text = (HERE / fname).read_text()
+        for m in re.finditer(r"^### (BP-[A-Z]+-\d\d) — (.+)$", text, re.M):
+            titles[m.group(1)] = m.group(2).strip()
+    return titles
+
+
+def improvement_plan(items_by_id, flagged, couplings, priced=None):
+    """ENG-07: the operational improvement plan — the co-equal output track.
+
+    Every flagged finding gets its paired best-practice prescription, typed by
+    fix layer. The $ at stake is standalone (the pools leak whether the cure is
+    procedural or automated); AI-gate unlock is the secondary benefit column.
+    """
+    bps = bp_titles()
+    L = ["\n## Operational improvement plan (ENG-07 — co-equal output)\n",
+         "Process and operating-model fixes prescribed by the paired best practices. These stand",
+         "on their own: the dollars at stake leak through the FM→pool bindings whether or not any",
+         "automation is ever funded, and most weak AI facets have a finding below as their root",
+         "cause — so this plan is funded alongside, usually ahead of, the AI portfolio. The last",
+         "column is the *secondary* benefit, not the justification.\n",
+         "| Finding | Score | Fix layer | Prescription (paired practice) | $ at stake/yr | AI gates also unlocked |",
+         "|---|---|---|---|---|---|"]
+
+    def row_key(iid):
+        val = priced.get(iid, (0.0, []))[0] if priced else 0.0
+        return (-flagged[iid].get("score", 0), -val, iid)
+
+    for iid in sorted(flagged, key=row_key):
+        it = items_by_id.get(iid)
+        if not it:
+            continue
+        if it["layer"] == "enterprise":
+            bpid = "BP-" + iid[len("OFM-"):]
+            presc = f"**{bpid}** {bps.get(bpid, '')}".strip()
+        else:
+            first = (it.get("practice") or "").split(". ")[0].strip()
+            presc = (first[:110] + "…") if len(first) > 110 else (first or "see paired practice")
+        dollars = "—"
+        if priced and priced.get(iid, (0.0,))[0] > 0:
+            dollars = f"${priced[iid][0]/1e6:.1f}M"
+        gates = ", ".join(couplings.get(iid, {}).get("facets", [])[:4]) or "—"
+        L.append(f"| {iid} | {flagged[iid].get('score')} | {FIX_TYPES[it['layer']]} "
+                 f"| {presc} | {dollars} | {gates} |")
+
+    n_by_layer = defaultdict(int)
+    for iid in flagged:
+        if iid in items_by_id:
+            n_by_layer[items_by_id[iid]["layer"]] += 1
+    L.append(f"\nFindings by fix layer: enterprise {n_by_layer['enterprise']} · "
+             f"process {n_by_layer['process']} · role {n_by_layer['role']}. "
+             "A complete prescription usually needs all three layers — structure/incentive fixes "
+             "(OFM), standard work (PFM), and coaching (RFM) — before or alongside automation; "
+             "prescribing only one layer relapses (README).")
+    return L
 
 
 def build_chains(scores, flagged):
@@ -266,6 +341,7 @@ def main():
         if rec["findings_without_bindings"]:
             L.append(f"  - {', '.join(rec['findings_without_bindings'][:30])}"
                      + (" …" if len(rec["findings_without_bindings"]) > 30 else ""))
+        priced = None
         if args.profile:
             global PROFILE
             PROFILE = args.profile
@@ -281,6 +357,8 @@ def main():
             if cp:
                 L.append("\n**Top multi-layer chains:** " + "; ".join(
                     f"{{{', '.join(m)}}} → ${v/1e6:.1f}M ({', '.join(p)})" for m, v, p in cp))
+
+        L += improvement_plan({it["id"]: it for it in items}, rec["flagged"], couplings, priced)
 
     report = "\n".join(L) + "\n"
     if args.output:

@@ -93,15 +93,23 @@ Packet pre-read is mandatory; the meeting decides, it does not discover. Agenda:
 1. **True-up (20 min)** — realized vs estimated value and cost for everything live; benefit
    owners' signatures; driver recalibrations applied.
 2. **Readiness velocity (10 min)** — assessment diff; remediation projects on/off track.
-3. **Remediation funding (20 min)** — locked-value ranking: fund the top items until marginal
-   locked-value-per-remediation-dollar drops below the best direct use-case ROI.
-4. **Launch decisions (30 min)** — GO and CONDITIONAL-with-plan use cases, ranked by
+3. **Operational improvements (15 min)** — the operations assessment's improvement plan
+   (reconcile.py ENG-07, bound into the packet as `operations.md`): process and operating-model
+   fixes prescribed by the paired best practices, typed by layer (structure/incentives,
+   standard work, coaching). These carry value with or without automation and are the root
+   cause of most weak facets — fund them ahead of, or alongside, technical gate remediation.
+   Same decision discipline as track two: owner, budget, proving metric per funded fix.
+4. **Remediation funding (15 min)** — locked-value ranking: fund the top technical items until
+   marginal locked-value-per-remediation-dollar drops below the best direct use-case ROI.
+   Where item 3 already funds a gate's operational root cause, the technical remediation rides
+   that project rather than duplicating it.
+5. **Launch decisions (30 min)** — GO and CONDITIONAL-with-plan use cases, ranked by
    net-value × payback from the cost model's ROI join; approve builds with named benefit owner,
    measurement baseline plan, and sourcing option (the cost model's recommendation is the
    default; overrides are documented in the packet).
-5. **Autonomy promotions (15 min)** — governance body presents evidence per candidate (§ Play 5).
-6. **Kills & descopes (15 min)** — net-negative UCs, crossed crossovers, KILL-register re-looks.
-7. **Decisions logged (10 min)** — every decision gets: owner, budget, expected value (from the
+6. **Autonomy promotions (10 min)** — governance body presents evidence per candidate (§ Play 5).
+7. **Kills & descopes (10 min)** — net-negative UCs, crossed crossovers, KILL-register re-looks.
+8. **Decisions logged (10 min)** — every decision gets: owner, budget, expected value (from the
    packet, not re-negotiated in the room), and the metric that will prove it.
 
 ### Play 3 — Remediation projects (unlocking gates)

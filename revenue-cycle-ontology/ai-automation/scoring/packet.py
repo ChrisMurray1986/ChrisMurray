@@ -7,9 +7,15 @@ directory: all three reports (md + html), a combined per-UC CSV, a
 machine-readable packet.json, and index.md with headline numbers, quarter-over-
 quarter deltas (via --prev), and the council agenda pre-filled.
 
+The packet is dual-track: pass --ops-report (the reconcile.py report carrying
+the operational improvement plan) and it is bound in as operations.md — the
+process/operating-model track the council funds alongside, usually ahead of,
+the automation track.
+
 Usage:
   packet.py my-org.yaml my-profile.yaml --outdir packets/2026-Q3
-  packet.py my-org.yaml my-profile.yaml --outdir packets/2026-Q4 --prev packets/2026-Q3
+  packet.py my-org.yaml my-profile.yaml --outdir packets/2026-Q4 --prev packets/2026-Q3 \
+            --ops-report reconcile-report.md
 """
 
 import argparse
@@ -41,6 +47,8 @@ def main():
     ap.add_argument("profile", help="org financial profile YAML")
     ap.add_argument("--outdir", required=True, help="packet directory to create")
     ap.add_argument("--prev", help="previous packet directory (for quarter-over-quarter deltas)")
+    ap.add_argument("--ops-report", help="reconcile.py report (operational improvement plan) "
+                                         "to bind into the packet as operations.md")
     args = ap.parse_args()
 
     out = Path(args.outdir)
@@ -141,6 +149,16 @@ def main():
         arrow = "▲" if d > 0 else ("▼" if d < 0 else "=")
         return f" ({arrow} {fmt(abs(d))} vs prior)" if d else " (unchanged)"
 
+    ops_bound = False
+    if args.ops_report:
+        ops_path = Path(args.ops_report)
+        if ops_path.exists():
+            (out / "operations.md").write_text(ops_path.read_text())
+            ops_bound = True
+        else:
+            print(f"warning: {ops_path} not found; packet has no operational track",
+                  file=sys.stderr)
+
     top_net = sorted((r for r in ccomp["rows"] if r.get("net_yr") is not None),
                      key=lambda r: -r.get("net_yr", 0))[:5]
     L = [f"# Investment packet — {headline['org']}",
@@ -174,19 +192,27 @@ def main():
                  + "\n\n\\* risk-EV-justified: segregated VS-8 expected value covers the cash "
                    "shortfall — judge on risk grounds, not as an automatic descope.")
     L.append("\n**SLM verdicts:** " + ", ".join(f"{k}: {v}" for k, v in headline["slm_verdicts"].items()))
-    L += ["\n## Council agenda (Play 2)\n",
+    ops_ref = ("operations.md" if ops_bound
+               else "not attached — pass the reconcile.py report via --ops-report")
+    L += ["\n## Council agenda (Play 2 — two tracks, one decision)\n",
           "1. True-up — realized vs estimated; benefit-owner signatures; driver recalibrations",
           "2. Readiness velocity — assessment diff vs prior quarter",
-          "3. Remediation funding — work the locked-value table above",
-          "4. Launch decisions — GO/CONDITIONAL ranked by net value × payback (portfolio.csv)",
-          "5. Autonomy promotions — evidence per candidate; update hitl_share on promotion",
-          "6. Kills & descopes — net-negative list above; crossed crossovers; KILL re-looks",
-          "7. Log decisions — owner, budget, expected value, proving metric",
+          f"3. **Operational improvements** — fund the process/operating-model fixes ({ops_ref});"
+          " these carry value with or without automation and are the root-cause cure for most"
+          " weak facets — fund ahead of, or alongside, gate remediation",
+          "4. Remediation funding — technical gate remediations, worked from the locked-value table above",
+          "5. Launch decisions — GO/CONDITIONAL ranked by net value × payback (portfolio.csv)",
+          "6. Autonomy promotions — evidence per candidate; update hitl_share on promotion",
+          "7. Kills & descopes — net-negative list above; crossed crossovers; KILL re-looks",
+          "8. Log decisions — owner, budget, expected value, proving metric",
           "\n## Contents\n",
           "- `feasibility.md` / `.html` — dispositions, gaps, remediation leverage",
           "- `value.md` / `.html` — value streams, pools, locked-value detail",
-          "- `cost.md` / `.html` — sourcing decisions, TCO, ROI, SLM break-even",
-          "- `portfolio.csv` — one row per use case across all three models",
+          "- `cost.md` / `.html` — sourcing decisions, TCO, ROI, SLM break-even"]
+    if ops_bound:
+        L.append("- `operations.md` — operational improvement plan + reconciliation "
+                 "(the process/operating-model track)")
+    L += ["- `portfolio.csv` — one row per use case across all three models",
           "- `packet.json` — headline numbers (machine-readable, for next quarter's deltas)"]
     (out / "index.md").write_text("\n".join(L) + "\n")
 

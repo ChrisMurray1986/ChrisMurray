@@ -54,7 +54,7 @@ failure-mode/best-practice structure down the **master ontology's spine** — fu
 | `17-role-assessment.md` | Role-level failure patterns and practices for every `ROLE-*` family (including ROLE-BOT — automated agents as workforce), with judgment surfaces mapped to decision IDs |
 | `build_field_instrument.py` | Generator: parses all three layers from their sources and emits the full field instrument (source-version stamped) — rerun after any edit |
 | `pfm-couplings.yaml` | ENG-02: hand-maintained `degrades` couplings for all PFM/RFM items (token-validated at build) |
-| `reconcile.py`, `couplings.yaml`, `binding-validation.md` | Binding validator & reconciler: resolves every OFM/PFM/RFM binding against the master ontology and registries, emits the machine-readable coupling graph, and (with scores + a facet assessment) checks the causal-chain contract both ways — class-aware (ENG-01), version-refusing (ENG-06), chain-grouping (ENG-04), and `--profile` prices findings via FM→pool (ENG-03) |
+| `reconcile.py`, `couplings.yaml`, `binding-validation.md` | Binding validator & reconciler: resolves every OFM/PFM/RFM binding against the master ontology and registries, emits the machine-readable coupling graph, and (with scores + a facet assessment) checks the causal-chain contract both ways — class-aware (ENG-01), version-refusing (ENG-06), chain-grouping (ENG-04), `--profile` prices findings via FM→pool (ENG-03), and emits the **operational improvement plan** (ENG-07): every flagged finding with its paired-practice prescription typed by fix layer, the packet's process/operating-model track |
 | `18-full-assessment-simulation.md` | Full-assessment simulation results: model strengths validated, weaknesses quantified, and the ENG-* hardening backlog |
 | `field-instrument.yaml` | Machine-readable instrument: all 286 items (44 OFM + 168 PFM + 74 RFM) with prompts, signals, and score/notes fields |
 | `field-instrument.html` | **Self-contained interactive scoring instrument** — layer tabs, search, 0/1/2 scoring with evidence notes, paired practice revealed on flagged items, per-layer progress, save/open state, scored-YAML export. Works offline on a tablet in the field |
@@ -92,6 +92,25 @@ facet scored 0/1 should have a named OFM as its cause (or the facet score is une
 every OFM observed should be traced to the facets it degrades (or its remediation is
 under-motivated). The joint finding — "this $X/yr of automation value is locked behind this
 operating-model fix" — is what moves executive action; either finding alone rarely does.
+
+## Two output tracks, one packet
+
+Coupling to the AI stack does **not** make this ontology an AI-readiness instrument. The
+assessment produces two co-equal output tracks, and the operational track is usually the
+larger share of the value:
+
+1. **Operational improvement plan** (`reconcile.py` ENG-07, bound into the quarterly packet as
+   `operations.md` via `packet.py --ops-report`): every flagged failure mode with its paired
+   best-practice prescription, typed by fix layer — structure/incentives (OFM), standard
+   work/tooling (PFM), coaching/competency (RFM) — and priced standalone via the FM→pool
+   bindings. These fixes carry their value whether or not any automation is ever funded;
+   AI-gate unlock is listed as the secondary benefit, never the justification.
+2. **AI portfolio inputs**: the degraded-facet couplings that explain low readiness scores and
+   price the locked automation value.
+
+The council agenda (playbook Play 2) funds track one ahead of, or alongside, track two —
+process and operating-model fixes are the root-cause cure for most weak facets, and
+"never automate chaos" cuts both ways: the fix for chaos is a process fix, not a deferral.
 
 ## Assessment method
 
