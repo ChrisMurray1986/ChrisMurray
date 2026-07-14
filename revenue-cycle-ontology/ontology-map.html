@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Revenue Cycle AI System — One Picture</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,0.10);
+    --l1:#2a78d6; --l2:#e34948; --l3:#4a3aa7; --l4:#eda100; --l5:#008300; --l6:#1baf7a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --ring:rgba(255,255,255,0.10);
+      --l1:#3987e5; --l2:#e66767; --l3:#9085e9; --l4:#c98500; --l5:#008300; --l6:#199e70;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --baseline:#383835; --ring:rgba(255,255,255,0.10);
+    --l1:#3987e5; --l2:#e66767; --l3:#9085e9; --l4:#c98500; --l5:#008300; --l6:#199e70;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+         font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:1180px; margin:0 auto; padding:30px 24px 60px; }
+  h1 { font-size:24px; margin:0 0 4px; }
+  .sub { color:var(--ink-2); margin:0 0 18px; max-width:820px; }
+  .modes { display:flex; gap:8px; margin:0 0 20px; flex-wrap:wrap; }
+  .modes button { font:600 13.5px/1 system-ui,sans-serif; color:var(--ink-2); background:var(--surface);
+    border:1px solid var(--ring); border-radius:20px; padding:9px 16px; cursor:pointer; }
+  .modes button[aria-pressed="true"] { color:var(--ink); border-color:var(--ink); }
+  .stage { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:20px; align-items:start; }
+  @media (max-width:900px){ .stage { grid-template-columns:1fr; } .panel { position:static; } }
+
+  /* diagram */
+  .diagram { position:relative; padding:6px 0; }
+  #edges { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+  #edges path.vis { fill:none; stroke-width:2; opacity:.75; transition:opacity .18s, stroke-width .18s; }
+  #edges path.hit { fill:none; stroke:transparent; stroke-width:16; pointer-events:stroke; cursor:pointer; }
+  #edges .dim { opacity:.14; }
+  #edges .hot { opacity:1; stroke-width:3.5; }
+  .elabel { position:absolute; transform:translate(-50%,-50%); font:600 11.5px/1.2 system-ui,sans-serif;
+    background:var(--surface); border:1px solid var(--ring); border-radius:12px; padding:3px 9px;
+    color:var(--ink-2); cursor:pointer; white-space:nowrap; transition:opacity .18s; z-index:3; }
+  .elabel.dim { opacity:.15; }
+  .elabel.hot { color:var(--ink); border-color:currentColor; }
+  .col { display:flex; flex-direction:column; gap:26px; margin:0 150px; position:relative; z-index:2; }
+  @media (max-width:700px){ .col { margin:0 40px; } }
+  .layer { background:var(--surface); border:1px solid var(--ring); border-left:5px solid var(--c);
+    border-radius:12px; padding:13px 16px; cursor:pointer; text-align:left; width:100%;
+    font:inherit; color:inherit; transition:opacity .18s, box-shadow .18s; }
+  .layer:hover, .layer.hot { box-shadow:0 2px 14px var(--ring); }
+  .layer.dim { opacity:.35; }
+  .layer .head { display:flex; align-items:baseline; gap:10px; }
+  .layer .n { font:700 12px/1 system-ui,sans-serif; color:var(--c); border:1.5px solid var(--c);
+    border-radius:50%; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; flex:none; align-self:center; }
+  .layer h3 { font-size:15.5px; margin:0; }
+  .layer .tag { color:var(--ink-2); font-size:13px; margin:3px 0 7px; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; }
+  .chip { font:600 11px/1 system-ui,sans-serif; color:var(--ink-2); background:var(--page);
+    border:1px solid var(--grid); border-radius:10px; padding:4px 8px; }
+  .chip b { color:var(--ink); }
+
+  /* panel */
+  .panel { position:sticky; top:16px; background:var(--surface); border:1px solid var(--ring);
+    border-radius:12px; padding:18px; min-height:300px; }
+  .panel .kicker { font:700 11px/1 system-ui,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:var(--pc,var(--muted)); }
+  .panel h2 { font-size:17px; margin:6px 0 8px; }
+  .panel p { color:var(--ink-2); font-size:13.5px; margin:8px 0; }
+  .panel .ex { border-left:3px solid var(--pc,var(--baseline)); padding:2px 0 2px 10px; font-style:italic; }
+  .steps { display:flex; align-items:center; gap:10px; margin-top:14px; }
+  .steps button { font:700 13px/1 system-ui,sans-serif; background:var(--surface); color:var(--ink);
+    border:1px solid var(--ink); border-radius:8px; padding:8px 14px; cursor:pointer; }
+  .steps button:disabled { opacity:.3; cursor:default; }
+  .steps .where { color:var(--muted); font-size:12px; }
+  details { margin-top:26px; color:var(--ink-2); }
+  summary { cursor:pointer; font-weight:600; color:var(--ink); }
+  table { border-collapse:collapse; width:100%; margin-top:10px; font-size:13px; }
+  th, td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--grid); vertical-align:top; }
+  th { color:var(--muted); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+  footer { color:var(--muted); font-size:12px; margin-top:34px; border-top:1px solid var(--grid); padding-top:10px; }
+</style></head>
+<body>
+<div class="wrap">
+  <h1>The revenue cycle AI system — in one picture</h1>
+  <p class="sub">Six connected layers: a map of how the work runs, a catalog of how it breaks,
+  the fixes, the safety gates, the money, and the decision loop that ties them together.
+  <b>Click any layer or arrow</b> — or follow a real example.</p>
+
+  <div class="modes" role="tablist">
+    <button id="mOverview" aria-pressed="true">The big picture</button>
+    <button id="mStory" aria-pressed="false">Follow a real problem: the $32M deadline chain →</button>
+  </div>
+
+  <div class="stage">
+    <div class="diagram" id="diagram">
+      <svg id="edges" aria-hidden="true"></svg>
+      <div class="col" id="col"></div>
+    </div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+
+  <details>
+    <summary>Prefer it as a list? Every layer and connection in plain words</summary>
+    <table id="tbl"><thead><tr><th>Connection</th><th>What it means</th></tr></thead><tbody></tbody></table>
+  </details>
+
+  <footer>Counts come from the ontology itself: 14 areas / 88 processes (master taxonomy),
+  278 failure checks + 33 defect types (operations assessment), 99 use cases and 98 readiness
+  checks across 8 gate dimensions (AI catalog &amp; gating), 8 shared value pools (value model).
+  The $32M example is from the Meridian Health simulation.</footer>
+</div>
+
+<script>
+const LAYERS = [
+  { id:"L1", c:"--l1", name:"How the work runs", tag:"The complete map of revenue-cycle operations — every process, decision, and action has a name and an address.",
+    chips:["<b>14</b> areas","<b>88</b> processes","every decision &amp; action"],
+    detail:{ k:"Layer 1 · Operations map", h:"How the work runs",
+      p:"From scheduling and insurance checks to coding, billing, payment, and appeals: the full map of how money moves through care. Everything has an address, so every other layer can point at an exact spot instead of a vague area.",
+      ex:"“Process 6.5: submit each claim before that payer's filing deadline.”" } },
+  { id:"L2", c:"--l2", name:"How it breaks", tag:"A catalog of named, checkable failure patterns — at the organization, process, and role level — and the defective work they produce.",
+    chips:["<b>278</b> failure checks","<b>3</b> altitudes","<b>33</b> defect types"],
+    detail:{ k:"Layer 2 · Failure catalog", h:"How it breaks",
+      p:"Assessors score each pattern in the field with evidence, not impressions. Related findings at different altitudes — an organizational habit, a broken process step, a role-level workaround — are grouped into one problem chain, so one problem is counted once.",
+      ex:"“Payer filing deadlines live in analysts' memory and old emails — not in any system.”" } },
+  { id:"L3", c:"--l3", name:"The fixes", tag:"99 AI &amp; automation use cases. Each names the failures it prevents and the exact step it improves — no solution looking for a problem.",
+    chips:["<b>99</b> use cases","paired best practices","autonomy earned in steps"],
+    detail:{ k:"Layer 3 · AI & automation catalog", h:"The fixes",
+      p:"Every use case exists because a named failure (or a named opportunity) exists, and coverage is audited in both directions. Each starts in recommend-mode and earns autonomy with evidence — never the other way around.",
+      ex:"“A timely-filing watchdog that flags every account approaching its deadline.”" } },
+  { id:"L4", c:"--l4", name:"The safety gates", tag:"What must be true before a fix is safe to launch: data captured, systems connected, process standardized, people ready.",
+    chips:["<b>8</b> readiness dimensions","<b>98</b> concrete checks","weakest link decides"],
+    detail:{ k:"Layer 4 · Readiness gates", h:"The safety gates",
+      p:"Each use case has its own gate profile, and the weakest link decides: go, go-with-conditions, wait, or don't. The gates are also a diagnosis — when one is shut, the assessment usually shows the operational problem holding it shut.",
+      ex:"“The watchdog can't launch until the deadline matrix is loaded and verified.”" } },
+  { id:"L5", c:"--l5", name:"The money", tag:"Every problem and every fix priced in the same currency — from shared value pools where a dollar can only be counted once.",
+    chips:["<b>8</b> value pools","costs: build / buy / run","one benefit ledger"],
+    detail:{ k:"Layer 5 · Value & cost", h:"The money",
+      p:"Value pools are sized from the health system's own numbers. Problems draw a price from the pool they drain; fixes draw a price from the pool they protect — so operational fixes and AI investments compete in dollars, not opinions. Cost is modeled the same way: build, buy, and run options priced side by side.",
+      ex:"“The filing-deadline problem chain: $32M a year at stake.”" } },
+  { id:"L6", c:"--l6", name:"The decision loop", tag:"Value minus cost, gated by readiness, sequenced under a budget — re-run every quarter.",
+    chips:["optimized portfolio","quarterly re-check","value counted once"],
+    detail:{ k:"Layer 6 · Investment loop", h:"The decision loop",
+      p:"Leadership gets a ranked portfolio and a sequenced roadmap, sized to the budget. Every quarter the system re-assesses, counts realized value once in one ledger, re-ranks, and funds the next moves. Fixes change how the work runs — which is where the picture started.",
+      ex:"“Meridian's two-year plan: $18.3M invested, a $69M-a-year run-rate at exit.”" } },
+];
+
+const EDGES = [
+  { id:"E1", a:"L1", b:"L2", side:"R", bend:.5, label:"pinned to exact steps",
+    detail:{ h:"Failures point at exact steps", p:"Every failure pattern names the precise process, decision, or action it corrupts — so a finding is never “billing has issues,” it's an address on the map.",
+      ex:"“Deadlines-in-people's-heads corrupts process 6.5 and process 11.2.”" } },
+  { id:"E2", a:"L2", b:"L4", side:"R", bend:.9, label:"problems lock the gates",
+    detail:{ h:"Operational problems lock the AI gates", p:"The single most valuable connection: when a readiness gate is shut, the failure catalog usually names the operational problem holding it shut. Fix the operation and the automation unlocks — two assessments, one organization.",
+      ex:"“Uncodified deadlines are exactly why the watchdog's gate reads not-ready.”" } },
+  { id:"E3", a:"L2", b:"L5", side:"R", bend:1.6, label:"every problem gets a price",
+    detail:{ h:"Every problem chain gets a price tag", p:"Failures produce defective work; each defect type drains a known value pool. That prices every finding — so the assessment ends in a ranked, dollar-denominated list, not a wall of observations.",
+      ex:"“One deadline chain: $32M a year — the largest single finding at Meridian.”" } },
+  { id:"E4", a:"L3", b:"L2", side:"L", bend:.5, label:"each fix prevents named failures",
+    detail:{ h:"Each fix prevents named failures", p:"Use cases are anchored to the failures they prevent (or the opportunities they open), and the link is audited both ways: no failure without a candidate fix, no fix without a reason to exist.",
+      ex:"“The watchdog exists because expired-deadline write-offs exist.”" } },
+  { id:"E5", a:"L4", b:"L3", side:"L", bend:.5, label:"gates decide launch & autonomy",
+    detail:{ h:"Gates decide launch — and how much autonomy", p:"A use case launches only when its gates open, and the gates also cap how independent it may be: recommend-only at first, more autonomy as evidence accumulates. Never automate a process that isn't standardized yet.",
+      ex:"“Watchdog: launch after the matrix loads; recommend-mode first quarter.”" } },
+  { id:"E6", a:"L5", b:"L6", side:"R", bend:.5, label:"ranked in one currency",
+    detail:{ h:"One currency, one ranking", p:"Because problems and fixes are priced from the same pools, the loop can rank an operational fix against an AI launch honestly — and a dollar of benefit can only be claimed once.",
+      ex:"“Load-the-deadline-matrix outranked several AI launches at Meridian.”" } },
+  { id:"E7", a:"L6", b:"L1", side:"L", bend:2.1, lt:.13, label:"the loop closes",
+    detail:{ h:"The loop closes", p:"Funded fixes change how the work runs. Next quarter's re-assessment measures whether they did — decisions got better or the plan changes. That is the measure that matters: not cleaner dashboards, better decisions.",
+      ex:"“Quarterly: re-assess → re-price → re-rank → fund the next moves.”" } },
+];
+
+const STORY = [
+  { l:["L1"], e:[], k:"Step 1 of 6 · on the map",
+    h:"Every payer sets a deadline to file each claim",
+    p:"Miss the deadline and the money is gone forever — no appeal, no recovery. The operations map holds this obligation at two addresses: claim submission (6.5) and the contract terms that define each deadline (11.2).",
+    ex:"This is a routine, everyday obligation — which is exactly why it's dangerous." },
+  { l:["L2"], e:["E1"], k:"Step 2 of 6 · the finding",
+    h:"The assessment finds the deadlines live in people's heads",
+    p:"Analysts keep payer deadlines in memory, spreadsheets, and old emails. Three findings at three altitudes — a knowledge-management habit, a broken process step, a role-level workaround — group into one problem chain. Accounts quietly expire.",
+    ex:"Evidence, not impressions: confirmed write-offs prove the leak is real." },
+  { l:["L5"], e:["E3"], k:"Step 3 of 6 · the price",
+    h:"The chain is priced: $32M a year at stake",
+    p:"Visible deadline write-offs are the tip; the model prices the whole exposure — every claim and appeal filed against a deadline nobody has verified. It becomes the single largest finding in the assessment, stated in dollars.",
+    ex:"$1.9M a year of confirmed write-offs; $32M a year exposed." },
+  { l:["L4"], e:["E2"], k:"Step 4 of 6 · the locked gate",
+    h:"The same problem locks an AI gate",
+    p:"There is a watchdog use case that flags every account approaching its deadline — but its gate reads not-ready, because the deadline matrix it needs doesn't exist in any system. The operational failure and the shut gate are the same fact, seen from two sides.",
+    ex:"Fix the operation and the automation unlocks." },
+  { l:["L3"], e:["E4","E5"], k:"Step 5 of 6 · the fix, in order",
+    h:"Operations first, automation second",
+    p:"The plan: a 90-day operational sprint loads and verifies every payer's deadlines into one governed matrix. Then the watchdog launches — in recommend-mode, earning autonomy with evidence. Automating before the fix would have hard-coded the chaos.",
+    ex:"Standardize → verify → automate. In that order, always." },
+  { l:["L6"], e:["E6","E7"], k:"Step 6 of 6 · the loop",
+    h:"The loop counts the value once, then repeats",
+    p:"The matrix sprint and the watchdog enter one benefit ledger — a dollar claimed once, net of running cost. Next quarter the re-assessment confirms the gate stayed open and the write-offs stopped, and the portfolio re-ranks for the next round.",
+    ex:"That's the flywheel: assess → price → gate → fix → measure → repeat." },
+];
+
+const col = document.getElementById("col"), svg = document.getElementById("edges"),
+      panel = document.getElementById("panel"), diagram = document.getElementById("diagram");
+let mode = "overview", step = 0, selected = null;
+
+for (const L of LAYERS) {
+  const b = document.createElement("button");
+  b.className = "layer"; b.id = "card-" + L.id; b.style.setProperty("--c", `var(${L.c})`);
+  b.innerHTML = `<div class="head"><span class="n">${L.id[1]}</span><h3>${L.name}</h3></div>
+    <div class="tag">${L.tag}</div><div class="chips">${L.chips.map(c=>`<span class="chip">${c}</span>`).join("")}</div>`;
+  b.onclick = () => { mode = "overview"; selected = { type:"layer", id:L.id }; syncModes(); render(); };
+  col.appendChild(b);
+}
+
+const tb = document.querySelector("#tbl tbody");
+for (const L of LAYERS) tb.insertAdjacentHTML("beforeend",
+  `<tr><td><span class="dot" style="background:var(${L.c})"></span><b>${L.id[1]}. ${L.name}</b></td><td>${L.detail.p}</td></tr>`);
+for (const E of EDGES) tb.insertAdjacentHTML("beforeend",
+  `<tr><td>${E.a[1]} → ${E.b[1]}: <b>${E.detail.h}</b></td><td>${E.detail.p}</td></tr>`);
+
+function anchors(E) {
+  const ra = document.getElementById("card-" + E.a).getBoundingClientRect(),
+        rb = document.getElementById("card-" + E.b).getBoundingClientRect(),
+        rd = diagram.getBoundingClientRect(), right = E.side === "R";
+  const x1 = (right ? ra.right : ra.left) - rd.left, y1 = ra.top + ra.height/2 - rd.top;
+  const x2 = (right ? rb.right : rb.left) - rd.left, y2 = rb.top + rb.height/2 - rd.top;
+  const bulge = (right ? 1 : -1) * (46 + 44 * E.bend);
+  return { x1, y1, x2, y2, cx: (right ? Math.max(x1,x2) : Math.min(x1,x2)) + bulge };
+}
+
+function draw() {
+  const r = diagram.getBoundingClientRect();
+  svg.setAttribute("viewBox", `0 0 ${r.width} ${r.height}`);
+  svg.innerHTML = ""; document.querySelectorAll(".elabel").forEach(n => n.remove());
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  svg.appendChild(defs);
+  for (const E of EDGES) {
+    const A = anchors(E), colr = `var(${LAYERS.find(l=>l.id===E.a).c})`;
+    defs.insertAdjacentHTML("beforeend",
+      `<marker id="ah-${E.id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+         <path d="M0 0 L10 5 L0 10 z" style="fill:var(${LAYERS.find(l=>l.id===E.a).c})"/></marker>`);
+    const d = `M ${A.x1} ${A.y1} C ${A.cx} ${A.y1}, ${A.cx} ${A.y2}, ${A.x2} ${A.y2}`;
+    const vis = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    vis.setAttribute("d", d); vis.setAttribute("class", "vis"); vis.dataset.edge = E.id;
+    vis.style.stroke = colr; vis.setAttribute("marker-end", `url(#ah-${E.id})`);
+    const hit = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    hit.setAttribute("d", d); hit.setAttribute("class", "hit");
+    hit.addEventListener("click", () => { mode = "overview"; selected = { type:"edge", id:E.id }; syncModes(); render(); });
+    hit.style.pointerEvents = "stroke";
+    svg.appendChild(vis); svg.appendChild(hit);
+    const lab = document.createElement("span");
+    lab.className = "elabel"; lab.dataset.edge = E.id; lab.textContent = E.label;
+    const pt = vis.getPointAtLength(vis.getTotalLength() * (E.lt ?? .5));
+    lab.style.left = pt.x + "px"; lab.style.top = pt.y + "px";
+    lab.onclick = () => { mode = "overview"; selected = { type:"edge", id:E.id }; syncModes(); render(); };
+    diagram.appendChild(lab);
+  }
+  applyFocus();
+}
+
+function focusSets() {
+  if (mode === "story") { const s = STORY[step]; return { L:new Set(s.l), E:new Set(s.e), any:true }; }
+  if (!selected) return { L:new Set(), E:new Set(), any:false };
+  if (selected.type === "layer") {
+    const E = new Set(EDGES.filter(e => e.a === selected.id || e.b === selected.id).map(e => e.id));
+    return { L:new Set([selected.id]), E, any:true };
+  }
+  const e = EDGES.find(e => e.id === selected.id);
+  return { L:new Set([e.a, e.b]), E:new Set([e.id]), any:true };
+}
+
+function applyFocus() {
+  const f = focusSets();
+  for (const L of LAYERS) {
+    const c = document.getElementById("card-" + L.id);
+    c.classList.toggle("hot", f.L.has(L.id));
+    c.classList.toggle("dim", f.any && !f.L.has(L.id));
+  }
+  document.querySelectorAll("#edges path.vis").forEach(p => {
+    p.classList.toggle("hot", f.E.has(p.dataset.edge));
+    p.classList.toggle("dim", f.any && !f.E.has(p.dataset.edge));
+  });
+  document.querySelectorAll(".elabel").forEach(l => {
+    l.classList.toggle("hot", f.E.has(l.dataset.edge));
+    l.classList.toggle("dim", f.any && !f.E.has(l.dataset.edge));
+  });
+}
+
+function render() {
+  applyFocus();
+  if (mode === "story") {
+    const s = STORY[step], lc = LAYERS.find(l => l.id === s.l[0]).c;
+    panel.style.setProperty("--pc", `var(${lc})`);
+    panel.innerHTML = `<div class="kicker">${s.k}</div><h2>${s.h}</h2><p>${s.p}</p>
+      <p class="ex">${s.ex}</p>
+      <div class="steps">
+        <button id="prev" ${step===0?"disabled":""}>← Back</button>
+        <button id="next" ${step===STORY.length-1?"disabled":""}>Next →</button>
+        <span class="where">${step+1} / ${STORY.length}</span>
+      </div>`;
+    document.getElementById("prev").onclick = () => { step = Math.max(0, step-1); render(); };
+    document.getElementById("next").onclick = () => { step = Math.min(STORY.length-1, step+1); render(); };
+    return;
+  }
+  if (selected?.type === "layer") {
+    const L = LAYERS.find(l => l.id === selected.id);
+    panel.style.setProperty("--pc", `var(${L.c})`);
+    panel.innerHTML = `<div class="kicker">${L.detail.k}</div><h2>${L.detail.h}</h2>
+      <p>${L.detail.p}</p><p class="ex">${L.detail.ex}</p>`;
+    return;
+  }
+  if (selected?.type === "edge") {
+    const E = EDGES.find(e => e.id === selected.id), L = LAYERS.find(l => l.id === E.a);
+    panel.style.setProperty("--pc", `var(${L.c})`);
+    panel.innerHTML = `<div class="kicker">Connection · ${E.a[1]} → ${E.b[1]}</div><h2>${E.detail.h}</h2>
+      <p>${E.detail.p}</p><p class="ex">${E.detail.ex}</p>`;
+    return;
+  }
+  panel.style.removeProperty("--pc");
+  panel.innerHTML = `<div class="kicker">Overview</div><h2>Read it top to bottom, then around</h2>
+    <p>The map of the work (1) anchors a catalog of how it breaks (2). Problems lock the safety
+    gates (4) that decide when the 99 fixes (3) may launch. Everything — problems and fixes alike —
+    is priced from the same pools (5), and a quarterly loop (6) decides, funds, measures, and repeats.</p>
+    <p><b>Click a layer</b> for what it is, <b>an arrow</b> for why the connection matters — or take
+    the guided example above: one real problem, followed through all six layers.</p>`;
+}
+
+function syncModes() {
+  document.getElementById("mOverview").setAttribute("aria-pressed", mode === "overview");
+  document.getElementById("mStory").setAttribute("aria-pressed", mode === "story");
+}
+document.getElementById("mOverview").onclick = () => { mode = "overview"; selected = null; syncModes(); render(); };
+document.getElementById("mStory").onclick = () => { mode = "story"; step = 0; syncModes(); render(); };
+
+new ResizeObserver(() => draw()).observe(diagram);
+draw(); render();
+</script>
+</body></html>
