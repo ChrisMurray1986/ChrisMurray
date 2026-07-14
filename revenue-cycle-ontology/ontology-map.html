@@ -111,9 +111,9 @@
   </details>
 
   <footer>Counts come from the ontology itself: 14 areas / 88 processes (master taxonomy),
-  278 failure checks + 33 defect types (operations assessment), 99 use cases and 98 readiness
-  checks across 8 gate dimensions (AI catalog &amp; gating), 8 shared value pools (value model).
-  The $32M example is from the Meridian Health simulation.</footer>
+  278 failure checks + 33 defect types and 278 paired operational practices (operations assessment),
+  99 use cases and 98 readiness checks across 8 gate dimensions (AI catalog &amp; gating),
+  8 shared value pools (value model). The $32M example is from the Meridian Health simulation.</footer>
 </div>
 
 <script>
@@ -128,11 +128,11 @@ const LAYERS = [
     detail:{ k:"Layer 2 · Failure catalog", h:"How it breaks",
       p:"Assessors score each pattern in the field with evidence, not impressions. Related findings at different altitudes — an organizational habit, a broken process step, a role-level workaround — are grouped into one problem chain, so one problem is counted once.",
       ex:"“Payer filing deadlines live in analysts' memory and old emails — not in any system.”" } },
-  { id:"L3", c:"--l3", name:"The fixes", tag:"99 AI &amp; automation use cases. Each names the failures it prevents and the exact step it improves — no solution looking for a problem.",
-    chips:["<b>99</b> use cases","paired best practices","autonomy earned in steps"],
-    detail:{ k:"Layer 3 · AI & automation catalog", h:"The fixes",
-      p:"Every use case exists because a named failure (or a named opportunity) exists, and coverage is audited in both directions. Each starts in recommend-mode and earns autonomy with evidence — never the other way around.",
-      ex:"“A timely-filing watchdog that flags every account approaching its deadline.”" } },
+  { id:"L3", c:"--l3", name:"The fixes — operational and AI", tag:"Two families: change the operation (a paired practice for every failure pattern — standard work, operating model, coaching) and automate (99 AI use cases). Operations first, always.",
+    chips:["<b>278</b> paired operational practices","<b>99</b> AI use cases","operations before automation"],
+    detail:{ k:"Layer 3 · Fixes: practices & automation", h:"The fixes — operational and AI",
+      p:"Every failure check has a paired operational practice at the same altitude — enterprise failures get structure and incentive changes (operating model, governance, accountability), process failures get standard work and tooling, role failures get coaching and competency. Many fixes are pure operations and never involve AI. The 99 automation use cases sit alongside, for what practices alone can't do — and a process is never automated until it's standardized first.",
+      ex:"“Load one governed deadline matrix (pure operations) — then launch the watchdog that uses it.”" } },
   { id:"L4", c:"--l4", name:"The safety gates", tag:"What must be true before a fix is safe to launch: data captured, systems connected, process standardized, people ready.",
     chips:["<b>8</b> readiness dimensions","<b>98</b> concrete checks","weakest link decides"],
     detail:{ k:"Layer 4 · Readiness gates", h:"The safety gates",
@@ -161,8 +161,8 @@ const EDGES = [
     detail:{ h:"Every problem chain gets a price tag", p:"Failures produce defective work; each defect type drains a known value pool. That prices every finding — so the assessment ends in a ranked, dollar-denominated list, not a wall of observations.",
       ex:"“One deadline chain: $32M a year — the largest single finding at Meridian.”" } },
   { id:"E4", a:"L3", b:"L2", side:"L", bend:.5, label:"each fix prevents named failures",
-    detail:{ h:"Each fix prevents named failures", p:"Use cases are anchored to the failures they prevent (or the opportunities they open), and the link is audited both ways: no failure without a candidate fix, no fix without a reason to exist.",
-      ex:"“The watchdog exists because expired-deadline write-offs exist.”" } },
+    detail:{ h:"Each fix prevents named failures", p:"The pairing is one-to-one: every failure check has an operational practice that prevents it, and the AI use cases are anchored the same way. The link is audited both directions — no failure without a candidate fix, no fix without a reason to exist. Which family of fix to use (or both, in sequence) falls out of the finding itself.",
+      ex:"“Deadline write-offs → first the matrix (practice), then the watchdog (AI).”" } },
   { id:"E5", a:"L4", b:"L3", side:"L", bend:.5, label:"gates decide launch & autonomy",
     detail:{ h:"Gates decide launch — and how much autonomy", p:"A use case launches only when its gates open, and the gates also cap how independent it may be: recommend-only at first, more autonomy as evidence accumulates. Never automate a process that isn't standardized yet.",
       ex:"“Watchdog: launch after the matrix loads; recommend-mode first quarter.”" } },
@@ -320,8 +320,9 @@ function render() {
   }
   panel.style.removeProperty("--pc");
   panel.innerHTML = `<div class="kicker">Overview</div><h2>Read it top to bottom, then around</h2>
-    <p>The map of the work (1) anchors a catalog of how it breaks (2). Problems lock the safety
-    gates (4) that decide when the 99 fixes (3) may launch. Everything — problems and fixes alike —
+    <p>The map of the work (1) anchors a catalog of how it breaks (2). Every failure has a paired
+    fix (3) — an operational practice, an AI use case, or both in sequence — and the safety gates (4)
+    decide when automation may launch. Everything — problems, operational fixes, and AI alike —
     is priced from the same pools (5), and a quarterly loop (6) decides, funds, measures, and repeats.</p>
     <p><b>Click a layer</b> for what it is, <b>an arrow</b> for why the connection matters — or take
     the guided example above: one real problem, followed through all six layers.</p>`;
