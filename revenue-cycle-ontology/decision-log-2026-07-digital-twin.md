@@ -46,6 +46,40 @@ SCN-03 build surfaced the intended behavior that redeploys must be sized to the
 work shift: an under-staffed single-pass-clearance redesign drives pre-registration
 to ~144% utilization and *drops* both experience indices below baseline.
 
+## Addendum (same month) — payer response dynamics (config v1.0 → v1.1)
+
+Payer behavior made endogenous. `payer_dynamics:` in `twin-config.yaml` defines five
+counter-move rules (PR-01…PR-05: discretionary-category denial re-tightening, appeal
+slow-walk/documentation friction, auth-surface expansion, payment/records-request
+friction, downcode-and-underpay pressure), each a deterministic intensity state
+machine: trigger threshold on a provider-behavior metric, activation lag, ramp,
+decay, capped magnitude.
+
+Key design decisions:
+
+- **Triggers watch provider-intent parameters** (baseline + scenario effects, before
+  payer response), not net outcomes — the baseline run never self-triggers, and the
+  loop cannot oscillate. Payers respond to observable provider posture (submission
+  quality, appeal success, automation velocity), which is what the intent parameters
+  encode.
+- **Grounding**: rules, lags (4–6 months), and boundedness taken from the wargame
+  instruments (`whats-right-conference-2026/wargame-2/`): payers deploy decision
+  automation 2–3 years ahead of providers at near-zero marginal denial cost; PI
+  escalation targets discretionary clinical categories and is a fee-revenue growth
+  business on ASO books; aggression is bounded by MLR floors, Stars/CTM exposure,
+  prompt-pay statutes, and employer abrasion — hence capped multipliers with decay,
+  not unbounded escalation.
+- **Gross vs net reporting**: with dynamics active the engine runs each scenario
+  twice; every report carries the erosion table and all headline figures are net.
+  Regenerated examples: SCN-01 NPV $234M → $110M net (53% erosion); SCN-04 $296M →
+  $170M (43%); SCN-02/SCN-03 stay below all thresholds and provoke nothing. The
+  emergent strategic result — a quiet workflow redesign's unprovoked NPV (~$98M)
+  rivals the aggressive AI wave's post-erosion NPV — is the intended payoff of
+  modeling the adversary.
+- Scenario schema is backward-compatible (dynamics live in the config; scenarios may
+  opt out with `payer_dynamics: false`; CLI `--no-payer-dynamics`). Effect grammar
+  gained the `segments` root (payment-lag responses) for both scenarios and rules.
+
 ## Not done (deliberate)
 
 - No seasonality or payer-behavior response (exogenous lags/denial rates).

@@ -79,7 +79,8 @@ Five entity kinds, all defined in `twin-config.yaml`:
 For each month over the horizon (default 36):
 
 ```
-volumes → denial cascade → driver volumes → stage demand hours → pool capacity/OT/backlog
+volumes → provider-intent params (scenario effects) → payer response overlay
+       → denial cascade → driver volumes → stage demand hours → pool capacity/OT/backlog
        → lag chain (bill lag + payment lag + denial cycle + patient tail) → AR days
        → leakage (denial write-offs, bad debt, underpayment, charge leakage)
        → revenue, cash (AR-delta), operating cost → productivity → PXI / CXI
@@ -110,6 +111,36 @@ Experience is therefore **emergent, not asserted**: an automation scenario raise
 by removing rote touches and rework; an under-staffed redesign *lowers* PXI/CXI
 through backlog even if its intent was patient-friendly.
 
+### Payer response dynamics
+
+Payer behavior is **endogenous**: sustained provider improvement triggers lagged,
+capped counter-moves, defined as rules in `payer_dynamics:` in the config. Each rule
+is a deterministic intensity state machine (0–1): its trigger metric is computed from
+**provider-intent parameters** (baseline + scenario effects, *before* payer response)
+versus baseline — so the baseline run never self-triggers and the feedback loop
+cannot oscillate — and its responses are ordinary effect-grammar edits scaled by
+intensity. Shipped rules, grounded in the wargame instruments
+(`whats-right-conference-2026/wargame-2/`: payers run decision automation 2–3 years
+ahead of providers and deny at near-zero marginal cost; PI escalation targets
+discretionary clinical categories; aggression is bounded by MLR floors, Stars/CTM
+exposure, prompt-pay statutes, and employer abrasion):
+
+| Rule | Counter-move | Watches |
+|---|---|---|
+| PR-01 | Algorithmic denial re-tightening on discretionary categories (clinical validation, level-of-care) | denial-prevention gain |
+| PR-02 | Appeal slow-walk, documentation friction, marginal overturn erosion | appeal-recovery gain |
+| PR-03 | Auth-required service list expansion | auth automation share |
+| PR-04 | Payment friction / records-request escalation (ADR, itemized review) | write-off reduction |
+| PR-05 | Downcode & silent underpayment pressure | write-off reduction |
+
+When dynamics are active, scenario runs execute **twice** (gross and net) and the
+report carries a "Payer response dynamics" section with per-rule trigger months,
+intensities, and the gross→net erosion table. All headline figures are **net of
+payer response**. Modest programs that stay below every threshold provoke nothing —
+which the comparison table makes visible (see SCN-02/SCN-03 vs SCN-01/SCN-04).
+Disable with `--no-payer-dynamics` (CLI), `payer_dynamics: false` at scenario top
+level, or `enabled: false` in the config.
+
 ## Scenario grammar
 
 ```yaml
@@ -137,14 +168,17 @@ Composition rules: effects from multiple interventions on the same parameter app
 sequentially in file order; staffing deltas are additive; every effect ramps from the
 **baseline** value, so sequence phases by `start_month`. Shipped scenarios:
 
-| Scenario | Lever exercised | Steady-state (vs baseline) |
+| Scenario | Lever exercised | Steady-state, net of payer response |
 |---|---|---|
-| `SCN-01` AI & automation wave 1 | Eight governed `UC-*` deployments + attrition capture | +$66M/yr net revenue, −$18M/yr labor, PXI 57→66, CXI 70→87 |
-| `SCN-02` Staffing rebalance | Pure staffing: 40 FTE back→front, prevention team | +$17M/yr, near-cost-neutral |
-| `SCN-03` Front-end workflow redesign | Pure process change: single-pass clearance, POS discipline | +$37M/yr, PXI 57→67 |
-| `SCN-04` Transformation program | All three, sequenced per the investment-loop playbook | +$96M/yr, −$18M/yr labor, NPV ≈ $296M, PXI 76, CXI 88 |
+| `SCN-01` AI & automation wave 1 | Eight governed `UC-*` deployments + attrition capture | +$42M/yr net revenue (gross +$66M before payer counter-moves), −$18M/yr labor, PXI 57→66, CXI 70→86 |
+| `SCN-02` Staffing rebalance | Pure staffing: 40 FTE back→front, prevention team | +$17M/yr, near-cost-neutral, no payer reaction |
+| `SCN-03` Front-end workflow redesign | Pure process change: single-pass clearance, POS discipline | +$37M/yr, PXI 57→67, no payer reaction |
+| `SCN-04` Transformation program | All three, sequenced per the investment-loop playbook | +$66M/yr (gross +$96M), NPV ≈ $170M net, PXI 76, CXI 87 |
 
-(Exact figures regenerate from `twin.py`; see `examples/`.)
+(Exact figures regenerate from `twin.py`; see `examples/`. Note the strategic result
+the payer dynamics surface: the quiet workflow redesign's NPV (~$98M, unprovoked)
+lands close to the aggressive AI wave's post-erosion NPV (~$111M) — visibility to
+payers is itself a cost.)
 
 ## Calibration on Epic + AWS + Snowflake + Databricks
 
@@ -178,8 +212,10 @@ The intended cadence:
 ## Known simplifications
 
 Monthly (not daily) resolution; queues are fluid-flow, not per-account discrete
-events; payer behavior is exogenous (payment lags and denial rates don't retaliate);
-no seasonality (add via `growth_annual_pct` or per-month volume overrides if needed);
+events; payer response is modeled as bounded, deterministic counter-move rules —
+regulatory shocks, litigation, contract renegotiation cycles, and payer-specific
+strategy differences (ASO vs fully-insured vs MA books) are not; no seasonality
+(add via `growth_annual_pct` or per-month volume overrides if needed);
 patient-experience components are proxies bound to measurable KPIs, not survey
 instruments. These are deliberate: the twin optimizes for auditable, calibratable
 causality over micro-realism.

@@ -67,6 +67,15 @@ def load_config(path):
     for cause in cfg["denials"]["causes"].values():
         if cause["owner_stage"] not in ids:
             raise SystemExit(f"denial cause owner_stage {cause['owner_stage']} not a stage id")
+    for rule in (cfg.get("payer_dynamics") or {}).get("rules", []):
+        if rule["trigger"]["metric"] not in PAYER_METRICS:
+            raise SystemExit(f"payer rule {rule['id']}: unknown metric {rule['trigger']['metric']}")
+        for eff in rule.get("responses", []):
+            parts = eff["target"].split(".")
+            if parts[0] == "stages" and parts[1] not in ids:
+                raise SystemExit(f"payer rule {rule['id']}: unknown stage in {eff['target']}")
+            if parts[0] not in ("stages", "levers", "denials", "segments"):
+                raise SystemExit(f"payer rule {rule['id']}: unknown target root {eff['target']}")
     return cfg, warnings
 
 
@@ -96,7 +105,7 @@ def load_scenario(path, cfg):
             top = eff["target"].split(".")[0]
             if top == "stages" and eff["target"].split(".")[1] not in stage_ids:
                 warnings.append(f"{iv['id']}: effect target {eff['target']} — unknown stage")
-            elif top not in ("stages", "levers", "denials"):
+            elif top not in ("stages", "levers", "denials", "segments"):
                 warnings.append(f"{iv['id']}: effect target {eff['target']} — unknown root")
         for sc in iv.get("staffing", []):
             if sc["pool"] not in cfg["staffing"]["pools"]:
@@ -189,6 +198,54 @@ def scenario_costs(scenario, month):
 
 
 # ----------------------------------------------------------------------------
+# Payer response dynamics
+# ----------------------------------------------------------------------------
+# Payer behavior is endogenous: each rule watches a PROVIDER-INTENT metric
+# (baseline + scenario effects, before any payer response) so the baseline run
+# never self-triggers and the feedback cannot oscillate. Intensity climbs
+# 1/ramp_months per month while the lagged metric exceeds threshold, decays
+# 1/decay_months otherwise; responses are effect-grammar edits scaled by it.
+
+PAYER_METRICS = ("prevention_gain_pts", "appeal_recovery_gain_pts",
+                 "auth_automation_gain_pts", "writeoff_reduction_pts")
+
+
+def _denial_rates(cfg):
+    """(initial-denial dollar rate, write-off dollar rate) as shares of expected net."""
+    stage_q = {st["id"]: st.get("quality_index", 1.0) for st in cfg["stages"]}
+    idr = cfg["denials"]["initial_denial_rate_dollars"]
+    rate = wo = 0.0
+    for cause in cfg["denials"]["causes"].values():
+        d = idr * cause["share"] * stage_q[cause["owner_stage"]]
+        rate += d
+        wo += d * (1 - cause["recovery"])
+    return rate, wo
+
+
+def _appeal_recovery(cfg):
+    """Weighted recovery over appealable causes (appeal_rate >= 0.10)."""
+    num = den = 0.0
+    for cause in cfg["denials"]["causes"].values():
+        if cause["appeal_rate"] >= 0.10:
+            w = cause["share"] * cause["appeal_rate"]
+            num += w * cause["recovery"]
+            den += w
+    return num / den if den else 0.0
+
+
+def payer_metrics(base_cfg, provider):
+    b_rate, b_wo = _denial_rates(base_cfg)
+    p_rate, p_wo = _denial_rates(provider)
+    return {
+        "prevention_gain_pts": b_rate - p_rate,
+        "appeal_recovery_gain_pts": _appeal_recovery(provider) - _appeal_recovery(base_cfg),
+        "auth_automation_gain_pts": _scalar_mean(provider, "prior_auth", "auto_rate")
+                                    - _scalar_mean(base_cfg, "prior_auth", "auto_rate"),
+        "writeoff_reduction_pts": b_wo - p_wo,
+    }
+
+
+# ----------------------------------------------------------------------------
 # One simulated month
 # ----------------------------------------------------------------------------
 
@@ -196,7 +253,7 @@ def seg_value(param, seg):
     return param[seg] if isinstance(param, dict) else param
 
 
-def simulate(cfg, scenario=None):
+def simulate(cfg, scenario=None, payer=True):
     horizon = cfg["meta"]["horizon_months"]
     staff = cfg["staffing"]
     prod_hours_fte = staff["hours_month"] * staff["productive_pct"]
@@ -205,8 +262,30 @@ def simulate(cfg, scenario=None):
     months = []
     prev_ar_balance = None
 
+    pd_cfg = cfg.get("payer_dynamics") or {}
+    pd_rules = pd_cfg.get("rules", []) if (
+        payer and scenario and pd_cfg.get("enabled")
+        and scenario.get("payer_dynamics", True) is not False) else []
+    intensity, metric_history = {r["id"]: 0.0 for r in pd_rules}, []
+
     for m in range(1, horizon + 1):
         p, ramping = month_params(cfg, scenario, m)
+
+        # --- payer response overlay (on provider-intent params) -------------
+        if pd_rules:
+            metric_history.append(payer_metrics(cfg, p))
+            for rule in pd_rules:
+                idx = m - rule["lag_months"] - 1
+                lagged = metric_history[idx] if idx >= 0 else None
+                triggered = (lagged is not None and
+                             lagged[rule["trigger"]["metric"]] >= rule["trigger"]["threshold"])
+                i = intensity[rule["id"]]
+                i = min(1.0, i + 1.0 / max(1, rule["ramp_months"])) if triggered \
+                    else max(0.0, i - 1.0 / max(1, rule["decay_months"]))
+                intensity[rule["id"]] = i
+                if i > 0.0:
+                    for eff in rule["responses"]:
+                        apply_effect(p, eff, i)
         segs = p["segments"]
         seg_ids = list(segs)
         gf = (1 + growth) ** ((m - 1) / 12.0)
@@ -364,6 +443,8 @@ def simulate(cfg, scenario=None):
             "denied_claims": sum(denied_claims.values()),
             "appealed_claims": sum(appealed_claims.values()),
             "patient_resp": patient_resp,
+            "payer": dict(intensity),
+            "payer_pressure": (sum(intensity.values()) / len(intensity)) if intensity else 0.0,
             "fte_total": sum(fte.values()) + cfg["organization"]["overhead_fte"],
         })
     return months
@@ -445,6 +526,55 @@ def prev_delta(base, scen, month):
     return s["ar_balance"] - b["ar_balance"]
 
 
+def payer_section(cfg, base, scen, gross, wacc, years):
+    """Payer response dynamics report block. Empty if dynamics were not simulated."""
+    rules = (cfg.get("payer_dynamics") or {}).get("rules", [])
+    if gross is None or not rules:
+        return []
+    L = ["## Payer response dynamics\n"]
+    any_triggered = any(r["payer_pressure"] > 0 for r in scen)
+    if not any_triggered:
+        L.append("*No payer counter-response triggered: the program stays below every "
+                 "reaction threshold (see `payer_dynamics` in the config). Gross and "
+                 "net-of-payer-response results are identical.*\n")
+        return L
+    L.append("Payer behavior is endogenous in this run: sustained provider gains trigger "
+             "lagged, capped counter-moves. Intensities are 0–1 (1.0 = full response).\n")
+    L.append("| Rule | Counter-move | Trigger metric | First active | Peak | End |")
+    L.append("|---|---|---|---|---|---|")
+    for rule in rules:
+        rid = rule["id"]
+        series = [(r["month"], r["payer"].get(rid, 0.0)) for r in scen]
+        active = [(mo, v) for mo, v in series if v > 0]
+        first = f"M{active[0][0]}" if active else "—"
+        peak = max((v for _, v in series), default=0.0)
+        L.append(f"| {rid} | {rule['name']} | {rule['trigger']['metric']} ≥ "
+                 f"{rule['trigger']['threshold']} | {first} | {peak:.2f} | "
+                 f"{series[-1][1]:.2f} |")
+    last, g_last, b_last = scen[-1], gross[-1], base[-1]
+    rev_net = (last["revenue"] - b_last["revenue"]) * 12
+    rev_gross = (g_last["revenue"] - b_last["revenue"]) * 12
+    npv_net, npv_gross = npv(base, scen, wacc, years), npv(base, gross, wacc, years)
+    erosion_pct = (1 - npv_net / npv_gross) * 100 if npv_gross else 0.0
+    L.append("")
+    L.append("| Measure | Gross (no payer response) | Net (with payer response) | Erosion |")
+    L.append("|---|---|---|---|")
+    L.append(f"| Steady-state net revenue /yr | {delta_money(rev_gross)} | {delta_money(rev_net)} | "
+             f"{delta_money(rev_net - rev_gross)} |")
+    L.append(f"| {years}-year NPV | {delta_money(npv_gross)} | {delta_money(npv_net)} | "
+             f"{erosion_pct:.0f}% |")
+    L.append(f"| Net days in AR (end) | {g_last['ar_days']:.1f} | {last['ar_days']:.1f} | "
+             f"+{last['ar_days'] - g_last['ar_days']:.1f} d |")
+    L.append(f"| Initial denial rate (end) | {g_last['idr']*100:.1f}% | {last['idr']*100:.1f}% | "
+             f"+{(last['idr'] - g_last['idr'])*100:.1f} pt |")
+    L.append("")
+    L.append("*All headline figures elsewhere in this report are NET of payer response. "
+             "Responses are bounded (MLR floors, Stars/CTM exposure, prompt-pay statutes, "
+             "employer abrasion) and decay if the provider posture normalizes — see "
+             "`payer_dynamics` rationale fields in the config.*\n")
+    return L
+
+
 def kpi_table(cfg, last, base_last):
     rows = [
         ("KPI-IDR", "Initial denial rate ($)", f"{base_last['idr']*100:.1f}%", f"{last['idr']*100:.1f}%"),
@@ -472,7 +602,7 @@ def kpi_table(cfg, last, base_last):
     return rows
 
 
-def write_report(cfg, scenario, base, scen, out_path=None):
+def write_report(cfg, scenario, base, scen, out_path=None, gross=None):
     is_scn = scenario is not None
     last, base_last = scen[-1], base[-1]
     wacc = cfg["organization"]["wacc"]
@@ -536,6 +666,7 @@ def write_report(cfg, scenario, base, scen, out_path=None):
         onetime = sum(r["one_time_cost"] for r in scen)
         runrate = last["scenario_run_cost"] * 12
         L.append(f"- Program spend: {money(onetime)} one-time + {money(runrate)}/yr run-rate at maturity\n")
+        L.extend(payer_section(cfg, base, scen, gross, wacc, years))
     else:
         y1 = annualize(scen, 1)
         L.append(f"- Net revenue captured: {money(_sum(y1,'revenue'))}/yr on expected net {money(_sum(y1,'expected_net'))}")
@@ -620,7 +751,7 @@ def write_csv(months, path):
             "idr", "denial_writeoff", "bad_debt", "underpayment_leak", "charge_leak",
             "labor_cost", "ot_cost", "total_cost", "one_time_cost", "scenario_run_cost",
             "pxi", "cxi", "fte_total", "total_touches", "auto_touches",
-            "denied_claims", "appealed_claims"]
+            "denied_claims", "appealed_claims", "payer_pressure"]
     with open(path, "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(keys)
@@ -632,10 +763,11 @@ def write_json(cfg, scenario, base, scen, path):
     out = {
         "model": cfg["meta"]["id"], "version": cfg["meta"]["version"],
         "scenario": scenario["scenario"]["id"] if scenario else None,
-        "months": [{k: v for k, v in r.items() if k not in ("pools", "stages", "px_vals", "cx_vals")}
+        "months": [{k: v for k, v in r.items()
+                    if k not in ("pools", "stages", "px_vals", "cx_vals", "payer")}
                    for r in scen],
         "end_state": {"pools": scen[-1]["pools"], "px": scen[-1]["px_vals"],
-                      "cx": scen[-1]["cx_vals"]},
+                      "cx": scen[-1]["cx_vals"], "payer_rules": scen[-1]["payer"]},
         "baseline_end": {"ar_days": base[-1]["ar_days"], "pxi": base[-1]["pxi"],
                          "cxi": base[-1]["cxi"]},
     }
@@ -648,19 +780,26 @@ def compare_report(cfg, runs, out_path):
     years = cfg["reporting"]["npv_years"]
     L = ["# Digital twin — scenario comparison\n",
          f"*Model `{cfg['meta']['id']}` v{cfg['meta']['version']}; {years}-yr NPV at "
-         f"{wacc*100:.1f}% WACC. Generated by `twin.py`.*\n",
-         "| Scenario | Net rev Δ/yr (steady) | Op cost Δ/yr | AR days | NPV | PXI | CXI |",
-         "|---|---|---|---|---|---|---|"]
+         f"{wacc*100:.1f}% WACC. Figures are NET of payer response dynamics; the erosion "
+         f"column is gross-NPV minus net-NPV. Generated by `twin.py`.*\n",
+         "| Scenario | Net rev Δ/yr (steady) | Op cost Δ/yr | AR days | NPV | Payer erosion | PXI | CXI |",
+         "|---|---|---|---|---|---|---|---|"]
     b_last = base[-1]
-    L.append(f"| Baseline | — | — | {b_last['ar_days']:.1f} | — | {b_last['pxi']:.1f} | {b_last['cxi']:.1f} |")
-    for scenario, _, scen in runs[1:]:
+    L.append(f"| Baseline | — | — | {b_last['ar_days']:.1f} | — | — | "
+             f"{b_last['pxi']:.1f} | {b_last['cxi']:.1f} |")
+    for scenario, _, scen, gross in runs[1:]:
         last = scen[-1]
         rev = (last["revenue"] - b_last["revenue"]) * 12
         cost = (last["total_cost"] - last["one_time_cost"]
                 - (b_last["total_cost"] - b_last["one_time_cost"])) * 12
         v = npv(base, scen, wacc, years)
+        if gross is not None and any(r["payer_pressure"] > 0 for r in scen):
+            erosion = delta_money(v - npv(base, gross, wacc, years))
+        else:
+            erosion = "none"
         L.append(f"| {scenario['scenario']['name']} | {delta_money(rev)} | {delta_money(cost)} | "
-                 f"{last['ar_days']:.1f} | {delta_money(v)} | {last['pxi']:.1f} | {last['cxi']:.1f} |")
+                 f"{last['ar_days']:.1f} | {delta_money(v)} | {erosion} | "
+                 f"{last['pxi']:.1f} | {last['cxi']:.1f} |")
     text = "\n".join(L) + "\n"
     if out_path:
         Path(out_path).write_text(text)
@@ -678,6 +817,8 @@ def main():
     ap.add_argument("--csv", help="write monthly time series CSV here")
     ap.add_argument("--json", help="write JSON dump here")
     ap.add_argument("--diag", action="store_true", help="print baseline pool utilization diagnostics")
+    ap.add_argument("--no-payer-dynamics", action="store_true",
+                    help="disable endogenous payer response (report gross program value)")
     args = ap.parse_args()
 
     cfg, warns = load_config(args.config)
@@ -698,26 +839,33 @@ def main():
               f"CTC {_sum(y1,'total_cost')/_sum(y1,'cash')*100:.2f}%")
         return
 
+    payer_on = not args.no_payer_dynamics and bool(
+        (cfg.get("payer_dynamics") or {}).get("enabled"))
+
     if args.compare:
         runs = [(None, None, base)]
         for spath in args.compare:
             scn, swarns = load_scenario(spath, cfg)
             for w in swarns:
                 print(f"WARNING [{spath}]: {w}", file=sys.stderr)
-            runs.append((scn, spath, simulate(cfg, scn)))
+            net = simulate(cfg, scn, payer=payer_on)
+            gross = simulate(cfg, scn, payer=False) if payer_on else None
+            runs.append((scn, spath, net, gross))
         print(compare_report(cfg, runs, args.out))
         return
 
-    scenario = None
+    scenario, gross = None, None
     if args.scenario:
         scenario, swarns = load_scenario(args.scenario, cfg)
         for w in swarns:
             print(f"WARNING: {w}", file=sys.stderr)
-        scen = simulate(cfg, scenario)
+        scen = simulate(cfg, scenario, payer=payer_on)
+        if payer_on:
+            gross = simulate(cfg, scenario, payer=False)
     else:
         scen = base
 
-    report = write_report(cfg, scenario, base, scen, args.out)
+    report = write_report(cfg, scenario, base, scen, args.out, gross=gross)
     if not args.out:
         print(report)
     else:

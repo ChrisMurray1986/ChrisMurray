@@ -12,7 +12,7 @@
 meta:
   id: TWIN-BASE-10B
   name: "Archetype IDN — $10B NPR, single-instance Epic on AWS, Snowflake EDW, Databricks lakehouse"
-  version: "1.0"
+  version: "1.1"          # 1.1: payer response dynamics (endogenous payer behavior)
   as_of: "2026-07"
   horizon_months: 36
   stack:                       # neutral SYS-* is authoritative; names are located via vendor-crosswalks/
@@ -406,6 +406,96 @@ levers:
   surprise_bill_per_1k: 1.8        # FM-PATIENTWRONGBILL / FM-FA-MISS incidents per 1k statements
   queries_per_100_ip: 28           # CDI query volume on providers (burden)
   clinic_auth_burden: 0.45         # share of auth work falling on clinical staff (ROLE-PROVIDER)
+
+# ---------------------------------------------------------------------------
+# Payer response dynamics — payer behavior is endogenous: sustained provider
+# improvement triggers counter-moves. Each rule is a deterministic intensity
+# state machine: its trigger metric is computed from PROVIDER-INTENT parameters
+# (baseline + scenario effects, before payer response) versus baseline, so the
+# baseline run never self-triggers and there is no oscillation. When the lagged
+# metric exceeds threshold, intensity climbs by 1/ramp_months per month toward
+# 1.0; when it falls back below, intensity decays by 1/decay_months. Responses
+# are scenario-grammar effects scaled by intensity.
+#
+# Grounding (whats-right-conference-2026/wargame-2 instruments): payers run
+# decision automation 2-3 years ahead of providers and deny at near-zero
+# marginal cost, so counter-escalation is fast (policy bulletins monthly, auth
+# lists quarterly — lags of 4-6 months); payment-integrity escalation targets
+# DISCRETIONARY clinical categories (DRG downgrades, level-of-care, itemized
+# review), not technical ones; and aggression is bounded by MLR floors, Stars
+# /CTM exposure, prompt-pay statutes, and employer abrasion — hence capped
+# magnitudes and reversibility (decay) rather than unbounded escalation.
+# Magnitudes here are bounded-countermove defaults; calibrate to your own
+# payer-mix (ASO share, MA Stars exposure, prompt-pay statutes in your states).
+#
+# Metrics (engine-computed, all "provider-intent minus baseline"):
+#   prevention_gain_pts      reduction in initial-denial dollar rate from upstream quality
+#   appeal_recovery_gain_pts weighted recovery gain on appealable causes (appeal_rate >= 0.10)
+#   auth_automation_gain_pts prior-auth stage auto_rate gain
+#   writeoff_reduction_pts   reduction in denial write-off rate (share of expected net)
+# ---------------------------------------------------------------------------
+payer_dynamics:
+  enabled: true
+  rules:
+    - id: PR-01
+      name: "Algorithmic denial re-tightening on discretionary categories"
+      rationale: "Provider prevents denials at scale -> payer PI engines re-tighten where medical judgment gives cover (clinical validation, level-of-care)"
+      trigger: {metric: prevention_gain_pts, threshold: 0.015}
+      lag_months: 5          # quarterly PI cycle + provider-notice period
+      ramp_months: 6
+      decay_months: 12
+      responses:
+        - {target: denials.causes.medical_necessity.share, mult: 1.25}
+        - {target: denials.causes.documentation.share, mult: 1.20}
+        - {target: denials.causes.other_clinical.share, mult: 1.20}
+
+    - id: PR-02
+      name: "Appeal slow-walk & documentation friction"
+      rationale: "Appeal success at AI scale breaks the payer's appeals-asymmetry calculus -> longer decision clocks, heavier documentation demands, marginal overturn erosion"
+      trigger: {metric: appeal_recovery_gain_pts, threshold: 0.04}
+      lag_months: 4
+      ramp_months: 6
+      decay_months: 12
+      responses:
+        - {target: denials.denial_cycle_days, delta: 10}
+        - {target: stages.appeals.min_per_touch, mult: 1.20}
+        - {target: denials.causes.medical_necessity.recovery, delta: -0.02}
+        - {target: denials.causes.documentation.recovery, delta: -0.02}
+
+    - id: PR-03
+      name: "Auth surface expansion"
+      rationale: "Provider automates auth submission/tracking -> payer expands the auth-required service list (quarterly list updates; near-zero payer marginal cost)"
+      trigger: {metric: auth_automation_gain_pts, threshold: 0.20}
+      lag_months: 6
+      ramp_months: 8
+      decay_months: 12
+      responses:
+        - {target: stages.prior_auth.applies, mult: 1.15}
+        - {target: denials.causes.prior_auth.share, mult: 1.08}
+
+    - id: PR-04
+      name: "Payment friction & records-request escalation"
+      rationale: "Cleaner claims and faster capture -> payers offset with ADR/itemized-bill review before payment (bounded by prompt-pay statutes)"
+      trigger: {metric: writeoff_reduction_pts, threshold: 0.005}
+      lag_months: 4
+      ramp_months: 6
+      decay_months: 10
+      responses:
+        - {target: segments.inpatient.payment_lag_days, delta: 3}
+        - {target: segments.hosp_outpatient.payment_lag_days, delta: 2}
+        - {target: segments.professional.payment_lag_days, delta: 1}
+        - {target: stages.ar_followup.touch_rate, mult: 1.10}
+
+    - id: PR-05
+      name: "Downcode & silent underpayment pressure"
+      rationale: "When overt denials stop working, variance moves to underpayment (DRG downgrades, line-item repricing) — quieter, harder to fight"
+      trigger: {metric: writeoff_reduction_pts, threshold: 0.006}
+      lag_months: 6
+      ramp_months: 8
+      decay_months: 12
+      responses:
+        - {target: levers.underpayment_pct, mult: 1.20}
+        - {target: stages.underpayment_recovery.touch_rate, mult: 1.15}
 
 # ---------------------------------------------------------------------------
 # Experience model — composite indices 0-100 (50 = archetype baseline band).

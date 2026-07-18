@@ -107,6 +107,26 @@ bindings:
     confidence: needs-sme-validation
     note: "The twin computes PXI/CXI from operational state; these observed series validate (not drive) the indices"
 
+  payer_response_calibration:
+    target: "payer_dynamics.rules.* (thresholds, lags, response magnitudes)"
+    module: >
+      Payer policy/bulletin monitoring (SYS-POLICYMON, process 11.3) for auth-list
+      and policy-change events; Clarity remit trend by CARC x payer x month for
+      denial re-tightening and downcode detection; ADR/records-request volumes from
+      audit tracking (SYS-AUDITTRACK) and HIM ROI logs; payment-lag trend by payer
+      from remit timestamps; appeal decision-clock trend from denial workqueues
+    derivation: >
+      Detect counter-moves as level shifts AFTER your own improvement ramps:
+      cause-level denial-rate rebound in discretionary categories, payment-lag
+      creep, auth-list growth, appeal-cycle lengthening. Fit each rule's lag from
+      observed event timing (your improvement go-live -> payer policy change date);
+      fit magnitudes from the rebound size. Wargame base rates
+      (whats-right-conference-2026/wargame-2/instruments/) are the priors.
+    snowflake: "twin_mart.payer_countermoves"
+    databricks_job: "payer_response_tracker (monthly; changepoint detection by payer x cause)"
+    confidence: needs-sme-validation
+    note: "Segment by book where possible — ASO/self-funded books escalate PI hardest (fee revenue), fully-insured is MLR-bounded, MA is Stars-constrained near-term"
+
   scenario_run_costs:
     target: "interventions.costs"
     module: "AWS/Snowflake/Databricks consumption tags + vendor contracts + internal build capitalization"
