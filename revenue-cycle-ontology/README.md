@@ -101,6 +101,13 @@ improvement, workforce, enabling technology, vendor management, and performance 
 structured as named failure modes (`OFM-*`, with field-observable signals) and the best
 practices (`BP-*`) that prevent them, each coupled to the AI-stack gates it degrades or enables.
 
+A fourth companion, the **digital twin** (`digital-twin/`), turns the ontology into a
+deterministic simulation of the whole operation: a staged claim-lifecycle flow model whose
+stages bind process IDs, staffing pools bind `ROLE-*`, denial causes bind `FM-*`, and outputs
+bind `KPI-*`. Scenarios (workflow redesign, AI/automation deployments bound to `UC-*` IDs,
+staffing changes) are ramped parameter overlays; the engine reports impact on financials,
+productivity, and patient/caregiver experience versus baseline.
+
 A third layer, the **vendor crosswalks** (`vendor-crosswalks/`), binds the vendor-neutral
 facets, processes, and failure modes to named EHR modules (Epic, Oracle Health): three-state
 native-capability maturity (licensed / lit / configured-to-depth), per-module depth markers

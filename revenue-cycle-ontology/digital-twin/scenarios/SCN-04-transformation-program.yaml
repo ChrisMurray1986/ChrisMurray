@@ -1,0 +1,199 @@
+# Scenario: full transformation program — workflow redesign first, automation on
+# top, staffing captured last. Sequencing follows the investment-loop playbook
+# (ai-automation/11): fix the workflow before automating it, take capacity out
+# only after capability is proven. This is SCN-03 (front-end redesign, months
+# 2-8) layered with the SCN-01 automation portfolio (months 4-15) and a deeper
+# combined staffing capture.
+
+scenario:
+  id: SCN-04
+  name: "Transformation program (workflow + AI + staffing)"
+  description: >
+    Three-year integrated program: single-pass financial clearance redesign,
+    then the eight-UC automation wave on the redesigned workflow, then
+    attrition-based staffing capture across nine pools (~355 net FTE). Where
+    SCN-01 and SCN-03 touch the same parameter, the later automation ramp
+    carries the parameter further (effects compose sequentially).
+
+interventions:
+  # ---- Phase 1: workflow redesign (from SCN-03) ----
+  - id: INT-W1
+    name: "Single-pass financial clearance"
+    type: workflow
+    start_month: 2
+    ramp_months: 7
+    effects:
+      - {target: stages.preregistration.touch_rate, set: 0.75}
+      - {target: stages.preregistration.min_per_touch, set: 9}
+      - {target: stages.eligibility.touch_rate, set: 0.18}
+      - {target: stages.registration.touch_rate, set: 0.80}
+      - {target: stages.estimates_counseling.applies.hosp_outpatient, set: 0.45}
+      - {target: levers.financial_clearance_rate, set: 0.93}
+      - {target: levers.estimate_accuracy, set: 0.82}
+      - {target: levers.surprise_bill_per_1k, set: 1.0}
+    staffing:
+      # redeploy sized to the work shift: single-pass clearance nearly doubles
+      # prereg demand (richer 9-min touches) while draining eligibility and
+      # day-of-service registration work
+      - {pool: prereg, fte_delta: 85, start_month: 2, glide_months: 7, mechanism: redeploy}
+      - {pool: registration, fte_delta: -40, start_month: 3, glide_months: 7, mechanism: redeploy}
+      - {pool: eligibility, fte_delta: -30, start_month: 3, glide_months: 7, mechanism: redeploy}
+      - {pool: estimates, fte_delta: 8, start_month: 2, glide_months: 4, mechanism: redeploy}
+    costs: {one_time: 1900000, run_rate_annual: 400000}
+
+  - id: INT-W2
+    name: "Auth at order entry + POS collection discipline"
+    type: workflow
+    start_month: 3
+    ramp_months: 6
+    effects:
+      - {target: levers.pos_collection_rate, set: 0.48}
+      - {target: levers.selfpay_yield, set: 0.685}
+    costs: {one_time: 400000, run_rate_annual: 0}
+
+  # ---- Phase 2: automation wave on the redesigned workflow (from SCN-01) ----
+  - id: INT-A1
+    name: "Auth submission agent + status tracking bots"
+    type: ai_automation
+    use_cases: [UC-01-08, UC-01-09]
+    autonomy: A3
+    risk_tier: R1
+    start_month: 5
+    ramp_months: 6
+    effects:
+      - {target: stages.prior_auth.auto_rate, set: 0.60}
+      - {target: stages.prior_auth.quality_index, set: 0.65}    # redesign + agent compound
+      - {target: levers.clinic_auth_burden, set: 0.25}
+    staffing:
+      - {pool: prior_auth, fte_delta: -35, start_month: 12, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 2400000, run_rate_annual: 1100000}
+
+  - id: INT-A2
+    name: "Eligibility orchestration + coverage discovery"
+    type: ai_automation
+    use_cases: [UC-01-04, UC-01-05]
+    autonomy: A4
+    risk_tier: R4
+    start_month: 4
+    ramp_months: 5
+    effects:
+      - {target: stages.eligibility.auto_rate, set: 0.80}
+      - {target: stages.eligibility.quality_index, set: 0.62}
+      - {target: stages.registration.quality_index, set: 0.80}
+    staffing:
+      - {pool: eligibility, fte_delta: -20, start_month: 10, glide_months: 6, mechanism: attrition}
+    costs: {one_time: 1500000, run_rate_annual: 700000}
+
+  - id: INT-A3
+    name: "Autonomous coding expansion"
+    type: ai_automation
+    use_cases: [UC-05-01]
+    autonomy: A3
+    risk_tier: R1
+    start_month: 6
+    ramp_months: 9
+    effects:
+      - {target: stages.coding.auto_rate.inpatient, set: 0.10}
+      - {target: stages.coding.auto_rate.hosp_outpatient, set: 0.55}
+      - {target: stages.coding.auto_rate.professional, set: 0.65}
+      - {target: stages.coding.quality_index, set: 0.85}
+      - {target: stages.coding.dwell_days, set: 1.2}
+    staffing:
+      - {pool: coding, fte_delta: -45, start_month: 14, glide_months: 10, mechanism: attrition}
+    costs: {one_time: 3200000, run_rate_annual: 2400000}
+
+  - id: INT-A4
+    name: "Claim edit resolution agent"
+    type: ai_automation
+    use_cases: [UC-06-02, UC-06-01]
+    autonomy: A3
+    risk_tier: R1
+    start_month: 7
+    ramp_months: 6
+    effects:
+      - {target: stages.claim_edit.auto_rate, set: 0.55}
+      - {target: stages.claim_edit.quality_index, set: 0.78}
+      - {target: stages.claim_edit.dwell_days, set: 0.8}
+    staffing:
+      - {pool: billing, fte_delta: -25, start_month: 13, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 1800000, run_rate_annual: 900000}
+
+  - id: INT-A5
+    name: "Intelligent auto-posting & reconciliation"
+    type: ai_automation
+    use_cases: [UC-07-01]
+    autonomy: A3
+    risk_tier: R2
+    start_month: 8
+    ramp_months: 5
+    effects:
+      - {target: stages.payment_posting.touch_rate, set: 0.09}
+      - {target: stages.cash_recon.auto_rate, set: 0.40}
+    staffing:
+      - {pool: posting, fte_delta: -25, start_month: 13, glide_months: 6, mechanism: attrition}
+    costs: {one_time: 900000, run_rate_annual: 500000}
+
+  - id: INT-A6
+    name: "Denial triage AI + appeal packet generation"
+    type: ai_automation
+    use_cases: [UC-08-02, UC-08-03]
+    autonomy: A2
+    risk_tier: R1
+    start_month: 6
+    ramp_months: 6
+    effects:
+      - {target: stages.denial_triage.auto_rate, set: 0.70}
+      - {target: stages.appeals.min_per_touch, set: 26}
+      - {target: denials.causes.prior_auth.recovery, set: 0.80}
+      - {target: denials.causes.medical_necessity.recovery, set: 0.70}
+      - {target: denials.causes.documentation.recovery, set: 0.76}
+      - {target: denials.causes.patient_status.recovery, set: 0.74}
+    staffing:
+      - {pool: denials, fte_delta: -20, start_month: 12, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 1600000, run_rate_annual: 1000000}
+
+  - id: INT-A7
+    name: "Claim status bot fleet + AR prioritization"
+    type: ai_automation
+    use_cases: [UC-09-02, UC-09-01]
+    autonomy: A4
+    risk_tier: R4
+    start_month: 5
+    ramp_months: 6
+    effects:
+      - {target: stages.ar_followup.auto_rate, set: 0.55}
+      - {target: stages.ar_followup.touch_rate, set: 0.19}
+    staffing:
+      - {pool: ar_followup, fte_delta: -85, start_month: 11, glide_months: 12, mechanism: attrition}
+    costs: {one_time: 1400000, run_rate_annual: 800000}
+
+  - id: INT-A8
+    name: "Conversational patient billing agent"
+    type: ai_automation
+    use_cases: [UC-10-03]
+    autonomy: A3
+    risk_tier: R3
+    start_month: 9
+    ramp_months: 8
+    effects:
+      - {target: stages.patient_customer_service.auto_rate, set: 0.35}
+      - {target: stages.selfpay_followup.auto_rate, set: 0.35}
+      - {target: levers.self_service_rate, set: 0.45}
+      - {target: levers.first_contact_resolution, set: 0.80}
+    staffing:
+      - {pool: pfs, fte_delta: -30, start_month: 15, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 1200000, run_rate_annual: 900000}
+
+  # ---- Phase 3: prevention program locks in the gains ----
+  - id: INT-P1
+    name: "Denial prevention program (8.5) on automated telemetry"
+    type: workflow
+    start_month: 10
+    ramp_months: 9
+    effects:
+      - {target: stages.claim_submission.quality_index, set: 0.80}
+      - {target: stages.utilization_review.quality_index, set: 0.90}
+      - {target: stages.cdi_review.quality_index, set: 0.90}
+    staffing:
+      - {pool: denials, fte_delta: -8, start_month: 10, glide_months: 3, mechanism: redeploy}
+    costs: {one_time: 300000, run_rate_annual: 200000}

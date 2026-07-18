@@ -1,0 +1,50 @@
+# Scenario: staffing rebalance — no AI, no new technology. Tests the twin's
+# staffing lever in isolation: shift 40 FTE from back-end AR follow-up to
+# front-end financial clearance, and stand up a denial-prevention feedback team
+# (process 8.5) from within the denials pool.
+#
+# Quality effects are the modeled consequence of front-end coverage: more
+# clearance capacity worked pre-service means fewer FM-ELIGLAPSE / FM-NOAUTH /
+# FM-DUPMRN defects reaching the payer (feeds-back-to relationships in the base
+# ontology). Effects are deliberately modest versus the AI scenario.
+
+scenario:
+  id: SCN-02
+  name: "Staffing rebalance to the front end"
+  description: >
+    Net-zero FTE change: 40 AR follow-up FTEs retrained and redeployed into
+    prior auth (+15), eligibility (+10), and pre-registration (+15); 12 denials
+    FTEs re-missioned into a denial-prevention program (8.5) driving root-cause
+    fixes upstream. No automation added.
+
+interventions:
+  - id: INT-01
+    name: "Redeploy 40 back-end FTE to financial clearance"
+    type: staffing
+    start_month: 2
+    ramp_months: 4
+    effects:
+      - {target: stages.prior_auth.quality_index, set: 0.88}
+      - {target: stages.eligibility.quality_index, set: 0.90}
+      - {target: stages.registration.quality_index, set: 0.92}
+      - {target: levers.financial_clearance_rate, set: 0.91}
+    staffing:
+      - {pool: ar_followup, fte_delta: -40, start_month: 2, glide_months: 4, mechanism: redeploy}
+      - {pool: prior_auth, fte_delta: 15, start_month: 2, glide_months: 4, mechanism: redeploy}
+      - {pool: eligibility, fte_delta: 10, start_month: 2, glide_months: 4, mechanism: redeploy}
+      - {pool: prereg, fte_delta: 15, start_month: 2, glide_months: 4, mechanism: redeploy}
+    costs: {one_time: 350000, run_rate_annual: 0}     # retraining & transition
+
+  - id: INT-02
+    name: "Denial prevention program (8.5) — root-cause feedback loops"
+    type: workflow
+    start_month: 3
+    ramp_months: 9
+    effects:
+      # prevention team drives upstream defect reduction across owned causes
+      - {target: stages.claim_edit.quality_index, set: 0.90}
+      - {target: stages.claim_submission.quality_index, set: 0.85}   # FM-TFL alarms
+      - {target: stages.utilization_review.quality_index, set: 0.93}
+    staffing:
+      - {pool: denials, fte_delta: -12, start_month: 3, glide_months: 3, mechanism: redeploy}
+    costs: {one_time: 150000, run_rate_annual: 0}

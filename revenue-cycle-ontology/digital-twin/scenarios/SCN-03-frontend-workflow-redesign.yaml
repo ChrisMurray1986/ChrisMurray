@@ -1,0 +1,57 @@
+# Scenario: front-end workflow redesign — process change only (no AI, minimal
+# staffing movement). Consolidates fragmented pre-service touches into a
+# single-pass financial clearance workflow and moves patient-financial
+# conversations pre-service.
+#
+# Workflow semantics: single-touch clearance raises minutes-per-touch (one rep
+# does eligibility + benefits + estimate + counseling in one contact) while
+# cutting total touch volume and downstream exception work; POS collection and
+# estimate levers move because the conversation now happens before service.
+
+scenario:
+  id: SCN-03
+  name: "Front-end workflow redesign (single-pass clearance)"
+  description: >
+    Registration-to-clearance redesign: one consolidated pre-service contact per
+    account (pre-reg + eligibility + estimate + counseling), auth submitted at
+    order entry, POS collection scripted with an accurate estimate in hand.
+    Tests pure workflow change: fewer, richer touches; defects prevented at
+    source; better patient financial experience.
+
+interventions:
+  - id: INT-01
+    name: "Single-pass financial clearance"
+    type: workflow
+    start_month: 2
+    ramp_months: 7
+    effects:
+      - {target: stages.preregistration.touch_rate, set: 0.75}   # more accounts cleared pre-service...
+      - {target: stages.preregistration.min_per_touch, set: 9}   # ...in one richer contact
+      - {target: stages.eligibility.touch_rate, set: 0.18}       # exception review only
+      - {target: stages.registration.touch_rate, set: 0.80}      # day-of-service rework drops
+      - {target: stages.estimates_counseling.applies.hosp_outpatient, set: 0.45}
+      - {target: stages.eligibility.quality_index, set: 0.80}
+      - {target: stages.registration.quality_index, set: 0.82}
+      - {target: levers.financial_clearance_rate, set: 0.93}
+      - {target: levers.estimate_accuracy, set: 0.82}
+      - {target: levers.surprise_bill_per_1k, set: 1.0}
+    staffing:
+      # redeploy sized to the work shift: single-pass clearance nearly doubles
+      # prereg demand (richer 9-min touches) while draining eligibility and
+      # day-of-service registration work
+      - {pool: prereg, fte_delta: 85, start_month: 2, glide_months: 7, mechanism: redeploy}
+      - {pool: registration, fte_delta: -40, start_month: 3, glide_months: 7, mechanism: redeploy}
+      - {pool: eligibility, fte_delta: -30, start_month: 3, glide_months: 7, mechanism: redeploy}
+      - {pool: estimates, fte_delta: 8, start_month: 2, glide_months: 4, mechanism: redeploy}
+    costs: {one_time: 1500000, run_rate_annual: 400000}   # redesign, training, scripting, QA
+
+  - id: INT-02
+    name: "Auth at order entry + POS collection discipline"
+    type: workflow
+    start_month: 4
+    ramp_months: 6
+    effects:
+      - {target: stages.prior_auth.quality_index, set: 0.82}     # auth secured before scheduling
+      - {target: levers.pos_collection_rate, set: 0.48}
+      - {target: levers.selfpay_yield, set: 0.685}               # pre-service clarity converts
+    costs: {one_time: 400000, run_rate_annual: 0}

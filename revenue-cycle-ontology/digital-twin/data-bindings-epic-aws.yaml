@@ -1,0 +1,124 @@
+# Digital twin data bindings — Epic on AWS + Snowflake + Databricks.
+# DISPOSABLE vendor layer (repo invariant #1): locates each twin-config parameter
+# on a named stack; never defines twin semantics. as_of is load-bearing — Epic
+# packaging and cloud service names churn; re-verify entries before relying on them.
+# Schema follows vendor-crosswalks conventions (module, confidence, as_of).
+
+meta:
+  as_of: "2026-07"
+  stack:
+    ehr: "Epic single-instance (Chronicles), hosted on AWS"
+    analytics_source: "Clarity (nightly relational) + Caboodle (dimensional)"
+    warehouse: "Snowflake — curated RCM marts (twin_* schema suggested)"
+    lakehouse: "Databricks — calibration jobs, drift monitoring, ML scoring"
+    movement: "Clarity/Caboodle → S3 landing (DMS/HVR/Fivetran-class) → Snowflake; Databricks reads Snowflake or S3 via external tables"
+  confidence_legend:
+    high: "Stable, widely deployed source of truth"
+    medium: "Real capability; table/module naming varies by build — verify with your Clarity SME"
+    needs-sme-validation: "Structured hypothesis; confirm on site before automating the feed"
+  refresh:
+    volumes_financials: monthly
+    touch_times_staffing: quarterly
+    denial_causes: quarterly
+    experience_levers: quarterly
+
+# Each binding: twin-config path -> where it is measured. `derivation` states the
+# calculation contract, not exact SQL (builds differ).
+bindings:
+
+  segments:
+    target: "segments.*.monthly_accounts / avg_net_rev / payment_lag_days / denial_count_rate / patient_balance_rate"
+    module: "Clarity HB/PB account + transaction tables (HSP_ACCOUNT, ARPB_TRANSACTIONS-class); Caboodle BillingAccountFact"
+    derivation: >
+      12-month trailing: billed accounts by segment (HB IP / HB OP / PB) per month;
+      net payments+expected per account; first-claim-to-final-payment lag
+      dollar-weighted; denied-claim share by count; share of accounts with patient
+      balance after insurance.
+    snowflake: "twin_mart.segment_monthly"
+    databricks_job: "calibrate_segments (monthly)"
+    confidence: high
+
+  staffing_pools:
+    target: "staffing.pools.*.fte / loaded_cost"
+    module: "HR/ERP roster (Workday-class) joined to Epic security templates & workqueue assignment for pool mapping"
+    derivation: "Map job codes -> ROLE-* -> pools; loaded cost = salary + benefits burden from GL"
+    snowflake: "twin_mart.staffing_roster"
+    databricks_job: "calibrate_staffing (quarterly)"
+    confidence: medium
+    note: "Pool membership is the modeling decision; job-code mapping table is source-controlled"
+
+  stage_touch_parameters:
+    target: "stages.*.touch_rate / min_per_touch / auto_rate / applies"
+    module: "HB/PB account activity & workqueue history (touch_logging facet, vendor-crosswalks/epic.yaml); Cadence/Prelude event logs for front-end stages"
+    derivation: >
+      Touches per account by stage = activity rows mapped stage-wise via
+      activity-code -> stage crosswalk; min_per_touch from inter-event gaps
+      (trimmed median); auto_rate = bot/interface user IDs (ROLE-BOT) share of
+      touches; applies = share of accounts with >=1 stage event.
+    snowflake: "twin_mart.stage_touches_monthly"
+    databricks_job: "calibrate_touch_times (quarterly; survival-model trim for idle gaps)"
+    confidence: medium
+    note: "Vendor/bolt-on touches must be fed back into the activity log or the twin under-counts automation (epic.yaml touch_logging depth marker)"
+
+  stage_dwell:
+    target: "stages.*.dwell_days (prebill chain)"
+    module: "Clarity DNFB/candidate-for-billing snapshots; charge lag from service-date vs post-date"
+    derivation: "KPI-CHGLAG, coding turnaround, edit dwell from stage timestamps"
+    snowflake: "twin_mart.prebill_lags"
+    confidence: high
+
+  denial_causes:
+    target: "denials.initial_denial_rate_dollars / causes.*.share / recovery / appeal_rate"
+    module: "Clarity remit tables (CARC/RARC) + denial workqueues; appeal outcomes per denial_labels/appeal_outcomes facets (vendor-crosswalks/epic.yaml)"
+    derivation: >
+      12-month denied dollars / expected; CARC x context -> cause mapping table
+      (the attribution table is modeling work, not platform work — ai-automation
+      file 14 §1); recovery = ultimately-paid share of denied dollars by cause;
+      appeal_rate = formal appeals / denied claims by cause.
+    snowflake: "twin_mart.denials_by_cause"
+    databricks_job: "calibrate_denials (quarterly); drift alert when cause shares move >2pts"
+    confidence: high
+    note: "If appeal outcomes live in letter PDFs, this binding is blocked until they are structured (appeal_outcomes facet)"
+
+  quality_index_monitoring:
+    target: "stages.*.quality_index (scenario tracking, not baseline — baseline is 1.0 by construction)"
+    module: "Same denial-cause mart, filtered to owner-stage cohorts pre/post intervention"
+    derivation: "quality_index estimate = cause denial rate (post) / cause denial rate (baseline window)"
+    databricks_job: "intervention_effect_tracker (monthly during ramps)"
+    confidence: medium
+
+  financial_levers:
+    target: "levers.* (underpayment, selfpay_yield, pos_collection_rate, charge leakage, estimate_accuracy...)"
+    module: >
+      Contract engine variance (SYS-CONTRACT / Resolute expected reimbursement) for
+      underpayment; self-pay cohort collections for selfpay_yield; POS payments at
+      Prelude/Cadence check-in for pos_collection_rate; revenue-integrity audit
+      findings for charge_leakage_pct; GFE-vs-final variance for estimate_accuracy
+    snowflake: "twin_mart.levers_monthly"
+    confidence: medium
+
+  experience_components:
+    target: "experience.* component observations (PXI/CXI validation)"
+    module: >
+      KPI-CLEARANCE / KPI-COMPLAINTS from access & PFS reporting; MyChart adoption
+      for self_service_rate; call-center platform for first_contact_resolution;
+      CDI query volumes (KPI-QUERYRATE) and clinic auth touches for provider burden;
+      HR attrition/engagement for CXI validation
+    confidence: needs-sme-validation
+    note: "The twin computes PXI/CXI from operational state; these observed series validate (not drive) the indices"
+
+  scenario_run_costs:
+    target: "interventions.costs"
+    module: "AWS/Snowflake/Databricks consumption tags + vendor contracts + internal build capitalization"
+    derivation: "Tag automation workloads per UC-*; run_rate_annual = cloud + license + support; one_time = build + integration + validation"
+    confidence: medium
+
+pipeline_notes: |
+  Suggested loop: (1) nightly Clarity/Caboodle extracts land in S3 and load to
+  Snowflake raw; (2) dbt-class models build twin_mart.* tables above; (3) quarterly
+  Databricks calibration jobs emit a twin-config candidate diff (YAML) reviewed and
+  committed by a human — config changes are code review, never silent; (4) twin runs
+  (baseline + active scenarios) are executed from the repo and their reports
+  committed to examples/ as records; (5) intervention_effect_tracker compares
+  live KPI movement against the scenario's simulated trajectory — divergence is the
+  signal to recalibrate effects, exactly like the value model's quarterly true-up.

@@ -1,0 +1,156 @@
+# Scenario: AI & automation wave 1 — a governed portfolio of eight UC-* deployments.
+# Every intervention binds the use-case IDs it deploys (validated against
+# ai-automation/scoring/gate-vectors.yaml), declares autonomy/risk per the
+# ceiling rule (autonomy may never exceed the risk tier's ceiling), and maps its
+# operational effects onto twin stage/lever parameters.
+#
+# Effect semantics: `set` ramps the parameter linearly from its baseline value to
+# the target over ramp_months starting at start_month; `mult` scales it.
+# quality_index < 1.0 means fewer defects at that owner stage -> fewer denials
+# from the FM-* causes it owns. Staffing reductions are attrition-glided and
+# deliberately lag the capability ramp (capacity comes out only after the
+# automation is proven).
+
+scenario:
+  id: SCN-01
+  name: "AI & automation wave 1"
+  description: >
+    Eight-intervention automation portfolio across the cycle: auth submission and
+    tracking, eligibility orchestration and coverage discovery, autonomous coding
+    expansion, edit resolution, intelligent posting, denial/appeal AI, AR status
+    bots, and a patient billing agent. Staffing capture is attrition-based and
+    trails each capability by ~2 quarters.
+
+interventions:
+  - id: INT-01
+    name: "Auth submission agent + status tracking bots"
+    type: ai_automation
+    use_cases: [UC-01-08, UC-01-09]
+    autonomy: A3
+    risk_tier: R1
+    start_month: 3
+    ramp_months: 6
+    effects:
+      - {target: stages.prior_auth.auto_rate, set: 0.60}
+      - {target: stages.prior_auth.quality_index, set: 0.72}   # FM-NOAUTH denials down 28%
+      - {target: levers.clinic_auth_burden, set: 0.28}
+    staffing:
+      - {pool: prior_auth, fte_delta: -35, start_month: 10, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 2400000, run_rate_annual: 1100000}
+
+  - id: INT-02
+    name: "Eligibility orchestration + coverage discovery sweep"
+    type: ai_automation
+    use_cases: [UC-01-04, UC-01-05]
+    autonomy: A4
+    risk_tier: R4
+    start_month: 2
+    ramp_months: 5
+    effects:
+      - {target: stages.eligibility.auto_rate, set: 0.80}
+      - {target: stages.eligibility.quality_index, set: 0.70}  # FM-ELIGLAPSE/FM-COB/FM-PLANMAP
+      - {target: stages.registration.quality_index, set: 0.85}
+      - {target: levers.selfpay_yield, set: 0.66}              # found coverage converts self-pay
+    staffing:
+      - {pool: eligibility, fte_delta: -20, start_month: 8, glide_months: 6, mechanism: attrition}
+    costs: {one_time: 1500000, run_rate_annual: 700000}
+
+  - id: INT-03
+    name: "Autonomous coding expansion (OP/profee; IP assist)"
+    type: ai_automation
+    use_cases: [UC-05-01]
+    autonomy: A3
+    risk_tier: R1
+    start_month: 4
+    ramp_months: 9
+    effects:
+      - {target: stages.coding.auto_rate.inpatient, set: 0.10}
+      - {target: stages.coding.auto_rate.hosp_outpatient, set: 0.55}
+      - {target: stages.coding.auto_rate.professional, set: 0.65}
+      - {target: stages.coding.quality_index, set: 0.85}       # FM-CODEERR denials down
+      - {target: stages.coding.dwell_days, set: 1.2}           # coding lag off the bill chain
+    staffing:
+      - {pool: coding, fte_delta: -45, start_month: 12, glide_months: 10, mechanism: attrition}
+    costs: {one_time: 3200000, run_rate_annual: 2400000}
+
+  - id: INT-04
+    name: "Claim edit resolution agent"
+    type: ai_automation
+    use_cases: [UC-06-02, UC-06-01]
+    autonomy: A3
+    risk_tier: R1
+    start_month: 5
+    ramp_months: 6
+    effects:
+      - {target: stages.claim_edit.auto_rate, set: 0.55}
+      - {target: stages.claim_edit.quality_index, set: 0.78}   # FM-CLAIMDROP/FM-REJECTUNWORKED
+      - {target: stages.claim_edit.dwell_days, set: 0.8}
+    staffing:
+      - {pool: billing, fte_delta: -25, start_month: 11, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 1800000, run_rate_annual: 900000}
+
+  - id: INT-05
+    name: "Intelligent auto-posting & reconciliation"
+    type: ai_automation
+    use_cases: [UC-07-01]
+    autonomy: A3
+    risk_tier: R2
+    start_month: 6
+    ramp_months: 5
+    effects:
+      - {target: stages.payment_posting.touch_rate, set: 0.09}   # exception share halves
+      - {target: stages.cash_recon.auto_rate, set: 0.40}
+    staffing:
+      - {pool: posting, fte_delta: -25, start_month: 11, glide_months: 6, mechanism: attrition}
+    costs: {one_time: 900000, run_rate_annual: 500000}
+
+  - id: INT-06
+    name: "Denial triage AI + appeal packet generation"
+    type: ai_automation
+    use_cases: [UC-08-02, UC-08-03]
+    autonomy: A2
+    risk_tier: R1
+    start_month: 4
+    ramp_months: 6
+    effects:
+      - {target: stages.denial_triage.auto_rate, set: 0.70}
+      - {target: stages.appeals.min_per_touch, set: 26}          # drafting time collapses
+      - {target: denials.causes.prior_auth.recovery, set: 0.80}
+      - {target: denials.causes.medical_necessity.recovery, set: 0.70}
+      - {target: denials.causes.documentation.recovery, set: 0.76}
+      - {target: denials.causes.patient_status.recovery, set: 0.74}
+    staffing:
+      - {pool: denials, fte_delta: -20, start_month: 10, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 1600000, run_rate_annual: 1000000}
+
+  - id: INT-07
+    name: "Claim status bot fleet + expected-value AR prioritization"
+    type: ai_automation
+    use_cases: [UC-09-02, UC-09-01]
+    autonomy: A4
+    risk_tier: R4
+    start_month: 3
+    ramp_months: 6
+    effects:
+      - {target: stages.ar_followup.auto_rate, set: 0.55}
+      - {target: stages.ar_followup.touch_rate, set: 0.19}       # prioritization kills no-value touches
+    staffing:
+      - {pool: ar_followup, fte_delta: -70, start_month: 9, glide_months: 10, mechanism: attrition}
+    costs: {one_time: 1400000, run_rate_annual: 800000}
+
+  - id: INT-08
+    name: "Conversational patient billing agent + digital self-service"
+    type: ai_automation
+    use_cases: [UC-10-03]
+    autonomy: A3
+    risk_tier: R3
+    start_month: 7
+    ramp_months: 8
+    effects:
+      - {target: stages.patient_customer_service.auto_rate, set: 0.35}
+      - {target: stages.selfpay_followup.auto_rate, set: 0.35}
+      - {target: levers.self_service_rate, set: 0.45}
+      - {target: levers.first_contact_resolution, set: 0.80}
+    staffing:
+      - {pool: pfs, fte_delta: -30, start_month: 13, glide_months: 8, mechanism: attrition}
+    costs: {one_time: 1200000, run_rate_annual: 900000}

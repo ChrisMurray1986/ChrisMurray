@@ -1,0 +1,438 @@
+# Digital twin — baseline configuration (SOURCE file; edit and calibrate freely).
+# Models a ~$10B NPR integrated delivery network. Every stage, pool, denial cause,
+# and KPI binds to base-ontology IDs (process x.y, ROLE-*, FM-*, KPI-*) so scenario
+# effects and outputs stay ontology-grounded. Consumed by twin.py.
+#
+# Calibration: replace every value here with your actuals from the warehouse
+# (see data-bindings-epic-aws.yaml for where each parameter lives on an
+# Epic + AWS + Snowflake + Databricks stack). Values shipped here are
+# industry-plausible for the archetype and consistent with
+# ai-automation/scoring/example-org-profile.yaml defaults.
+
+meta:
+  id: TWIN-BASE-10B
+  name: "Archetype IDN — $10B NPR, single-instance Epic on AWS, Snowflake EDW, Databricks lakehouse"
+  version: "1.0"
+  as_of: "2026-07"
+  horizon_months: 36
+  stack:                       # neutral SYS-* is authoritative; names are located via vendor-crosswalks/
+    SYS-EHR: "Epic (Chronicles; Clarity/Caboodle analytics)"
+    SYS-PB-HB: "Epic Resolute HB/PB"
+    SYS-EDW: "Snowflake (curated marts) + Databricks (lakehouse / ML; calibration jobs)"
+    cloud: "AWS (Epic hosting + data plane)"
+
+organization:
+  npr_annual: 1.006e+10          # derived check: sum(segments monthly_accounts * avg_net_rev) * 12
+  wacc: 0.065
+  external_spend_annual: 6.0e+7   # statements, early-out, agencies, print/mail (VS-7 addressable)
+  tech_run_annual: 3.8e+7         # RCM bolt-ons, clearinghouse, bots, data platform allocation
+  overhead_fte: 150               # leadership/analytics/PMO (ROLE-ANALYTICS, ROLE-SYSANALYST, mgmt)
+  overhead_loaded_cost: 95000
+
+# ---------------------------------------------------------------------------
+# Volumes — monthly billed accounts by billing segment
+# ---------------------------------------------------------------------------
+segments:
+  inpatient:        {monthly_accounts: 8800,   avg_net_rev: 24600, payment_lag_days: 42,
+                     denial_count_rate: 0.100, patient_balance_rate: 0.55}
+  hosp_outpatient:  {monthly_accounts: 220000, avg_net_rev: 1980,  payment_lag_days: 34,
+                     denial_count_rate: 0.110, patient_balance_rate: 0.50}
+  professional:     {monthly_accounts: 930000, avg_net_rev: 200,   payment_lag_days: 26,
+                     denial_count_rate: 0.090, patient_balance_rate: 0.42}
+
+payer_mix:                     # informational context for calibration; engine uses segment lags
+  medicare_ffs: 0.24
+  medicare_advantage: 0.19
+  medicaid_managed: 0.13
+  commercial: 0.32
+  self_pay: 0.04
+  other: 0.08
+
+growth_annual_pct: 0.0         # volume growth; set >0 to stress capacity
+
+# ---------------------------------------------------------------------------
+# Staffing pools — capacity supply. Pools bind ROLE-* IDs; stages draw on pools.
+# hours_month * productive_pct = productive hours per FTE per month.
+# ---------------------------------------------------------------------------
+staffing:
+  hours_month: 173
+  productive_pct: 0.78
+  overtime_premium: 0.5        # extra cost multiplier on hours above capacity (up to ot_cap)
+  ot_cap_pct: 0.08             # max overtime as share of base hours; excess demand becomes backlog
+  pools:
+    scheduling:      {roles: [ROLE-SCHED],                       fte: 150, loaded_cost: 58000}
+    prereg:          {roles: [ROLE-PREREG],                      fte: 90,  loaded_cost: 60000}
+    eligibility:     {roles: [ROLE-VERIF],                       fte: 100, loaded_cost: 62000}
+    prior_auth:      {roles: [ROLE-AUTH],                        fte: 130, loaded_cost: 66000}
+    estimates:       {roles: [ROLE-ESTIM, ROLE-FINCOUNS],        fte: 60,  loaded_cost: 64000}
+    registration:    {roles: [ROLE-REGISTRAR, ROLE-PA-QA],       fte: 210, loaded_cost: 58000}
+    ur:              {roles: [ROLE-URN, ROLE-CM],                fte: 95,  loaded_cost: 105000}
+    cdi:             {roles: [ROLE-CDIS],                        fte: 70,  loaded_cost: 110000}
+    charge_integrity: {roles: [ROLE-CHGANALYST, ROLE-REVINT],    fte: 60,  loaded_cost: 80000}
+    coding:          {roles: [ROLE-CODER-IP, ROLE-CODER-OP, ROLE-CODER-PRO], fte: 260, loaded_cost: 82000}
+    billing:         {roles: [ROLE-BILLER, ROLE-EDITANALYST],    fte: 200, loaded_cost: 64000}
+    posting:         {roles: [ROLE-POSTER, ROLE-RECON],          fte: 110, loaded_cost: 60000}
+    denials:         {roles: [ROLE-DENIAL],                      fte: 170, loaded_cost: 68000}
+    appeals:         {roles: [ROLE-APPEALRN, ROLE-APPEALW],      fte: 60,  loaded_cost: 92000}
+    ar_followup:     {roles: [ROLE-ARFU],                        fte: 300, loaded_cost: 62000}
+    underpayment:    {roles: [ROLE-UNDERPAY],                    fte: 25,  loaded_cost: 78000}
+    credit_balance:  {roles: [ROLE-CREDIT],                      fte: 35,  loaded_cost: 62000}
+    pfs:             {roles: [ROLE-PFSREP, ROLE-AGCYLIAISON],    fte: 190, loaded_cost: 56000}
+    fin_assist:      {roles: [ROLE-FACOUNS],                     fte: 45,  loaded_cost: 60000}
+
+# ---------------------------------------------------------------------------
+# Stage network — work demand. Ordered claim-lifecycle pipeline.
+#   processes: base-ontology process IDs the stage aggregates
+#   pool: staffing pool that performs the manual work
+#   driver: what generates work units (accounts | denied_claims | appealed_claims
+#           | patient_statements)
+#   applies: per-segment fraction of driver units passing through the stage
+#   touch_rate: manual touches per applicable unit (may exceed 1.0 = rework/multi-review)
+#   auto_rate: share of touches absorbed by automation (SYS-*, ROLE-BOT) — the
+#              primary AI/automation lever
+#   min_per_touch: handle minutes (scalar, or per-segment map)
+#   dwell_days: intrinsic calendar dwell contributed to the bill/AR lag chain even
+#               with zero backlog (only stages on the billing path carry it)
+#   lag_chain: prebill | postbill | none — whether dwell (+ backlog days) delays billing / AR
+# ---------------------------------------------------------------------------
+stages:
+  - id: scheduling
+    name: "Scheduling & order intake"
+    processes: ["1.1"]
+    pool: scheduling
+    driver: accounts
+    applies: {inpatient: 0.50, hosp_outpatient: 0.60, professional: 0.15}
+    touch_rate: 0.90
+    auto_rate: 0.10
+    min_per_touch: 5
+    lag_chain: none
+
+  - id: preregistration
+    name: "Pre-registration"
+    processes: ["1.2"]
+    pool: prereg
+    driver: accounts
+    applies: {inpatient: 0.90, hosp_outpatient: 0.55, professional: 0.10}
+    touch_rate: 0.60
+    auto_rate: 0.15
+    min_per_touch: 6
+    lag_chain: none
+
+  - id: eligibility
+    name: "Eligibility & benefits verification"
+    processes: ["1.3"]
+    pool: eligibility
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 0.95, professional: 0.90}
+    touch_rate: 0.30            # exception review share; RTE handles the rest silently
+    auto_rate: 0.65
+    min_per_touch: 7
+    lag_chain: none
+
+  - id: prior_auth
+    name: "Prior authorization & referral"
+    processes: ["1.4"]
+    pool: prior_auth
+    driver: accounts
+    applies: {inpatient: 0.35, hosp_outpatient: 0.28, professional: 0.06}   # auth-required share
+    touch_rate: 1.00
+    auto_rate: 0.12
+    min_per_touch: 9
+    dwell_days: 0.0
+    lag_chain: none
+
+  - id: estimates_counseling
+    name: "Estimates, GFE & financial counseling"
+    processes: ["1.6", "1.7"]
+    pool: estimates
+    driver: accounts
+    applies: {inpatient: 0.50, hosp_outpatient: 0.30, professional: 0.02}
+    touch_rate: 0.80
+    auto_rate: 0.25
+    min_per_touch: 8
+    lag_chain: none
+
+  - id: registration
+    name: "Registration, arrival & POS collection"
+    processes: ["1.8", "1.9"]
+    pool: registration
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 0.12}
+    touch_rate: 0.95
+    auto_rate: 0.05
+    min_per_touch: 5
+    lag_chain: none
+
+  - id: utilization_review
+    name: "UR & status determination"
+    processes: ["2.1", "2.2", "2.3", "2.4"]
+    pool: ur
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 0.02, professional: 0.00}
+    touch_rate: 1.00
+    auto_rate: 0.05
+    min_per_touch: 55
+    lag_chain: none
+
+  - id: charge_capture
+    name: "Charge capture & reconciliation"
+    processes: ["3.1", "3.2", "3.4"]
+    pool: charge_integrity
+    driver: accounts
+    applies: {inpatient: 0.40, hosp_outpatient: 0.12, professional: 0.05}
+    touch_rate: 1.00
+    auto_rate: 0.10
+    min_per_touch: 6
+    dwell_days: 2.0
+    lag_chain: prebill
+
+  - id: cdi_review
+    name: "CDI concurrent review & queries"
+    processes: ["4.1", "4.2", "4.3"]
+    pool: cdi
+    driver: accounts
+    applies: {inpatient: 0.85, hosp_outpatient: 0.01, professional: 0.00}
+    touch_rate: 1.30            # avg reviews per covered case
+    auto_rate: 0.05
+    min_per_touch: 45
+    lag_chain: none             # concurrent; does not delay billing directly
+
+  - id: coding
+    name: "Coding (IP / OP / profee)"
+    processes: ["5.2", "5.3", "5.4", "5.6"]
+    pool: coding
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 0.85, professional: 0.35}
+    touch_rate: 1.00
+    auto_rate: {inpatient: 0.02, hosp_outpatient: 0.12, professional: 0.15}
+    min_per_touch: {inpatient: 35, hosp_outpatient: 6, professional: 2.2}
+    dwell_days: 3.0
+    lag_chain: prebill
+
+  - id: claim_edit
+    name: "Claim generation, edit & scrub resolution"
+    processes: ["6.1", "6.2"]
+    pool: billing
+    driver: accounts
+    applies: {inpatient: 0.35, hosp_outpatient: 0.28, professional: 0.20}   # manual-edit-queue share
+    touch_rate: 1.00
+    auto_rate: 0.15
+    min_per_touch: {inpatient: 12, hosp_outpatient: 6, professional: 3}
+    dwell_days: 1.5
+    lag_chain: prebill
+
+  - id: claim_submission
+    name: "Submission, acks, secondaries & rebills"
+    processes: ["6.3", "6.4", "6.5"]
+    pool: billing
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.09
+    auto_rate: 0.30
+    min_per_touch: 8
+    dwell_days: 0.5
+    lag_chain: prebill
+
+  - id: payment_posting
+    name: "Remittance processing & posting exceptions"
+    processes: ["7.1", "7.2", "7.4"]
+    pool: posting
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.17            # exception share of remits requiring manual work
+    auto_rate: 0.00             # auto-post embodied in touch_rate; scenarios raise auto_rate further
+    min_per_touch: {inpatient: 9, hosp_outpatient: 4, professional: 1.5}
+    lag_chain: none
+
+  - id: cash_recon
+    name: "Reconciliation, treasury & balancing"
+    processes: ["7.3", "7.6"]
+    pool: posting
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.04
+    auto_rate: 0.10
+    min_per_touch: 6
+    lag_chain: none
+
+  - id: denial_triage
+    name: "Denial identification, triage & routing"
+    processes: ["8.1", "8.2"]
+    pool: denials
+    driver: denied_claims
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 1.00
+    auto_rate: 0.25
+    min_per_touch: 4
+    lag_chain: none
+
+  - id: denial_resolution
+    name: "Denial resolution (non-appeal paths)"
+    processes: ["8.3"]
+    pool: denials
+    driver: denied_claims
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.60
+    auto_rate: 0.05
+    min_per_touch: 14
+    lag_chain: none
+
+  - id: appeals
+    name: "Appeals management"
+    processes: ["8.4"]
+    pool: appeals
+    driver: appealed_claims
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 1.00
+    auto_rate: 0.03
+    min_per_touch: 42
+    lag_chain: none
+
+  - id: ar_followup
+    name: "AR follow-up & claim status"
+    processes: ["9.1", "9.2", "9.3"]
+    pool: ar_followup
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.22            # share of claims requiring at least one follow-up touch
+    auto_rate: 0.22
+    min_per_touch: 11
+    lag_chain: none
+
+  - id: underpayment_recovery
+    name: "Underpayment recovery"
+    processes: ["9.4"]
+    pool: underpayment
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.0072          # variance cases worked per claim
+    auto_rate: 0.00
+    min_per_touch: 22
+    lag_chain: none
+
+  - id: credit_balance
+    name: "Credit balance & refunds"
+    processes: ["9.5"]
+    pool: credit_balance
+    driver: accounts
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.015
+    auto_rate: 0.00
+    min_per_touch: 15
+    lag_chain: none
+
+  - id: patient_customer_service
+    name: "Patient statements, service & disputes"
+    processes: ["10.1", "10.2", "10.3"]
+    pool: pfs
+    driver: patient_statements
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.16            # calls + disputes + plan setups per statement
+    auto_rate: 0.05
+    min_per_touch: 9
+    lag_chain: none
+
+  - id: selfpay_followup
+    name: "Self-pay segmentation & early-out"
+    processes: ["10.5", "10.6"]
+    pool: pfs
+    driver: patient_statements
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.19
+    auto_rate: 0.10
+    min_per_touch: 7
+    lag_chain: none
+
+  - id: financial_assistance
+    name: "Financial assistance / 501(r)"
+    processes: ["10.4"]
+    pool: fin_assist
+    driver: patient_statements
+    applies: {inpatient: 1.00, hosp_outpatient: 1.00, professional: 1.00}
+    touch_rate: 0.03
+    auto_rate: 0.05
+    min_per_touch: 20
+    lag_chain: none
+
+# ---------------------------------------------------------------------------
+# Denial model — initial denials decomposed by cause, each owned by the stage
+# whose quality controls it. quality_index 1.0 = baseline defect level; scenarios
+# lower an owner stage's quality_index to prevent that cause's denials at source.
+# recovery = share of denied dollars ultimately recovered (rebill + appeal),
+# appeal_rate = share of denied claims formally appealed (drives appeals labor).
+# Weighted recovery ~0.82 -> final denial write-off ~2.0% of NPR (KPI-DENWO).
+# ---------------------------------------------------------------------------
+denials:
+  initial_denial_rate_dollars: 0.115   # KPI-IDR ($-weighted) at quality_index 1.0
+  denial_cycle_days: 55                # avg extra AR days on denied dollars
+  causes:
+    eligibility:        {share: 0.16, fm: [FM-ELIGLAPSE, FM-COB, FM-PLANMAP], owner_stage: eligibility,
+                         preventable: 0.85, recovery: 0.94, appeal_rate: 0.025}
+    registration_tech:  {share: 0.11, fm: [FM-DUPMRN],                        owner_stage: registration,
+                         preventable: 0.90, recovery: 0.94, appeal_rate: 0.012}
+    prior_auth:         {share: 0.15, fm: [FM-NOAUTH],                        owner_stage: prior_auth,
+                         preventable: 0.80, recovery: 0.72, appeal_rate: 0.14}
+    medical_necessity:  {share: 0.09, fm: [FM-MEDNEC],                        owner_stage: utilization_review,
+                         preventable: 0.50, recovery: 0.62, appeal_rate: 0.20}
+    patient_status:     {share: 0.07, fm: [FM-STATUSWRONG],                   owner_stage: utilization_review,
+                         preventable: 0.60, recovery: 0.66, appeal_rate: 0.22}
+    documentation:      {share: 0.08, fm: [FM-DOCGAP],                        owner_stage: cdi_review,
+                         preventable: 0.55, recovery: 0.68, appeal_rate: 0.18}
+    coding:             {share: 0.10, fm: [FM-CODEERR],                       owner_stage: coding,
+                         preventable: 0.65, recovery: 0.85, appeal_rate: 0.10}
+    claim_technical:    {share: 0.13, fm: [FM-CLAIMDROP, FM-REJECTUNWORKED],  owner_stage: claim_edit,
+                         preventable: 0.90, recovery: 0.95, appeal_rate: 0.006}
+    timely_filing:      {share: 0.03, fm: [FM-TFL],                           owner_stage: claim_submission,
+                         preventable: 0.95, recovery: 0.20, appeal_rate: 0.06}
+    other_clinical:     {share: 0.08, fm: [FM-VARIANCEMISS],                  owner_stage: denial_resolution,
+                         preventable: 0.30, recovery: 0.78, appeal_rate: 0.12}
+
+# ---------------------------------------------------------------------------
+# Financial levers — scalar parameters scenarios can move (with KPI bindings)
+# ---------------------------------------------------------------------------
+levers:
+  underpayment_pct: 0.010          # underpaid $ / NPR (KPI-UNDERPAY)
+  underpayment_detect_rate: 0.55   # share detected & recovered
+  patient_share_of_npr: 0.055      # patient responsibility / NPR
+  selfpay_yield: 0.64              # net collection on patient responsibility (KPI-SELFPAYYIELD)
+  pos_collection_rate: 0.35        # POS share of collectible pre-service cash (KPI-POS-CASH)
+  charge_leakage_pct: 0.010        # missed net revenue / NPR (FM-CHGMISS); capture_rate recovers it
+  charge_capture_rate: 0.25        # share of leakage currently caught by revenue integrity
+  estimate_accuracy: 0.70          # KPI-ESTIMATE-ACC
+  financial_clearance_rate: 0.86   # KPI-CLEARANCE
+  self_service_rate: 0.25          # patient digital self-service share (portal pay, chat)
+  first_contact_resolution: 0.68   # patient CS FCR
+  complaints_per_1k: 3.2           # KPI-COMPLAINTS baseline
+  surprise_bill_per_1k: 1.8        # FM-PATIENTWRONGBILL / FM-FA-MISS incidents per 1k statements
+  queries_per_100_ip: 28           # CDI query volume on providers (burden)
+  clinic_auth_burden: 0.45         # share of auth work falling on clinical staff (ROLE-PROVIDER)
+
+# ---------------------------------------------------------------------------
+# Experience model — composite indices 0-100 (50 = archetype baseline band).
+# Each component: value derived by engine, normalized between worst/best bounds.
+# patient -> PXI (Patient Financial Experience Index)
+# caregiver -> CXI (Caregiver / Workforce Experience Index; staff + providers)
+# ---------------------------------------------------------------------------
+experience:
+  patient:
+    components:
+      financial_clearance: {kpi: KPI-CLEARANCE,     weight: 0.18, worst: 0.60, best: 0.98}
+      estimate_accuracy:   {kpi: KPI-ESTIMATE-ACC,  weight: 0.15, worst: 0.40, best: 0.95}
+      auth_wait_days:      {kpi: KPI-AUTH-RATE,     weight: 0.15, worst: 12.0, best: 1.0, invert: true}
+      billing_complaints:  {kpi: KPI-COMPLAINTS,    weight: 0.17, worst: 6.0,  best: 0.8, invert: true}
+      surprise_bills:      {kpi: KPI-COMPLAINTS,    weight: 0.12, worst: 4.0,  best: 0.2, invert: true}
+      self_service:        {kpi: KPI-SELFPAYYIELD,  weight: 0.11, worst: 0.10, best: 0.70}
+      first_contact_res:   {kpi: KPI-COMPLAINTS,    weight: 0.12, worst: 0.45, best: 0.92}
+  caregiver:
+    components:
+      workload_balance:    {weight: 0.24, worst: 1.20, best: 0.85, invert: true}   # avg pool utilization
+      backlog_pressure:    {weight: 0.16, worst: 12.0, best: 0.5,  invert: true}   # avg backlog days, staffed stages
+      rework_share:        {weight: 0.18, worst: 0.30, best: 0.06, invert: true}   # denial/rework hours / total hours
+      automation_relief:   {weight: 0.16, worst: 0.05, best: 0.45}                 # share of rote touches automated
+      provider_burden:     {weight: 0.16, worst: 1.30, best: 0.55, invert: true}   # query+clinic-auth burden index (1.0 = baseline)
+      change_load:         {weight: 0.10, worst: 6.0,  best: 0.0,  invert: true}   # interventions ramping simultaneously
+
+# Reporting
+reporting:
+  ar_days_target: null           # optional annotation only
+  npv_years: 3

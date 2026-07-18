@@ -18,6 +18,7 @@ README that is the authoritative deep documentation:
 | 2. AI & automation ontology | `ai-automation/` | 103 use cases (`UC-*`) bound to base-ontology IDs, with governance (autonomy ceilings), feasibility gating, value model, cost model, investment playbook |
 | 3. Operations assessment | `operations-assessment/` | Failure modes (`OFM-*`/`PFM-*`/`RFM-*`) and best practices (`BP-*`) across 3 layers (enterprise → process → role), coupled to the AI readiness gates they degrade |
 | 4. Vendor crosswalks | `vendor-crosswalks/` | Disposable, `as_of`-stamped bindings from neutral IDs to named EHR modules (Epic, Oracle Health) |
+| 5. Digital twin | `digital-twin/` | Deterministic monthly flow simulation of the whole operation ($10B-NPR archetype baseline); scenarios (workflow, AI/automation via `UC-*`, staffing) → financial, productivity, and patient/caregiver experience impact |
 
 ## Key files
 
@@ -67,6 +68,18 @@ python3 build_explorer.py                  # rebuild use-case-explorer.html
 python3 build_field_instrument.py          # regenerate field-instrument.yaml/.html from sources
 python3 reconcile.py --scores S.yaml --facets A.yaml [--profile P.yaml] [-o report.md]
 ```
+
+`digital-twin/` (operational simulation; see its README for the meta-model):
+
+```bash
+python3 twin.py --diag                     # baseline pool-utilization sanity check
+python3 twin.py -o report.md               # baseline run
+python3 twin.py --scenario scenarios/SCN-01-ai-automation-wave1.yaml -o r.md [--csv m.csv] [--json r.json]
+python3 twin.py --compare scenarios/SCN-0*.yaml -o comparison.md
+```
+
+`digital-twin/twin-config.yaml` and `scenarios/*.yaml` are source; `examples/*` are
+generated run records (regenerate, don't hand-edit).
 
 The HTML artifacts (`rcm-investment-app.html`, `use-case-explorer.html`,
 `field-instrument.html`) are **generated, self-contained files** — never edit them directly;
